@@ -1,0 +1,19 @@
+.DS_Store
+**/.DS_Store
+
+# Nchat Secrets (Phone number, history, profiles)
+nchat/.config/nchat/app.conf
+nchat/.config/nchat/profiles/
+nchat/.config/nchat/history/
+nchat/.config/nchat/log.txt*
+nchat/.config/nchat/temp/
+
+# GitHub Auth
+gh/.config/gh/hosts.yml
+
+# SSH and Keys
+**/.ssh/
+**/id_rsa
+**/id_ed25519
+**/*.pem
+**/*.key

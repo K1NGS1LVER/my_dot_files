@@ -1,0 +1,74 @@
+{
+  // The tab size is already 2, matching your VS Code setting.
+  "tab_size": 2,
+
+  // Using "VSCode" keybindings, which you already had.
+  "base_keymap": "VSCode",
+
+  // Font sizes, updated buffer_font_size to match VS Code.
+  "ui_font_size": 18.0,
+  "buffer_font_size": 20.0, // Was 19.0, updated to 20.0 from VS Code
+  "terminal": {
+    "font_size": 15.0
+  },
+
+  // Theme settings, already matching your VS Code theme.
+  "theme": {
+    "mode": "system",
+    "light": "One Dark",
+    "dark": "Tokyo Night Storm"
+  },
+
+  // Autosave after 1 second, which you already had.
+  "autosave": "on_focus_change", // A common alternative to delay, saves when you switch windows.
+
+  // UI layout settings from your VS Code config.
+  "project_panel": {
+    "dock": "right", // Sidebar on the right
+    "confirm_delete": false // Don't ask for confirmation on delete
+  },
+  "ui": {
+    "status_bar": {
+      "visible": false // Hides the bottom status bar
+    }
+  },
+
+  // Editor behavior settings from your VS Code config.
+  "soft_wrap": "editor_width", // Wraps lines at the editor's width
+  "minimap": {
+    "show": "auto" // Hides the minimap until you scroll
+  },
+  "inlay_hints": {
+    "enabled": true
+  },
+
+  // Enables formatting on save, a key feature from your VS Code setup.
+  // NOTE: You must have a language server (like Prettier for web dev) installed
+  // for this to work.
+  "format_on_save": "on",
+
+  // Language-specific settings
+  "languages": {
+    // Tells Zed's Java language server where to find your JDK
+    "Java": {
+      "java_home": "/Library/Java/JavaVirtualMachines/temurin-24.jdk/Contents/Home"
+    },
+    // Sets the default formatter for these languages.
+    // Ensure you have the Prettier language server set up in Zed.
+    "JavaScript": {
+      "default_formatters": ["prettier"]
+    },
+    "TypeScript": {
+      "default_formatters": ["prettier"]
+    },
+    "TSX": {
+      "default_formatters": ["prettier"]
+    },
+    "JSON": {
+      "default_formatters": ["prettier"]
+    },
+    "HTML": {
+      "default_formatters": ["prettier"]
+    }
+  }
+}
