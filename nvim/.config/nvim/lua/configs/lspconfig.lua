@@ -1,4 +1,7 @@
-require("nvchad.configs.lspconfig").defaults()
+local nvlsp = require "nvchad.configs.lspconfig"
+local lspconfig = require "lspconfig"
+
+nvlsp.defaults()
 
 -- List of language servers to enable
 -- Install them using :MasonInstall <server_name>
@@ -17,7 +20,13 @@ local servers = {
   "lua_ls",       -- Lua
 }
 
-vim.lsp.enable(servers)
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+    on_attach = nvlsp.on_attach,
+    on_init = nvlsp.on_init,
+    capabilities = nvlsp.capabilities,
+  }
+end
 
 -- Enhanced diagnostic configuration
 vim.diagnostic.config({

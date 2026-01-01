@@ -90,3 +90,20 @@ map("n", "<leader>fo", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Find Obsidian N
 map("n", "<leader>ck", "<cmd>ToggleCheckbox<cr>", { desc = "Toggle Checkbox" })
 map("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle File Explorer" })
 map("n", "<leader>o", "<cmd>NvimTreeFocus<cr>", { desc = "Focus File Explorer" })
+
+-- Terminal Compatibility Mappings (Replaces ToggleTerm)
+map({ "n", "t" }, "<C-t>", function()
+  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+end, { desc = "Toggle Floating Terminal" })
+
+map({ "n", "t" }, "<leader>tf", function()
+  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+end, { desc = "Toggle Floating Terminal" })
+
+map({ "n", "t" }, "<leader>h", function()
+  require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
+end, { desc = "Toggle Horizontal Terminal" })
+
+map({ "n", "t" }, "<leader>tv", function()
+  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
+end, { desc = "Toggle Vertical Terminal" })

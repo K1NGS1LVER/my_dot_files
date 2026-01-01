@@ -37,38 +37,38 @@ autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
 
 -- Universal Transparency Enforcer
 -- This ensures ANY theme loaded will have transparent backgrounds
-local transparency_group = vim.api.nvim_create_augroup("UniversalTransparency", { clear = true })
+-- local transparency_group = vim.api.nvim_create_augroup("UniversalTransparency", { clear = true })
 
--- Default to true if not set
-if vim.g.transparency_enabled == nil then
-  vim.g.transparency_enabled = true
-end
+-- -- Default to true if not set
+-- if vim.g.transparency_enabled == nil then
+--   vim.g.transparency_enabled = true
+-- end
 
-local function set_transparency()
-  if not vim.g.transparency_enabled then return end
+-- local function set_transparency()
+--   if not vim.g.transparency_enabled then return end
   
-  -- 2. Clear Highlights
-  local groups = {
-    "Normal", "NormalNC", "Comment", "Constant", "Special", "Identifier",
-    "Statement", "PreProc", "Type", "Underlined", "Todo", "String", "Function",
-    "Conditional", "Repeat", "Operator", "Structure", "LineNr", "NonText",
-    "SignColumn", "CursorLineNr", "EndOfBuffer", "MsgArea",
-    "NormalFloat", "FloatBorder", "NvimTreeNormal", "NvimTreeNormalNC", "NvimTreeWinSeparator",
-    "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopePromptBorder",
-    "Pmenu", "PmenuSel", "PmenuSbar", "PmenuThumb",
-    "GitSignsAdd", "GitSignsChange", "GitSignsDelete",
-  }
+--   -- 2. Clear Highlights
+--   local groups = {
+--     "Normal", "NormalNC", "Comment", "Constant", "Special", "Identifier",
+--     "Statement", "PreProc", "Type", "Underlined", "Todo", "String", "Function",
+--     "Conditional", "Repeat", "Operator", "Structure", "LineNr", "NonText",
+--     "SignColumn", "CursorLineNr", "EndOfBuffer", "MsgArea",
+--     "NormalFloat", "FloatBorder", "NvimTreeNormal", "NvimTreeNormalNC", "NvimTreeWinSeparator",
+--     "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopePromptBorder",
+--     "Pmenu", "PmenuSel", "PmenuSbar", "PmenuThumb",
+--     "GitSignsAdd", "GitSignsChange", "GitSignsDelete",
+--   }
   
-  for _, group in ipairs(groups) do
-    vim.api.nvim_set_hl(0, group, { bg = "NONE" })
-  end
-end
+--   for _, group in ipairs(groups) do
+--     vim.api.nvim_set_hl(0, group, { bg = "NONE" })
+--   end
+-- end
 
-autocmd("ColorScheme", {
-  group = transparency_group,
-  pattern = "*",
-  callback = set_transparency,
-})
+-- autocmd("ColorScheme", {
+--   group = transparency_group,
+--   pattern = "*",
+--   callback = set_transparency,
+-- })
 
--- Apply immediately if a theme is already loaded
-set_transparency()
+-- -- Apply immediately if a theme is already loaded
+-- set_transparency()

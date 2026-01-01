@@ -74,40 +74,42 @@ return {
   },
 
   -- Better terminal integration
-  {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    cmd = { "ToggleTerm", "TermExec" },
-    keys = {
-      { "<C-t>", "<cmd>ToggleTerm<cr>", desc = "Toggle terminal" },
-      { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Terminal float" },
-      { "<leader>h", function() require("toggleterm.terminal").toggle("horizontal") end, desc = "Toggle horizontal terminal" },
-      { "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", desc = "Terminal vertical" },
-    },
-    opts = {
-      size = function(term)
-        if term.direction == "horizontal" then
-          return 15
-        elseif term.direction == "vertical" then
-          return vim.o.columns * 0.4
-        end
-      end,
-      open_mapping = [[<C-t>]],
-      hide_numbers = true,
-      shade_terminals = true,
-      start_in_insert = true,
-      insert_mappings = true,
-      terminal_mappings = true,
-      persist_size = true,
-      direction = "float",
-      close_on_exit = true,
-      shell = vim.o.shell,
-      float_opts = {
-        border = "curved",
-        winblend = 0,
-      },
-    },
-  },
+  -- REMOVED: Redundant with NvChad's internal terminal.
+  -- Mappings have been migrated to mappings.lua to maintain functionality.
+  -- {
+  --   "akinsho/toggleterm.nvim",
+  --   version = "*",
+  --   cmd = { "ToggleTerm", "TermExec" },
+  --   keys = {
+  --     { "<C-t>", "<cmd>ToggleTerm<cr>", desc = "Toggle terminal" },
+  --     { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Terminal float" },
+  --     { "<leader>h", function() require("toggleterm.terminal").toggle("horizontal") end, desc = "Toggle horizontal terminal" },
+  --     { "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", desc = "Terminal vertical" },
+  --   },
+  --   opts = {
+  --     size = function(term)
+  --       if term.direction == "horizontal" then
+  --         return 15
+  --       elseif term.direction == "vertical" then
+  --         return vim.o.columns * 0.4
+  --       end
+  --     end,
+  --     open_mapping = [[<C-t>]],
+  --     hide_numbers = true,
+  --     shade_terminals = true,
+  --     start_in_insert = true,
+  --     insert_mappings = true,
+  --     terminal_mappings = true,
+  --     persist_size = true,
+  --     direction = "float",
+  --     close_on_exit = true,
+  --     shell = vim.o.shell,
+  --     float_opts = {
+  --       border = "curved",
+  --       winblend = 0,
+  --     },
+  --   },
+  -- },
 
   -- Debugging support
   {
@@ -400,26 +402,34 @@ return {
       { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" },
     },
   },
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function() vim.fn["mkdp#util#install"]() end,
-    keys = {
-      { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
-    },
-  },
+  -- REMOVED: Redundant with render-markdown.nvim
+  -- {
+  --   "iamcco/markdown-preview.nvim",
+  --   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  --   ft = { "markdown" },
+  --   build = function() vim.fn["mkdp#util#install"]() end,
+  --   keys = {
+  --     { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
+  --   },
+  -- },
   -- Harpoon (File navigation)
   {
     "ThePrimeagen/harpoon",
+    branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local harpoon = require("harpoon")
+      harpoon:setup()
+    end,
     keys = {
-      { "<leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Harpoon file 1" },
-      { "<leader>2", function() require("harpoon.ui").nav_file(2) end, desc = "Harpoon file 2" },
-      { "<leader>3", function() require("harpoon.ui").nav_file(3) end, desc = "Harpoon file 3" },
-      { "<leader>4", function() require("harpoon.ui").nav_file(4) end, desc = "Harpoon file 4" },
-      { "<leader>a", function() require("harpoon.mark").add_file() end, desc = "Harpoon add file" },
-      { "<leader>hm", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Harpoon menu" },
+      { "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon Add" },
+      { "<C-e>", function() local harpoon = require("harpoon"); harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "Harpoon Menu" },
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "Harpoon Select 1" },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "Harpoon Select 2" },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "Harpoon Select 3" },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "Harpoon Select 4" },
+      { "<C-S-P>", function() require("harpoon"):list():prev() end, desc = "Harpoon Prev" },
+      { "<C-S-N>", function() require("harpoon"):list():next() end, desc = "Harpoon Next" },
     },
   },
 
