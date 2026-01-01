@@ -336,4 +336,4 @@ alias book='open -a Books'
 alias upscale='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models'
 
 # Todoist Interactive
-alias todo="todoist list | fzf --header 'Select task to complete (ESC to cancel)' --height 40% --reverse | awk '{print \$1}' | xargs -r todoist close"
+alias todo="todoist --header list --filter 'today | inbox | recurring' | fzf --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs -r todoist close"

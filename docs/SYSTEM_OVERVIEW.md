@@ -32,6 +32,7 @@ The shell is powered by **Zsh** with **Oh My Zsh** and the **Powerlevel10k** the
 | `z`              | **`zoxide`**  | `cd`     | Remembers frequently visited dirs. `z gemini` jumps to `.../GeminiCLI`. |
 | `help`           | **`tldr`**    | `man`    | Simplified, community-driven examples. `help tar`.                      |
 | `lg`             | **`lazygit`** | `git`    | Terminal UI for complex git operations.                                 |
+| `todo`           | **`todoist`** | `todoist`| Interactive task manager. Filters Today/Inbox/Recurring + FZF selection.|
 
 ---
 
