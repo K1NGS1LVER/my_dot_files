@@ -1,19 +1,50 @@
 .DS_Store
 **/.DS_Store
 
-# Nchat Secrets (Phone number, history, profiles)
+# --- NCHAT (WhatsApp/Telegram) ---
+# Secrets and Credentials
 nchat/.config/nchat/app.conf
+nchat/.config/nchat/key.conf
+nchat/.config/nchat/ui.conf
 nchat/.config/nchat/profiles/
 nchat/.config/nchat/history/
-nchat/.config/nchat/log.txt*
 nchat/.config/nchat/temp/
+nchat/.config/nchat/log.txt*
+nchat/.config/nchat/debug.info
 
-# GitHub Auth
+# --- GITHUB CLI ---
 gh/.config/gh/hosts.yml
+gh/.config/gh/config.yml
 
-# SSH and Keys
+# --- SSH & KEYS ---
 **/.ssh/
 **/id_rsa
 **/id_ed25519
 **/*.pem
 **/*.key
+**/*.pub
+**/known_hosts
+
+# --- GENERAL SECRETS ---
+**/.env
+**/.env.local
+**/.netrc
+**/.gemini/oauth_creds.json
+**/.gemini/google_accounts.json
+**/.gemini/installation_id
+**/.gemini/state.json
+
+# --- HISTORY ---
+zsh/.zsh_history
+zsh/.zcompdump*
+**/.bash_history
+**/.python_history
+**/.node_repl_history
+**/.lesshst
+**/.viminfo
+
+# --- TEMP FILES ---
+**/.swp
+**/.swo
+**/tmp/
+**/cache/

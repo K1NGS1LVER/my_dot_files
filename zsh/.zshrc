@@ -326,8 +326,14 @@ alias -g C='| tee /dev/tty | pbcopy'
 # Created by `pipx` on 2025-12-26 19:45:40
 export PATH="$PATH:/Users/dan/.local/bin"
 
+# Add Mason binaries to PATH (Neovim tools)
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+
 # Video Players
 alias play='mpv'
 alias watch='open -a IINA'
 alias book='open -a Books'
 alias upscale='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models'
+
+# Todoist Interactive
+alias todo="todoist list | fzf --header 'Select task to complete (ESC to cancel)' --height 40% --reverse | awk '{print \$1}' | xargs -r todoist close"
