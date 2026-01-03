@@ -1,7 +1,4 @@
-local nvlsp = require "nvchad.configs.lspconfig"
-local lspconfig = require "lspconfig"
-
-nvlsp.defaults()
+require("nvchad.configs.lspconfig").defaults()
 
 -- List of language servers to enable
 -- Install them using :MasonInstall <server_name>
@@ -20,12 +17,20 @@ local servers = {
   "lua_ls",       -- Lua
 }
 
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+-- Use the existing NvChad or global enable function
+if vim.lsp.enable then
+  vim.lsp.enable(servers)
+else
+  -- Fallback if vim.lsp.enable isn't found (though it should be if it was there before)
+  -- This handles the case where NvChad might inject it
+  for _, lsp in ipairs(servers) do
+    local lspconf = require "lspconfig"
+    lspconf[lsp].setup {
+      on_attach = require("nvchad.configs.lspconfig").on_attach,
+      on_init = require("nvchad.configs.lspconfig").on_init,
+      capabilities = require("nvchad.configs.lspconfig").capabilities,
+    }
+  end
 end
 
 -- Enhanced diagnostic configuration

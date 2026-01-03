@@ -12,7 +12,7 @@ local options = {
     markdown = { "prettier" },
     python = { "black" },
     rust = { "rustfmt" },
-    go = { "gofmt" },
+    go = { "goimports" },
     sh = { "shfmt" },
   },
 

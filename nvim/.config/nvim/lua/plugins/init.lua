@@ -118,6 +118,7 @@ return {
       "rcarriga/nvim-dap-ui",
       "nvim-neotest/nvim-nio",
       "theHamsta/nvim-dap-virtual-text",
+      "leoluz/nvim-dap-go", -- Add Go debugger support
     },
     keys = {
       { "<leader>db", "<cmd>DapToggleBreakpoint<cr>", desc = "Toggle breakpoint" },
@@ -126,6 +127,7 @@ return {
       { "<leader>do", "<cmd>DapStepOver<cr>", desc = "Step over" },
       { "<leader>dO", "<cmd>DapStepOut<cr>", desc = "Step out" },
       { "<leader>dr", "<cmd>DapToggleRepl<cr>", desc = "Toggle REPL" },
+      { "<leader>dgt", function() require('dap-go').debug_test() end, desc = "Debug Go Test" }, -- Go specific
       {
         "<leader>du",
         function()
@@ -137,6 +139,8 @@ return {
     config = function()
       local dap = require "dap"
       local dapui = require "dapui"
+      
+      require("dap-go").setup() -- Setup Go debugger
       dapui.setup()
       require("nvim-dap-virtual-text").setup()
 

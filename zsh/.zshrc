@@ -72,7 +72,7 @@ plugins=(
     git
     zsh-autosuggestions  
     zsh-syntax-highlighting
-    # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
+    history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
 source $ZSH/oh-my-zsh.sh
