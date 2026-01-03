@@ -40,3 +40,5 @@ if status is-interactive
     fish_add_path $HOME/.cargo/bin
     fish_add_path /opt/homebrew/bin
 end
+\n# The Fuck\nthefuck --alias | source
+alias ntmux='zellij'

@@ -72,10 +72,31 @@ plugins=(
     git
     zsh-autosuggestions  
     zsh-syntax-highlighting
-    history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
+    fzf-tab
+    # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
 source $ZSH/oh-my-zsh.sh
+
+# --- THEFUCK ---
+eval $(thefuck --alias)
+
+# --- FZF-TAB CONFIGURATION ---
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# preview directory's content with eza when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# preview file content with bat when completing other commands
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers --line-range=:500 $realpath'
+# switch group using < and >
+zstyle ':fzf-tab:*' switch-group '<' '>'
+
 
 # User configuration
 
@@ -340,3 +361,38 @@ alias ai='ollama run deepseek-coder:6.7b'
 
 # Todoist Interactive
 alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimiter='\t' --with-nth=2 --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs todo-go close"
+
+# --- Zellij Auto-Rename Tabs ---
+function change_zellij_tab_title() {
+  if [[ -n $ZELLIJ ]]; then
+    command nohup zellij action rename-tab "$1" >/dev/null 2>&1
+  fi
+}
+
+function zellij_preexec() {
+  local cmdline=$1
+  # Truncate if longer than 15 chars
+  if [[ ${#cmdline} -gt 15 ]]; then
+    cmdline="${cmdline:0:15}..."
+  fi
+  change_zellij_tab_title "$cmdline"
+}
+
+function zellij_precmd() {
+  # Set title to current dir name
+  local current_dir=${PWD##*/}
+  if [[ $PWD == $HOME ]]; then
+    current_dir="~"
+  fi
+  change_zellij_tab_title "$current_dir"
+}
+
+if [[ -n $ZELLIJ ]]; then
+  autoload -Uz add-zsh-hook
+  add-zsh-hook preexec zellij_preexec
+  add-zsh-hook precmd zellij_precmd
+  # Initial title
+  zellij_precmd
+fi
+
+alias ntmux='zellij'
