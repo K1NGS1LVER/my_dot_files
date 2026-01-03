@@ -37,4 +37,17 @@ alias gp='git push'
 # Todo Tool (Go)
 alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimiter=$'\t' --with-nth=2 --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs todo-go close"
 \n# The Fuck\neval $(thefuck --alias)
-alias ntmux='zellij'
+# ntmux: Default to session 'dan', occasionally random
+ntmux() {
+  if [[ $# -gt 0 ]]; then
+    zellij "$@"
+    return
+  fi
+
+  if [[ $((RANDOM % 10)) -eq 0 ]]; then
+    echo "🎲 Lucky roll! Generating random name..."
+    zellij
+  else
+    zellij attach -c "dan"
+  fi
+}

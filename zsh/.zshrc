@@ -395,4 +395,21 @@ if [[ -n $ZELLIJ ]]; then
   zellij_precmd
 fi
 
-alias ntmux='zellij'
+# ntmux: Default to session 'dan', occasionally random
+ntmux() {
+  if [[ $# -gt 0 ]]; then
+    # If arguments provided (e.g., ntmux ls), just run them
+    zellij "$@"
+    return
+  fi
+
+  # 1 in 10 chance to get a random funny name
+  if [[ $((RANDOM % 10)) -eq 0 ]]; then
+    echo "🎲 Lucky roll! Generating random name..."
+    zellij
+  else
+    # 9 in 10 chance to use default 'dan'
+    # 'attach -c' creates the session if it doesn't exist
+    zellij attach -c "dan"
+  end
+}

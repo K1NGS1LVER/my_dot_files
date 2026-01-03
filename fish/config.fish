@@ -41,4 +41,17 @@ if status is-interactive
     fish_add_path /opt/homebrew/bin
 end
 \n# The Fuck\nthefuck --alias | source
-alias ntmux='zellij'
+function ntmux
+    if count $argv > /dev/null
+        zellij $argv
+    else
+        # Generate random number 1-10
+        set -l roll (random 1 10)
+        if test $roll -eq 1
+            echo "🎲 Lucky roll! Generating random name..."
+            zellij
+        else
+            zellij attach -c "dan"
+        end
+    end
+end
