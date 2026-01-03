@@ -335,5 +335,8 @@ alias watch='open -a IINA'
 alias book='open -a Books'
 alias upscale='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models'
 
+# AI
+alias ai='ollama run deepseek-coder:6.7b'
+
 # Todoist Interactive
-alias todo="todoist --header list --filter 'today | inbox | recurring' | fzf --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs -r todoist close"
+alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimiter='\t' --with-nth=2 --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs todo-go close"
