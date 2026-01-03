@@ -411,5 +411,5 @@ ntmux() {
     # 9 in 10 chance to use default 'dan'
     # 'attach -c' creates the session if it doesn't exist
     zellij attach -c "dan"
-  end
+  fi
 }
