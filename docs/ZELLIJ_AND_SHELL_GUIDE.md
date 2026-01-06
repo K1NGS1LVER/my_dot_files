@@ -57,6 +57,14 @@ Replaced `vim-tmux-navigator` with a smart hybrid config.
 *   If in **Zellij**: Detects environment and sends `zellij action move-focus`.
 *   **Result:** `Ctrl + h/j/k/l` moves seamlessly across everything.
 
+### **Markdown Power Tools**
+*   **Auto-Bulleting:** Restored via `bullets.vim`. Pressing `Enter` in a list automatically creates the next bullet/number.
+*   **Checkboxes:**
+    *   **`<leader>x`**: Toggle checkbox (Bullets.vim default).
+    *   **`<leader>ck`**: Toggle checkbox (Custom mapping).
+*   **Render:** `render-markdown.nvim` hides syntax like `**bold**` for a cleaner look.
+*   **Obsidian:** Integrated for note-linking (`<leader>fo` to find notes).
+
 ---
 
 ## 3. The Shells (Unified Experience)
