@@ -6,10 +6,11 @@ This document details the configuration for the "Power User" setup involving Zel
 
 We have replaced Tmux with **Zellij**, configured to mimic Tmux's best features while adding modern UI and speed.
 
-### **Key Features**
-*   **Status Bar:** Custom `zjstatus` plugin providing a Tmux-like bar with Catppuccin Macchiato colors.
-*   **Navigation:** Vim-style navigation (`Ctrl + h/j/k/l`) works seamlessly between Zellij panes and Neovim windows.
+### **UI & Aesthetics**
+*   **Status Bar:** Custom `zjstatus` plugin providing a **clean, minimal** aesthetic.
+*   **Theme:** Catppuccin Macchiato with a custom **Active Purple (`#6B5C8F`)** highlight.
 *   **Auto-Naming:** Tabs automatically rename to the running command (e.g., `nvim`, `git`) and revert to the directory name when done.
+*   **Smart Launch:** `ntmux` launches a session named "dan" 90% of the time, and a random funny name 10% of the time.
 
 ### **Keybindings (Tmux-Style Leader: `Ctrl + a`)**
 
@@ -17,6 +18,7 @@ We have replaced Tmux with **Zellij**, configured to mimic Tmux's best features 
 | :--- | :--- | :--- |
 | **New Tab** | `Ctrl + a` then `c` | `Ctrl + t` then `n` |
 | **Rename Tab** | `Ctrl + a` then `,` | `Ctrl + t` then `r` |
+| **Jump to Tab 1-9** | `Ctrl + a` then `1..9` | `Alt + 1..9` (if terminal configured) |
 | **Next Tab** | `Shift + Right` | `Alt + n` |
 | **Prev Tab** | `Shift + Left` | `Alt + p` |
 | **Detach** | `Ctrl + a` then `d` | `Ctrl + o` then `d` |
@@ -24,8 +26,12 @@ We have replaced Tmux with **Zellij**, configured to mimic Tmux's best features 
 | **Close Tab** | `Ctrl + w` | `Ctrl + t` then `x` |
 | **Move Focus** | `Ctrl + h/j/k/l` | (Same) |
 
+**Important Conflict Fixes:**
+*   **`Ctrl + s`**: Unbound in Zellij so it passes to Neovim (Submit AI Prompt).
+*   **`Ctrl + n`**: Unbound in Zellij so it passes to `nchat` (Next Chat).
+
 ### **Aliases**
-*   **`ntmux`**: Launches Zellij (New Tmux).
+*   **`ntmux`**: Launches Zellij (Smart Session Manager).
 *   **`z`**: Launches `zoxide` (Smart CD).
 
 ---
@@ -36,11 +42,14 @@ Your Neovim setup is now an AI-powered IDE.
 
 ### **AI Assistant (`avante.nvim`)**
 Acts like "Cursor" or "Copilot" but runs **locally** on your machine using Ollama.
-*   **Model:** `deepseek-coder:6.7b`
+*   **Models:**
+    *   **Primary:** `llama3` (8B) - Smart, General Purpose.
+    *   **Secondary:** `deepseek-coder:1.3b` - Fast, Code Specific.
 *   **Usage:**
     *   **Ask AI:** `<leader>aa` (Ask about code).
     *   **Edit Code:** `<leader>ae` (Highlight code -> Ask AI to refactor).
-    *   **Refresh:** `<leader>ar`.
+    *   **Toggle Model:** `<leader>am` (Switch between Llama3 and DeepSeek).
+    *   **Submit:** `Ctrl + s` (in Chat window).
 
 ### **Multiplexer Integration**
 Replaced `vim-tmux-navigator` with a smart hybrid config.
@@ -62,9 +71,11 @@ You can now use **Zsh**, **Bash**, or **Fish** interchangeably. They share histo
 *   **Todo CLI:** Custom Go binary (`todo-go`).
 
 ### **Zsh Exclusives**
-*   **fzf-tab:** "God-mode" tab completion.
-    *   Tab-completing `cd`? You see a preview of the folder contents.
-    *   Tab-completing `cat`? You see the file contents.
+*   **fzf-tab:** "God-mode" tab completion with file previews.
+
+### **Yazi (File Manager)**
+*   **Ebooks:** `.epub` and `.pdf` files automatically open in **Apple Books**.
+*   **Fallback:** Unknown files open in the system default app.
 
 ### **The "Todo" Workflow**
 A custom tool written in **Go** (`~/dotfiles/scripts/todo.go`) interacts with Todoist API.
