@@ -15,6 +15,9 @@ local servers = {
   "rust_analyzer",-- Rust
   "gopls",        -- Go
   "lua_ls",       -- Lua
+  "kotlin_language_server", -- Kotlin
+  "jdtls",        -- Java
+  "lemminx",      -- XML
 }
 
 -- Use the existing NvChad or global enable function

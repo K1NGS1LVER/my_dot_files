@@ -77,3 +77,15 @@ vim.api.nvim_create_user_command("Openpdf", function(opts)
   end
   vim.fn.jobstart({ "open", "-a", "/System/Applications/Preview.app", filepath }, { detach = true })
 end, { nargs = "?", complete = "file" })
+
+-- --- GX FIX (Smart URL Opener) ---
+-- Overrides vim.ui.open to prepend https:// if missing
+local original_open = vim.ui.open
+vim.ui.open = function(path)
+  -- If path has no protocol but looks like a domain (has dot, starts with alphanum)
+  -- Regex: Not protocol, starts with word/dash/dot, has a dot followed by letters, optional rest
+  if not path:match("^%a+://") and path:match("^[%w%-%.]+%.[a-z]+") then
+    path = "https://" .. path
+  end
+  return original_open(path)
+end

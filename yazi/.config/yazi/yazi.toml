@@ -1,17 +1,25 @@
 # Yazi Configuration (User Override)
 
 [mgr]
-show_hidden = true
+show_hidden = false
 show_symlink = true
-
-[opener]
-book = [
-    { run = 'open -a Books "$@"', orphan = true, desc = "Apple Books" }
-]
 
 [open]
 prepend_rules = [
-    { name = "*.epub", use = "book" }
+    { name = "*.epub", use = "book" },
+    { name = "*.pdf", use = "book" }
+]
+append_rules = [
+    { name = "*", use = "system" }
+]
+
+[opener]
+book = [
+    { run = 'open -a Books "$@"', orphan = true, desc = "Apple Books" },
+    { run = 'open -b com.apple.iBooksX "$@"', orphan = true, desc = "Apple Books (Bundle ID)" }
+]
+system = [
+    { run = 'open "$@"', orphan = true, desc = "System Default" }
 ]
 
 [status]

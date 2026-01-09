@@ -29,6 +29,24 @@ return {
   },
 
   {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "kotlin-language-server",
+        "jdtls",
+        "lemminx", -- XML
+        "pyright",
+        "gopls",
+        "rust-analyzer",
+        "typescript-language-server",
+        "lua-language-server",
+        "html-lsp",
+        "css-lsp",
+      },
+    },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
@@ -51,6 +69,9 @@ return {
         "dockerfile",
         "git_config",
         "gitignore",
+        "kotlin",
+        "java",
+        "xml",
       },
       highlight = { enable = true },
       indent = { enable = true },
@@ -290,7 +311,7 @@ return {
     },
   },
 
-  -- Tmux Navigation
+  -- Multiplexer Navigation (Tmux & Zellij)
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -307,6 +328,15 @@ return {
       { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
       { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
     },
+    config = function()
+        -- If in Zellij, override the tmux navigator commands to send Zellij actions
+        if os.getenv("ZELLIJ") then
+            vim.keymap.set('n', '<C-h>', function() vim.fn.system("zellij action move-focus left") end)
+            vim.keymap.set('n', '<C-j>', function() vim.fn.system("zellij action move-focus down") end)
+            vim.keymap.set('n', '<C-k>', function() vim.fn.system("zellij action move-focus up") end)
+            vim.keymap.set('n', '<C-l>', function() vim.fn.system("zellij action move-focus right") end)
+        end
+    end,
   },
 
   -- Popular Themes
@@ -366,7 +396,9 @@ return {
     "dkarter/bullets.vim",
     ft = { "markdown", "text", "gitcommit", "scratch" },
     init = function()
-      vim.g.bullets_set_mappings = 0 -- Disable default mappings
+      -- Keep auto-bulleting (Enter key) but disable default leader mappings
+      -- so it doesn't conflict with your <leader>ck or other keys.
+      vim.g.bullets_mapping_leader = ''
     end,
   },
   {
@@ -511,6 +543,13 @@ return {
       view = {
         side = "right",
       },
+      git = {
+        enable = true,
+        ignore = false, -- Show files even if they are gitignored
+      },
+      filters = {
+        dotfiles = false, -- Show hidden files (starting with .)
+      },
     },
     config = function(_, opts)
       opts.view = opts.view or {}
@@ -521,5 +560,61 @@ return {
       -- This tells the tabline to expect the tree on the right
       require("base46").load_all_highlights()
     end,
+  },
+
+  -- AI - Avante.nvim (Like Cursor for Neovim)
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
+    version = false,
+    opts = {
+      provider = "ollama",
+      auto_suggestions_provider = "ollama", 
+      
+      -- Force keybindings
+      mappings = {
+        submit = {
+            normal = "<C-s>",
+            insert = "<C-s>",
+        },
+      },
+      
+      providers = {
+        ollama = {
+          endpoint = "http://127.0.0.1:11434",
+          model = "llama3",
+          timeout = 30000,
+          temperature = 0,
+          max_tokens = 4096,
+        },
+      },
+    },
+    build = "make",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "zbirenbaum/copilot.lua",
+      {
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = { insert_mode = true },
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = { file_types = { "markdown", "Avante" } },
+        ft = { "markdown", "Avante" },
+      },
+    },
   },
 }

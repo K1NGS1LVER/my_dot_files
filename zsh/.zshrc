@@ -78,8 +78,12 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# --- THEFUCK ---
-eval $(thefuck --alias)
+# --- THEFUCK (Lazy Load) ---
+fuck() {
+    unfunction fuck
+    eval $(thefuck --alias)
+    fuck "$@"
+}
 
 # --- FZF-TAB CONFIGURATION ---
 # disable sort when completing `git checkout`
@@ -117,7 +121,26 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
+# --- KOTLIN ALIASES ---
+alias k='kotlin'        # REPL
+alias kc='kotlinc'      # Compiler
+
+# Compile, Run, and Cleanup (Like 'go run')
+krun() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: krun <file.kt>"
+        return 1
+    fi
+    local file="$1"
+    local name="${file%.*}"
+    # Compile to temporary jar
+    kotlinc "$file" -include-runtime -d "${name}.temp.jar" && \
+    java -jar "${name}.temp.jar" && \
+    rm "${name}.temp.jar"
+}
+
 # --- ALIASES ---
+alias reload='source ~/.zshrc && echo "Config reloaded! ♻️"'
 unalias read 2>/dev/null # Fix for previous bad alias causing conflicts
 
 # NvChad / Terminal Development Aliases
@@ -131,63 +154,42 @@ alias nv='nvim'
 alias nvconfig='nvim ~/.config/nvim/'
 alias nvguide='nvim ~/.config/nvim/SETUP_GUIDE.md'
 alias nvcheat='nvim ~/.config/nvim/CHEATSHEET.md'
+alias home='cd ~'
+alias c='clear'
+
+# alias for echo as meow for cute shiii
+
+alias meow=echo
 
 # Better ls with colors (using eza)
 alias ls='eza --icons'
 alias ll='eza -lah --icons --git'
 alias la='eza -A --icons'
 
+# --- CACHED INITS (Optimized) ---
+# Cache init scripts to avoid spawning processes on every startup
+_cache_init() {
+  local cmd_name="$1"
+  local cache_file="$HOME/.cache/zsh/${cmd_name}_init.zsh"
+  mkdir -p "$HOME/.cache/zsh"
+  
+  if [[ ! -f "$cache_file" ]]; then
+    "$@" > "$cache_file"
+  fi
+  source "$cache_file"
+}
+
 # Initialize zoxide (smarter cd)
-eval "$(zoxide init zsh)"
-eval "$(zoxide init zsh --cmd cd)"
-
-# TypeScript Runner (Fixes NodeNext/ModuleResolution errors)
-alias tsr='ts-node -O "{\"module\":\"commonjs\"}"'
-
-# Ebook Reader
-alias book='open -a Books'
-
-# Quick directory navigation
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias home='cd ~'
-alias c='clear'
-
-# Git shortcuts (complement to lazygit)
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline --graph --decorate'
-
-# alias for fastfetch
-alias fetch='fastfetch'
-
-# --- KEY BINDINGS (Shortcuts) ---
-# This fixes keys to work like standard text editors
-
-# Use Emacs keybindings by default (Ctrl+A start, Ctrl+E end)
-bindkey -e 
-
-# Make keys work for MacOS/Terminals that send specific codes
-bindkey "^[[1;3C" forward-word      # Option+Right Arrow (Move forward a word)
-bindkey "^[[1;3D" backward-word     # Option+Left Arrow (Move back a word)
-bindkey "^[[1;5C" forward-word      # Ctrl+Right Arrow
-bindkey "^[[1;5D" backward-word     # Ctrl+Left Arrow
-bindkey "^[[H" beginning-of-line    # Home Key
-bindkey "^[[F" end-of-line          # End Key
-bindkey "^A" beginning-of-line      # Ctrl+A
-bindkey "^E" end-of-line            # Ctrl+E
-
-# --- FZF (Fuzzy Search) ---
-# Setup fzf key bindings and fuzzy completion
-# source <(fzf --zsh) # Commented out to prevent conflict with Atuin Ctrl+R
+_cache_init zoxide init zsh --cmd cd
 
 # --- ATUIN (Advanced History) ---
-# Start the Atuin shell integration
-# This should be loaded at the end of your shell config.
 [[ -s /opt/homebrew/opt/atuin/bin/atuin.sh ]] && source /opt/homebrew/opt/atuin/bin/atuin.sh
+
+# --- ZCOMPILE (Auto-compile config for speed) ---
+# Compiles .zshrc to .zshrc.zwc if it has changed
+if [[ ~/.zshrc -nt ~/.zshrc.zwc ]]; then
+  zcompile ~/.zshrc
+fi
 
 # --- BAT (Better Cat) ---
 alias cat='bat'

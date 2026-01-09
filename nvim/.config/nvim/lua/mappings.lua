@@ -14,7 +14,7 @@ end, { desc = "Smart ; key" })
 map("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 
 -- Save and quit
-map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+map({ "n", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
 map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
 map("n", "<leader>qq", "<cmd>q<cr>", { desc = "Quit" })
 map("n", "<leader>Q", "<cmd>qa!<cr>", { desc = "Quit all without saving" })
@@ -107,3 +107,32 @@ end, { desc = "Toggle Horizontal Terminal" })
 map({ "n", "t" }, "<leader>tv", function()
   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
 end, { desc = "Toggle Vertical Terminal" })
+
+-- AI Model Switcher (Llama3 <-> DeepSeek)
+map("n", "<leader>am", function()
+  local avante = require("avante.config")
+  -- Define the two models
+  local model_a = "llama3"
+  local model_b = "deepseek-coder:1.3b"
+  
+  -- Check current model (assuming start state is model_a)
+  if vim.g.avante_current_model == model_b then
+    vim.g.avante_current_model = model_a
+  else
+    vim.g.avante_current_model = model_b
+  end
+  
+  -- Apply the change
+  -- We access the raw config table and update the providers.ollama.model field
+  -- Avante usually reads this on each request, so updating the global config table works
+  local options = avante.get()
+  options.providers.ollama.model = vim.g.avante_current_model
+  
+  -- Notify user
+  print("Switched AI Model to: " .. vim.g.avante_current_model)
+end, { desc = "Toggle AI Model (Llama3 / DeepSeek)" })
+
+
+-- Close buffer with <leader>x
+map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
+

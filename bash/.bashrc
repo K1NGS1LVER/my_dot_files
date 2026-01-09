@@ -16,7 +16,124 @@ eval "$(zoxide init bash)"
 # Atuin (History)
 [[ -f /opt/homebrew/bin/atuin ]] && eval "$(atuin init bash)"
 
+# --- ENV VARS ---
+export JAVA_HOME=$(/usr/libexec/java_home)
+export EDITOR="nvim"
+
 # --- ALIASES ---
+alias reload='source ~/.bashrc && echo "Config reloaded! ♻️"'
+alias meow='echo'
+
+# NvChad / Terminal Development Aliases
+alias og='/usr/bin/vim'
+alias lg='lazygit'
+alias nv='nvim'
+alias nvconfig='nvim ~/.config/nvim/'
+alias nvguide='nvim ~/.config/nvim/SETUP_GUIDE.md'
+alias nvcheat='nvim ~/.config/nvim/CHEATSHEET.md'
+
+# --- FUNCTIONS ---
+
+# Brave Browser Function (Handles URLs smart)
+brave() {
+    if [[ -z "$1" ]]; then
+        open -a "Brave Browser"
+        return
+    fi
+
+    local sites=(
+        "youtube|yt;https://www.youtube.com;/results?search_query="
+        "github|gh;https://github.com;/search?q="
+        "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords="
+        "christ|cu;https://christuniversity.in;"
+        "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword="
+        "monkeytype|mt;https://monkeytype.com;"
+        "keybr|kb;https://www.keybr.com;"
+        "greasyfork|gf;https://greasyfork.org;/scripts/search?q="
+        "openjs;https://openuserjs.org;/?q="
+        "classroom|cl;https://classroom.google.com;"
+        "reddit|rd;https://www.reddit.com;/search/?q="
+        "x|twitter;https://x.com;/search?q="
+        "google|g;https://www.google.com;/search?q="
+        "net;http://192.168.100.100:8090/;"
+    )
+
+    local keyword="$1"
+    shift
+
+    for site in "${sites[@]}"; do
+        local aliases="${site%%;*}"
+        local rest="${site#*;}"
+        local base="${rest%%;*}"
+        local search_path="${rest#*;}"
+
+        if [[ "|${aliases}|" == *"|${keyword}|"* ]]; then
+            if [[ -z "$@" ]]; then
+                open -a "Brave Browser" "$base"
+            else
+                local query=$(printf "%s+" "$@")
+                query=${query%+}
+                if [[ -n "$search_path" && "$search_path" != "$base" ]]; then
+                    if [[ "$search_path" == /* ]]; then
+                        open -a "Brave Browser" "${base%/}${search_path}${query}"
+                    else
+                        open -a "Brave Browser" "${search_path}${query}"
+                    fi
+                else
+                    open -a "Brave Browser" "${base}${query}"
+                fi
+            fi
+            return
+        fi
+    done
+
+    if [[ "$keyword" != http* ]]; then
+        open -a "Brave Browser" "https://$keyword"
+    else
+        open -a "Brave Browser" "$keyword"
+    fi
+}
+
+# yazi wrapper
+y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if [[ -f "$tmp" ]]; then
+        local cwd
+        cwd=$(cat "$tmp")
+        if [[ -n "$cwd" ]] && [[ "$cwd" != "$PWD" ]] && [[ -d "$cwd" ]]; then
+            builtin cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+    fi
+}
+
+# Open PDF in Sioyek
+pdf() {
+    /Applications/sioyek.app/Contents/MacOS/sioyek --new-window "$@" &> /dev/null &
+}
+
+# Capture output
+cap() {
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local logfile="capture_${timestamp}.txt"
+    echo "Saving output to $logfile ..."
+    "$@" | tee "$logfile" 2>&1
+}
+
+# Record session
+alias rec='script recording_$(date +%Y%m%d_%H%M%S).txt'
+
+# --- Zellij Auto-Rename (Simplified for Bash) ---
+if [[ -n $ZELLIJ ]]; then
+    function zellij_title() {
+        local title="$1"
+        command nohup zellij action rename-tab "$title" >/dev/null 2>&1
+    }
+    # Bash doesn't have preexec easily, so we just set it on prompt
+    PROMPT_COMMAND='zellij_title "${PWD##*/}"'
+fi
+
 alias ls='eza --icons'
 alias ll='eza -lah --icons --git'
 alias la='eza -A --icons'
@@ -28,6 +145,22 @@ alias vim='nvim'
 alias vi='nvim'
 alias v='nvim'
 
+# --- KOTLIN ---
+alias k='kotlin'
+alias kc='kotlinc'
+
+krun() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: krun <file.kt>"
+        return 1
+    fi
+    local file="$1"
+    local name="${file%.*}"
+    kotlinc "$file" -include-runtime -d "${name}.temp.jar" && \
+    java -jar "${name}.temp.jar" && \
+    rm "${name}.temp.jar"
+}
+
 # Git
 alias gs='git status'
 alias ga='git add'
@@ -36,7 +169,13 @@ alias gp='git push'
 
 # Todo Tool (Go)
 alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimiter=$'\t' --with-nth=2 --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs todo-go close"
-\n# The Fuck\neval $(thefuck --alias)
+
+# The Fuck (Lazy Load)
+fuck() {
+    unset -f fuck
+    eval $(thefuck --alias)
+    fuck "$@"
+}
 # ntmux: Default to session 'dan', occasionally random
 ntmux() {
   if [[ $# -gt 0 ]]; then
