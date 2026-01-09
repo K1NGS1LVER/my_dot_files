@@ -190,3 +190,31 @@ ntmux() {
     zellij attach -c "dan"
   fi
 }
+
+# --- FASTFETCH WRAPPER ---
+fetch() {
+    case "$1" in
+        "go")
+            fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
+            ;;
+        "arch")
+            fastfetch --logo arch
+            ;;
+        "random")
+            local logos=("arch" "android" "apple" "windows" "linux" "ubuntu" "fedora" "debian")
+            local random_logo=${logos[$RANDOM % ${#logos[@]}]}
+            echo "Displaying logo: $random_logo"
+            fastfetch --logo $random_logo
+            ;;
+        "")
+            fastfetch
+            ;;
+        *)
+            fastfetch --logo "$1"
+            ;;
+    esac
+}
+
+# --- BASH COMPLETION ---
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+

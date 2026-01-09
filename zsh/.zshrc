@@ -73,6 +73,7 @@ plugins=(
     zsh-autosuggestions  
     zsh-syntax-highlighting
     fzf-tab
+    zsh-completions
     # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
@@ -414,4 +415,31 @@ ntmux() {
     # 'attach -c' creates the session if it doesn't exist
     zellij attach -c "dan"
   fi
+}
+
+# --- FASTFETCH WRAPPER ---
+fetch() {
+    case "$1" in
+        "go")
+            fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
+            ;;
+        "arch")
+            fastfetch --logo arch
+            ;;
+        "random")
+            local logos=("arch" "android" "apple" "windows" "linux" "ubuntu" "fedora" "debian")
+            # Zsh arrays are 1-based, so add +1
+            local random_index=$(( ($RANDOM % ${#logos[@]}) + 1 ))
+            local random_logo=${logos[$random_index]}
+            echo "Displaying logo: $random_logo"
+            fastfetch --logo "$random_logo"
+            ;;
+        "")
+            fastfetch
+            ;;
+        *)
+            # Try to pass it directly to fastfetch
+            fastfetch --logo "$1"
+            ;;
+    esac
 }

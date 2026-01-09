@@ -180,3 +180,25 @@ function ntmux
         end
     end
 end
+
+# --- FASTFETCH WRAPPER ---
+function fetch
+    if test (count $argv) -eq 0
+        fastfetch
+        return
+    end
+
+    switch $argv[1]
+        case "go"
+            fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
+        case "arch"
+            fastfetch --logo arch
+        case "random"
+            set -l logos arch android apple windows linux ubuntu fedora debian
+            set -l random_logo (random choice $logos)
+            echo "Displaying logo: $random_logo"
+            fastfetch --logo $random_logo
+        case "*"
+            fastfetch --logo $argv[1]
+    end
+end
