@@ -74,6 +74,7 @@ plugins=(
     zsh-syntax-highlighting
     fzf-tab
     zsh-completions
+    pnpm
     # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
