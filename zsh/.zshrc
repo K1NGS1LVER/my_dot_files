@@ -74,7 +74,6 @@ plugins=(
     zsh-syntax-highlighting
     fzf-tab
     zsh-completions
-    pnpm
     # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
@@ -444,3 +443,11 @@ fetch() {
             ;;
     esac
 }
+
+# pnpm
+export PNPM_HOME="/Users/dan/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
