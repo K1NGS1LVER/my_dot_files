@@ -114,8 +114,11 @@ if status is-interactive
                     set -l query (string join "+" $query_args)
                     
                     if test -n "$search_path" -a "$search_path" != "$base"
-                        # Handle relative paths if needed, basically just concat
-                        open -a "Brave Browser" "$search_path$query"
+                        if string match -q "/*" "$search_path"
+                             open -a "Brave Browser" "$base$search_path$query"
+                        else
+                             open -a "Brave Browser" "$search_path$query"
+                        end
                     else
                         open -a "Brave Browser" "$base$query"
                     end

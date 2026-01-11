@@ -1,7 +1,7 @@
-require("nvchad.configs.lspconfig").defaults()
+local nvlsp = require "nvchad.configs.lspconfig"
 
--- List of language servers to enable
--- Install them using :MasonInstall <server_name>
+nvlsp.defaults()
+
 local servers = {
   "html",
   "cssls",
@@ -20,19 +20,49 @@ local servers = {
   "lemminx",      -- XML
 }
 
--- Use the existing NvChad or global enable function
-if vim.lsp.enable then
-  vim.lsp.enable(servers)
-else
-  -- Fallback if vim.lsp.enable isn't found (though it should be if it was there before)
-  -- This handles the case where NvChad might inject it
-  for _, lsp in ipairs(servers) do
-    local lspconf = require "lspconfig"
-    lspconf[lsp].setup {
-      on_attach = require("nvchad.configs.lspconfig").on_attach,
-      on_init = require("nvchad.configs.lspconfig").on_init,
-      capabilities = require("nvchad.configs.lspconfig").capabilities,
-    }
+-- Helper to find Mason binaries
+local function get_mason_bin(server_name)
+    return vim.fn.stdpath("data") .. "/mason/bin/" .. server_name
+end
+
+-- Ensure lspconfig configs are loaded for Nvim 0.11 defaults
+-- This prevents "module 'lspconfig' not found" errors if we rely on it
+pcall(require, "lspconfig.configs")
+
+for _, lsp in ipairs(servers) do
+  local config = {
+    on_attach = nvlsp.on_attach,
+    on_init = nvlsp.on_init,
+    capabilities = nvlsp.capabilities,
+  }
+
+  -- Special handling for ts_ls (TypeScript)
+  if lsp == "ts_ls" then
+      -- Use root_markers for correct per-project detection (Nvim 0.11+)
+      config.root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' }
+      
+      -- Ensure we use the mason binary if available
+      local binary = get_mason_bin("typescript-language-server")
+      if vim.fn.executable(binary) == 1 then
+          config.cmd = { binary, "--stdio" }
+      end
+  end
+
+  -- Special handling for Kotlin
+  if lsp == "kotlin_language_server" then
+      local binary = get_mason_bin("kotlin-language-server")
+      if vim.fn.executable(binary) == 1 then
+          config.cmd = { binary }
+      end
+  end
+
+  -- Native Neovim 0.11+ Setup
+  if vim.lsp.enable then
+      vim.lsp.config[lsp] = config
+      vim.lsp.enable(lsp)
+  else
+      -- Fallback for older versions (unlikely given the error, but safe)
+      require("lspconfig")[lsp].setup(config)
   end
 end
 
