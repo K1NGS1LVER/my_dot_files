@@ -161,6 +161,8 @@ alias c='clear'
 # alias for echo as meow for cute shiii
 
 alias meow=echo
+alias bark=ls
+
 
 # Better ls with colors (using eza)
 alias ls='eza --icons'
