@@ -30,6 +30,13 @@ opt.undolevels = 10000
 -- Better performance
 o.lazyredraw = false
 
+-- Code Folding (Icons & Persistence)
+opt.foldenable = true
+opt.fillchars = { foldopen = "", foldclose = "", fold = " ", foldsep = " " }
+
+-- Session Management (Persist folds)
+opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- Font configuration (for GUI only)
 opt.guifont = "JetBrainsMono Nerd Font:h12"
 

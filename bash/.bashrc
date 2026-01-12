@@ -218,3 +218,9 @@ fetch() {
 # --- BASH COMPLETION ---
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
+
+# Neovim Playground Alias
+alias nv-play="NVIM_APPNAME=nvim-playground nvim"
+
+# Neovim Kickstart Alias
+alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"

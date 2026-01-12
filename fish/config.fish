@@ -205,3 +205,9 @@ function fetch
             fastfetch --logo $argv[1]
     end
 end
+
+# Neovim Playground Alias
+alias nv-play="NVIM_APPNAME=nvim-playground nvim"
+
+# Neovim Kickstart Alias
+alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"

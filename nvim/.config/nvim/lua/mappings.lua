@@ -136,3 +136,6 @@ end, { desc = "Toggle AI Model (Llama3 / DeepSeek)" })
 -- Close buffer with <leader>x
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
 
+-- Folding
+map("n", "<leader>ff", "za", { desc = "Toggle Fold" })
+

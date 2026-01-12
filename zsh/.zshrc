@@ -453,3 +453,9 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# Neovim Playground Alias
+alias nv-play="NVIM_APPNAME=nvim-playground nvim"
+
+# Neovim Kickstart Alias
+alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"

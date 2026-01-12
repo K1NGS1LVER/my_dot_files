@@ -617,4 +617,22 @@ return {
       },
     },
   },
+
+  -- Better Folding (VSCode style)
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = "kevinhwang91/promise-async",
+    event = "BufReadPost",
+    opts = {
+      provider_selector = function()
+        return { "treesitter", "indent" }
+      end,
+    },
+    init = function()
+      vim.o.foldcolumn = "0" -- Hide fold column to prevent UI conflict
+      vim.o.foldlevel = 99 -- Using ufo provider need a large value
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+    end,
+  },
 }
