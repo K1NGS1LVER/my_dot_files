@@ -48,34 +48,79 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "vim",
-        "lua",
-        "vimdoc",
-        "html",
-        "css",
-        "javascript",
-        "typescript",
-        "tsx",
-        "json",
-        "yaml",
-        "markdown",
-        "markdown_inline",
-        "bash",
-        "python",
-        "rust",
-        "go",
-        "dockerfile",
-        "git_config",
-        "gitignore",
-        "kotlin",
-        "java",
-        "xml",
-      },
-      highlight = { enable = true },
-      indent = { enable = true },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "vim",
+          "lua",
+          "vimdoc",
+          "html",
+          "css",
+          "javascript",
+          "typescript",
+          "tsx",
+          "json",
+          "yaml",
+          "markdown",
+          "markdown_inline",
+          "bash",
+          "python",
+          "rust",
+          "go",
+          "dockerfile",
+          "git_config",
+          "gitignore",
+          "kotlin",
+          "java",
+          "xml",
+        },
+        highlight = { enable = true },
+        indent = { enable = true },
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+              ["ai"] = "@conditional.outer", -- Around If/Switch
+              ["ii"] = "@conditional.inner", -- Inside If/Switch
+              ["al"] = "@loop.outer",        -- Around Loop
+              ["il"] = "@loop.inner",        -- Inside Loop
+              ["ab"] = "@block.outer",       -- Around Block
+              ["ib"] = "@block.inner",       -- Inside Block
+              ["aa"] = "@parameter.outer",   -- Around Argument
+              ["ia"] = "@parameter.inner",   -- Inside Argument
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]m"] = "@function.outer",
+              ["]]"] = "@class.outer",
+            },
+            goto_next_end = {
+              ["]M"] = "@function.outer",
+              ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[m"] = "@function.outer",
+              ["[["] = "@class.outer",
+            },
+            goto_previous_end = {
+              ["[M"] = "@function.outer",
+              ["[]"] = "@class.outer",
+            },
+          },
+        },
+      })
+    end,
   },
 
   -- Git integration

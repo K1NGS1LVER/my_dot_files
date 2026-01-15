@@ -224,3 +224,7 @@ alias nv-play="NVIM_APPNAME=nvim-playground nvim"
 
 # Neovim Kickstart Alias
 alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
+
+# Cisco Packet Tracer
+alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
+eval "$(starship init bash)"

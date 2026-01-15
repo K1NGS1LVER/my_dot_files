@@ -1,0 +1,42 @@
+# --- Starship Config (P10K Inspired) ---
+
+# Get specific symbols
+[directory]
+style = "bold blue"
+read_only = " 󰌾"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+
+[cmd_duration]
+min_time = 500
+style = "yellow"
+
+[kubernetes]
+disabled = false
+
+[package]
+disabled = true
+
+# Character/Prompt symbol
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
+
+# Two-line prompt setup
+[line_break]
+disabled = false
+
+# Custom formatting
+format = """
+$directory\
+$git_branch\
+$git_status\
+$kubernetes\
+$cmd_duration\
+$line_break\
+$character """
