@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Directory to store persistent copies of files
+PERSIST_DIR="/tmp/nchat_persist"
+mkdir -p "$PERSIST_DIR"
+
+# input file from nchat
+INPUT_FILE="$1"
+
+if [ -z "$INPUT_FILE" ]; then
+    exit 1
+fi
+
+if [ ! -f "$INPUT_FILE" ]; then
+    exit 1
+fi
+
+# Extract filename
+FILENAME=$(basename "$INPUT_FILE")
+
+# Create a unique target path
+TIMESTAMP=$(date +%s)
+TARGET_FILE="$PERSIST_DIR/${TIMESTAMP}_$FILENAME"
+
+# Copy the file
+cp "$INPUT_FILE" "$TARGET_FILE"
+
+# Open the COPIED file
+open "$TARGET_FILE"
