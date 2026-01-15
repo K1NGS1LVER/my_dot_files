@@ -359,7 +359,10 @@ export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 alias play='mpv'
 alias watch='open -a IINA'
 alias book='open -a Books'
-alias upscale='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models'
+alias upscale='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models -n realesrgan-x4plus'
+alias upscale-anime='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models -n realesrgan-x4plus-anime'
+alias upscale-image='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models -n realesrgan-x4plus'
+alias upscale-safe='/Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/realesrgan-ncnn-vulkan -m /Users/dan/projects/pythonVishal/Real-ESRGAN-0.3.0/models -n realesrgan-x4plus -x'
 
 # AI
 alias ai='ollama run deepseek-coder:6.7b'
@@ -459,3 +462,6 @@ alias nv-play="NVIM_APPNAME=nvim-playground nvim"
 
 # Neovim Kickstart Alias
 alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
+
+# Cisco Packet Tracer
+alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
