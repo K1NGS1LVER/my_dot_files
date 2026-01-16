@@ -1,34 +1,18 @@
 # --- Ghostty Configuration ---
 
 # --- Fonts ---
-font-family = "JetBrainsMono Nerd Font"
+font-family = "GeistMono Nerd Font"
 font-size = 22
-font-feature = calt
-font-feature = liga
 
 # --- Theme & Colors ---
 theme = catppuccin-macchiato
 background-opacity = 0.85
-background-blur-radius = 25
-
-# --- Premium Aesthetic Tweaks ---
-cursor-color = #f4dbd6
-cursor-style = block
-cursor-style-blink = true
-cursor-text = #24273a
-
-selection-background = #5b6078
-selection-foreground = #cad3f5
-
-# Performance and clarity on blurred backgrounds
-minimum-contrast = 1.1
 
 # --- Window ---
 window-padding-x = 12
 window-padding-y = 12
 window-decoration = true
-macos-titlebar-style = transparent
-macos-icon = custom-style
+macos-titlebar-style = tabs
 
 # --- Shell ---
 command = /bin/zsh
@@ -37,7 +21,4 @@ command = /bin/zsh
 macos-option-as-alt = true
 copy-on-select = true
 mouse-hide-while-typing = true
-
-# --- Transitions ---
-# Smooth theme transitions (Commented out as unsupported in current version)
-# theme-transition-duration = 0.3s
+cursor-style = bar

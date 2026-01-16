@@ -15,7 +15,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # "agnoster" is a great theme that shows git status and path clearly.
 # Note: Requires a Powerline font installed in your terminal.
 # If icons look weird, switch this back to "robbyrussell".
-# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # this is to stop the prompts pop up when the terminal starts
 # POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
@@ -220,9 +220,7 @@ bindkey "^[t" transpose-words # Swap current and previous words (Alt+T or Esc+T)
 bindkey "^T" transpose-chars # Swap current and previous characters (Ctrl+T)
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-eval "$(starship init zsh)"
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -307,7 +305,7 @@ brave() {
     fi
 }
 
-# yazi wrapper fucntion 
+# yazi wrapper function
 export EDITOR="nvim"
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
@@ -467,3 +465,6 @@ alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
 
 # Cisco Packet Tracer
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
+
+# To customize prompt, run `p10k configure` or edit ~/dotfiles/zsh/.p10k.zsh.
+[[ ! -f ~/dotfiles/zsh/.p10k.zsh ]] || source ~/dotfiles/zsh/.p10k.zsh

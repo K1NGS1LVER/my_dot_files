@@ -89,3 +89,4 @@ vim.ui.open = function(path)
   end
   return original_open(path)
 end
+require "neovide"
