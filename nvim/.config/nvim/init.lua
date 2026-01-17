@@ -1,3 +1,4 @@
+vim.loader.enable()
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
 
@@ -21,7 +22,6 @@ require("lazy").setup({
     branch = "v2.5",
     import = "nvchad.plugins",
   },
-
   { import = "plugins" },
 }, lazy_config)
 

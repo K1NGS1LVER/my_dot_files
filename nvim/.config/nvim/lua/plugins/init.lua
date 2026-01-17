@@ -397,7 +397,7 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
-      transparent_background = true,
+      transparent_background = not vim.g.neovide,
     },
   },
   {
@@ -678,6 +678,23 @@ return {
       vim.o.foldlevel = 99 -- Using ufo provider need a large value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
+    end,
+  },
+
+  -- Smooth Scrolling
+  {
+    "karb94/neoscroll.nvim",
+    event = "WinScrolled",
+    config = function()
+      require("neoscroll").setup({
+        -- All standard keys
+        mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
+        hide_cursor = true,
+        stop_eof = true,
+        use_local_scrolloff = false,
+        respect_scrolloff = false,
+        cursor_scroll_step = 1,
+      })
     end,
   },
 }

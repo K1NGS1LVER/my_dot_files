@@ -43,3 +43,9 @@ opt.guifont = "JetBrainsMono Nerd Font:h12"
 -- Show whitespace characters
 opt.list = true
 opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+-- Disable unused providers
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_python3_provider = 0
