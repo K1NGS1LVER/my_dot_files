@@ -466,5 +466,4 @@ alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
 # Cisco Packet Tracer
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
 
-# To customize prompt, run `p10k configure` or edit ~/dotfiles/zsh/.p10k.zsh.
-[[ ! -f ~/dotfiles/zsh/.p10k.zsh ]] || source ~/dotfiles/zsh/.p10k.zsh
+
