@@ -200,7 +200,12 @@ alias cat='bat'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BAT_THEME="Catppuccin Macchiato"
 
-# --- TLDR ---
+# --- MODERN CLI REPLACEMENTS ---
+alias du='dust'
+alias ps='procs'
+alias sed='sd'
+
+# --- TEALDEER (Faster TLDR) ---
 # Ensure tldr uses a local cache
 alias help='tldr'
 
