@@ -472,3 +472,4 @@ alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
 
 
+alias explain="$HOME/scripts/explain_tree.py"
