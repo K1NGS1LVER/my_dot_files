@@ -599,6 +599,26 @@ return {
     config = function(_, opts)
       opts.view = opts.view or {}
       opts.view.side = "right"
+      
+      -- Custom Mappings
+      opts.on_attach = function(bufnr)
+        local api = require "nvim-tree.api"
+        
+        local function opts(desc)
+          return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+        end
+        
+        -- Default mappings
+        api.config.mappings.default_on_attach(bufnr)
+        
+        -- Custom: "Go In" (Change Root) on 'l' and 'CR' (Enter) for directories
+        vim.keymap.set('n', 'l', api.tree.change_root_to_node, opts('CD'))
+        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+        
+        -- Custom: "Go Out" (Up Directory) on 'h'
+        vim.keymap.set('n', 'h', api.tree.change_root_to_parent, opts('Up'))
+      end
+      
       require("nvim-tree").setup(opts)
       
       -- Force NvChad specific UI fix for right-side tree
