@@ -185,6 +185,9 @@ _cache_init() {
 # Initialize zoxide (smarter cd)
 _cache_init zoxide init zsh --cmd cd
 
+# Initialize Mole completion (cached)
+_cache_init mole completion zsh
+
 # --- ATUIN (Advanced History) ---
 [[ -s /opt/homebrew/opt/atuin/bin/atuin.sh ]] && source /opt/homebrew/opt/atuin/bin/atuin.sh
 
@@ -483,5 +486,55 @@ alias anim-dl='ani-cli -d'            # Download episode instead of playing
 # Update ani-cli by pulling the latest code
 anim-update() {
     (cd ~/.local/share/ani-cli && git pull && echo "✅ ani-cli updated successfully!")
+}
+
+# --- DISPLAY FILTERS ---
+alias gray='toggle-gray'
+alias sepia='shortcuts run "Sepia Mode"'
+
+# --- SYSTEM EFFICIENCY ---
+
+# 1. Update Everything (Homebrew, Zsh, Pipx, Mac Store)
+up() {
+    echo "🚀 Updating Homebrew..."
+    brew update && brew upgrade && brew cleanup
+    
+    if command -v pipx &> /dev/null; then
+        echo "🐍 Updating Pipx packages..."
+        pipx upgrade-all
+    fi
+    
+    echo "💎 Updating System Gems..."
+    gem cleanup
+
+    echo "✅ System Updated!"
+}
+
+# 2. Deep Clean (Docker, Logs, Caches)
+cleanup() {
+    echo "🧹 Cleaning Homebrew Cache..."
+    rm -rf "$(brew --cache)"
+    
+    echo "🧹 Cleaning Docker (Stopped containers, unused images)..."
+    if command -v docker &> /dev/null; then
+        docker system prune -f
+    fi
+    
+    echo "🧹 Cleaning User Cache (Logs, Temp files)..."
+    rm -rf ~/Library/Caches/Homebrew
+    rm -rf ~/.npm/_cacache
+    
+    echo "✨ Disk space reclaimed!"
+}
+
+# 3. Fuzzy Find & Edit
+# Usage: vf [search_term]
+vf() {
+    local file
+    file=$(fzf --preview 'bat --style=numbers --color=always --line-range :500 {}')
+    
+    if [[ -n $file ]]; then
+        $EDITOR "$file"
+    fi
 }
 

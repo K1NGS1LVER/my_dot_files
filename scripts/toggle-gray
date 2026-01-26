@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+from ctypes import cdll
+import sys
+
+def toggle_grayscale():
+    try:
+        lib = cdll.LoadLibrary("/System/Library/PrivateFrameworks/UniversalAccess.framework/UniversalAccess")
+        current_state = lib.UAGrayscaleIsEnabled()
+        new_state = 0 if current_state else 1
+        lib.UAGrayscaleSetEnabled(new_state)
+        print(f"Grayscale {'disabled' if current_state else 'enabled'}")
+    except Exception as e:
+        print(f"Error toggling grayscale: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    toggle_grayscale()
