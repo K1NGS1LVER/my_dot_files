@@ -71,9 +71,9 @@ HIST_STAMPS="mm/dd/yyyy"
 plugins=(
     git
     zsh-autosuggestions  
-    zsh-syntax-highlighting
     fzf-tab
     zsh-completions
+    zsh-syntax-highlighting
     # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
 )
 
@@ -378,7 +378,7 @@ alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimi
 # --- Zellij Auto-Rename Tabs ---
 function change_zellij_tab_title() {
   if [[ -n $ZELLIJ ]]; then
-    command nohup zellij action rename-tab "$1" >/dev/null 2>&1
+    command nohup zellij action rename-tab "$1" >/dev/null 2>&1 &!
   fi
 }
 
@@ -473,3 +473,15 @@ alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet T
 
 
 alias explain="$HOME/scripts/explain_tree.py"
+
+# --- ANI-CLI CONFIGURATION ---
+alias anim='ani-cli'                  # Short alias
+alias anim-c='ani-cli -c'             # Continue watching from last history
+alias anim-res='ani-cli -q 1080'      # Force 1080p quality
+alias anim-dl='ani-cli -d'            # Download episode instead of playing
+
+# Update ani-cli by pulling the latest code
+anim-update() {
+    (cd ~/.local/share/ani-cli && git pull && echo "✅ ani-cli updated successfully!")
+}
+
