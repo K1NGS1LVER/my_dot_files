@@ -42,7 +42,7 @@ HYPHEN_INSENSITIVE="true"
 # DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to disable colors in ls.
-DISABLE_LS_COLORS="true"
+# DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
@@ -56,7 +56,7 @@ DISABLE_LS_COLORS="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -94,7 +94,7 @@ zstyle ':completion:*:descriptions' format '[%d]'
 # set list-colors to enable filename colorizing
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
-zstyle ':completion:*' menu no
+# zstyle ':completion:*' menu no
 # preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 # preview file content with bat when completing other commands
@@ -507,6 +507,9 @@ up() {
     echo "💎 Updating System Gems..."
     gem cleanup
 
+    echo "📓 Updating Obsidian MOCs..."
+    (cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py)
+
     echo "✅ System Updated!"
 }
 
@@ -537,4 +540,5 @@ vf() {
         $EDITOR "$file"
     fi
 }
+
 

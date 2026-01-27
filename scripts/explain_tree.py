@@ -5,8 +5,35 @@ import ast
 from pathlib import Path
 
 # Configuration
-IGNORE_DIRS = {'.git', '__pycache__', '.pytest_cache', '.mypy_cache', '.DS_Store', 'site-packages'}
-IGNORE_FILES = {'.DS_Store', '.gitignore'}
+IGNORE_DIRS = {
+    # VCS
+    '.git', '.svn', '.hg', '.bzr',
+    # Python
+    '__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache', '.coverage', 'htmlcov', 
+    '.venv', 'venv', 'env', '.env', 'site-packages', 'dist-packages',
+    # JS / Web
+    'node_modules', 'bower_components',
+    # Build / Artifacts
+    'target', 'dist', 'build', 'out', 'bin', 'obj',
+    # IDE / Tools
+    '.idea', '.vscode', '.eclipse', '.settings', '.DS_Store', 'Thumbs.db',
+    # CI / CD / Meta
+    '.github', '.gitlab', '.circleci',
+    # Vendor / 3rd Party
+    'vendor', 'extern',
+    # Documentation (often verbose)
+    'docs', 'docs_src', 'doc'
+}
+
+IGNORE_FILES = {
+    '.DS_Store', '.gitignore', '.gitattributes', 
+    '__init__.py', # Often noise in file trees
+    '.keep', '.gitkeep'
+}
+
+# Normalize ignores to lowercase for case-insensitive matching
+IGNORE_DIRS_LOWER = {d.lower() for d in IGNORE_DIRS}
+IGNORE_FILES_LOWER = {f.lower() for f in IGNORE_FILES}
 
 # Registry of known descriptions (seeded with project-specific context)
 KNOWN_DESCRIPTIONS = {
@@ -33,11 +60,6 @@ KNOWN_DESCRIPTIONS = {
 def get_description(path: Path):
     """
     Tries to find a description for a file/folder.
-    Priority:
-    1. KNOWN_DESCRIPTIONS dictionary.
-    2. Python docstrings (for .py files).
-    3. Top-level comments (for .py, .sh files).
-    4. Generic fallback based on extension.
     """
     name = path.name
     
@@ -50,18 +72,14 @@ def get_description(path: Path):
 
     # 2 & 3. Parse file content for descriptions
     try:
-        # Limit read to first 500 bytes to save time/memory
+        # Limit read to first 500 bytes
         try:
             content = path.read_text(encoding='utf-8', errors='ignore')[:1000]
         except Exception:
             return ""
 
-        # Strategy for Python files: AST for Docstring
         if path.suffix == '.py':
             try:
-                # We need to parse more content to ensure valid AST if possible, 
-                # but partial parsing might fail. Let's try parsing the head.
-                # If that fails, fallback to simple string checking.
                 module = ast.parse(content)
                 docstring = ast.get_docstring(module)
                 if docstring:
@@ -69,18 +87,15 @@ def get_description(path: Path):
             except Exception:
                 pass
             
-            # Fallback: Check for top-level comments starting with #
             lines = content.splitlines()
             for line in lines:
                 stripped = line.strip()
                 if stripped.startswith('#') and not stripped.startswith('#!'):
                     comment = stripped.lstrip('#').strip()
-                    # Filter out encoding declarations or standard lint ignores if needed
                     if "coding:" not in comment:
                         return comment
                     break
 
-        # Strategy for Shell scripts
         if path.suffix == '.sh':
             lines = content.splitlines()
             for line in lines:
@@ -103,15 +118,23 @@ def get_description(path: Path):
 def generate_tree(dir_path: Path, prefix: str = "", counter: int = 1):
     """
     Recursive generator that yields lines for the tree structure.
-    Returns a tuple: (line_string, next_counter)
     """
-    # Get all children, sorted naturally (dirs first? or alpha? tree usually does alpha)
     try:
-        entries = sorted([p for p in dir_path.iterdir() 
-                          if p.name not in IGNORE_DIRS and p.name not in IGNORE_FILES],
-                         key=lambda x: (not x.is_dir(), x.name.lower()))
+        # Filter entries
+        entries = []
+        for p in dir_path.iterdir():
+            name_lower = p.name.lower()
+            if name_lower in IGNORE_DIRS_LOWER:
+                continue
+            if name_lower in IGNORE_FILES_LOWER:
+                continue
+            entries.append(p)
+            
+        # Sort
+        entries.sort(key=lambda x: (not x.is_dir(), x.name.lower()))
+        
     except PermissionError:
-        return
+        return counter
 
     total = len(entries)
     
@@ -123,10 +146,8 @@ def generate_tree(dir_path: Path, prefix: str = "", counter: int = 1):
         description = get_description(entry)
         desc_str = f"  # {description}" if description else ""
         
-        # Format the line: " 1 ├── name # description"
-        # We allow dynamic padding for the line number for cleaner look up to 999 lines
-        line_str = f"{counter:4} {prefix}{connector}{entry.name:<20}{desc_str}"
-        print(line_str)
+        # Print the line
+        print(f"{counter:4} {prefix}{connector}{entry.name:<20}{desc_str}")
         
         counter += 1
         
@@ -141,7 +162,7 @@ def main():
     if len(sys.argv) > 1:
         potential_path = Path(sys.argv[1])
         if potential_path.is_dir():
-            start_dir = potential_path
+            start_dir = potential_path.resolve()
 
     print(f"{start_dir.name}/")
     generate_tree(start_dir)
