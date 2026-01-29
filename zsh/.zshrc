@@ -543,3 +543,78 @@ vf() {
 
 
 export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
+\n# Firefox Browser Function (Replicated from Brave)\n# Firefox Function (Handles URLs smart)
+fox() {
+    # 1. Handle empty arguments
+    if [[ -z "$1" ]]; then
+        open -a "Firefox"
+        return
+    fi
+
+    # 2. Site definitions
+    # Format: "keyword|alias;base_url;search_path"
+    # We use ';' as a delimiter because it is not part of the standard URL protocol prefix (like 'https:')
+    local sites=(
+        "youtube|yt;https://www.youtube.com;/results?search_query="
+        "github|gh;https://github.com;/search?q="
+        "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords="
+        "christ|cu;https://christuniversity.in;"
+        "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword="
+        "monkeytype|mt;https://monkeytype.com;"
+        "keybr|kb;https://www.keybr.com;"
+        "greasyfork|gf;https://greasyfork.org;/scripts/search?q="
+        "openjs;https://openuserjs.org;/?q="
+        "classroom|cl;https://classroom.google.com;"
+        "reddit|rd;https://www.reddit.com;/search/?q="
+        "x|twitter;https://x.com;/search?q="
+        "google|g;https://www.google.com;/search?q="
+        "net;http://192.168.100.100:8090/;"
+    )
+
+    local keyword="$1"
+    shift
+
+    # 3. Iterate and match
+    for site in "${sites[@]}"; do
+        # Parse fields using ';' delimiter
+        local aliases="${site%%;*}"   # Everything before the first ';'
+        local rest="${site#*;}"       # Everything after the first ';'
+        local base="${rest%%;*}"      # Everything before the next ';'
+        local search_path="${rest#*;}" # Everything after that ';' (optional)
+
+        # Check if keyword matches any alias (surrounded by pipes)
+        if [[ "|${aliases}|" == *"|${keyword}|"* ]]; then
+            if [[ -z "$@" ]]; then
+                # No query provided -> Open Base URL
+                open -a "Firefox" "$base"
+            else
+                # Query provided -> Construct Search URL
+                local query=$(printf "%s+" "$@")
+                query=${query%+} # Remove trailing '+'
+                
+                # Use search_path if available, otherwise append query to base (fallback)
+                if [[ -n "$search_path" && "$search_path" != "$base" ]]; then
+                    # Check if search_path is relative (starts with /)
+                    if [[ "$search_path" == /* ]]; then
+                         # Remove trailing slash from base if present to avoid double slashes
+                        open -a "Firefox" "${base%/}${search_path}${query}"
+                    else
+                        open -a "Firefox" "${search_path}${query}"
+                    fi
+                else
+                    open -a "Firefox" "${base}${query}"
+                fi
+            fi
+            return
+        fi
+    done
+
+    # 4. Default Fallback: Treat as direct URL
+    if [[ "$keyword" != http* ]]; then
+        open -a "Firefox" "https://$keyword"
+    else
+        open -a "Firefox" "$keyword"
+    fi
+}
+
+alias fox='fox'
