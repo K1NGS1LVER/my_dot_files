@@ -543,7 +543,9 @@ vf() {
 
 
 export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
-\n# Firefox Browser Function (Replicated from Brave)\n# Firefox Function (Handles URLs smart)
+
+# Firefox Browser Function (Replicated from Brave)
+# Firefox Function (Handles URLs smart)
 fox() {
     # 1. Handle empty arguments
     if [[ -z "$1" ]]; then
