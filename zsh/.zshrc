@@ -542,3 +542,4 @@ vf() {
 }
 
 
+export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
