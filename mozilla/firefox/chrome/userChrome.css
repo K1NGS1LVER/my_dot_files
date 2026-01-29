@@ -1,0 +1,84 @@
+
+/* === RESTORED MINIMAL SETUP (Centered, Dimmed, No Icons) === */
+
+/* 1. FORCE Center Tab Text */
+.tab-label-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.tab-label {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    flex-grow: 0 !important;
+}
+
+/* 2. Nuclear Option for Container Icons */
+*[usercontextid],
+#userContext-indicator,
+#userContext-label,
+#userContext-icons,
+.identity-box-button[usercontextid] {
+    display: none !important;
+    visibility: collapse !important;
+    min-width: 0 !important;
+    width: 0 !important;
+}
+
+/* 3. Hide Shield Icon (Tracking Protection) */
+#tracking-protection-icon-container {
+    display: none !important;
+}
+
+/* 4. Hide Traffic Lights */
+.titlebar-buttonbox-container {
+    display: none !important;
+}
+.titlebar-spacer {
+    display: none !important;
+}
+
+/* 5. Minimal Tabs Base */
+:root {
+  --tab-min-height: 30px !important;
+  --tab-block-margin: 2px !important;
+}
+.tabbrowser-tab::after, .tabbrowser-tab::before {
+    display: none !important;
+}
+.tab-secondary-label { 
+    display: none !important; 
+}
+#tabs-newtab-button .toolbarbutton-text {
+    display: none !important;
+}
+
+/* 6. Dim Inactive Tabs */
+.tabbrowser-tab:not([selected="true"]) .tab-content {
+    opacity: 0.7 !important;
+}
+.tabbrowser-tab:hover .tab-content {
+    opacity: 1 !important;
+}
+
+/* 7. Active Tab Style */
+.tab-background[selected="true"] {
+    background: var(--toolbar-bgcolor) !important;
+    border-top: 2px solid var(--lwt-tab-line-color, #0a84ff) !important;
+    border-radius: 4px !important;
+}
+
+/* 8. Ensure Toolbar is Visible (Resetting any Autohide hacks) */
+#nav-bar {
+    margin-top: 0 !important;
+    opacity: 1 !important;
+    position: relative !important;
+    pointer-events: auto !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+#urlbar-container {
+    --urlbar-container-height: 30px !important;
+}
+
