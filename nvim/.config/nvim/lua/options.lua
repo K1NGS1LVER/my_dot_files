@@ -49,3 +49,9 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
+-- Indentation Settings (2 Spaces)
+o.expandtab = true      -- Use spaces instead of tabs
+o.shiftwidth = 2        -- Shift 2 spaces when tab
+o.tabstop = 2           -- 1 tab == 2 spaces
+o.softtabstop = 2       -- Edit as if tabs are 2 spaces
+

@@ -72,3 +72,14 @@ autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
 
 -- -- Apply immediately if a theme is already loaded
 -- set_transparency()
+-- Go specific settings (Force Real Tabs)
+autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.opt_local.expandtab = false  -- Use real tabs
+    vim.opt_local.tabstop = 4        -- Visual width of tab
+    vim.opt_local.shiftwidth = 4     -- Indent width
+    vim.opt_local.softtabstop = 4
+  end,
+})
+

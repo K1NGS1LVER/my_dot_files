@@ -5,7 +5,7 @@ local map = vim.keymap.set
 -- Better command mode
 map("n", ";", function()
   local next_char = vim.fn.getcharstr()
-  if next_char:match("%d") then
+  if next_char:match "%d" then
     vim.api.nvim_feedkeys(next_char, "n", false)
   else
     vim.api.nvim_feedkeys(":" .. next_char, "n", false)
@@ -62,6 +62,9 @@ map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<leader>bd", "<cmd>bd<cr>", { desc = "Delete buffer" })
 
+-- delete wihout copying to the clipboard buffer uses the black hole register
+map("n", "<leader>dd", '"_dd', { desc = "delete without copying" })
+
 -- LSP mappings (enhanced)
 map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 map("n", "gr", vim.lsp.buf.references, { desc = "References" })
@@ -114,32 +117,30 @@ end, { desc = "Toggle Vertical Terminal" })
 
 -- AI Model Switcher (Llama3 <-> DeepSeek)
 map("n", "<leader>am", function()
-  local avante = require("avante.config")
+  local avante = require "avante.config"
   -- Define the two models
   local model_a = "llama3"
   local model_b = "deepseek-coder:1.3b"
-  
+
   -- Check current model (assuming start state is model_a)
   if vim.g.avante_current_model == model_b then
     vim.g.avante_current_model = model_a
   else
     vim.g.avante_current_model = model_b
   end
-  
+
   -- Apply the change
   -- We access the raw config table and update the providers.ollama.model field
   -- Avante usually reads this on each request, so updating the global config table works
   local options = avante.get()
   options.providers.ollama.model = vim.g.avante_current_model
-  
+
   -- Notify user
   print("Switched AI Model to: " .. vim.g.avante_current_model)
 end, { desc = "Toggle AI Model (Llama3 / DeepSeek)" })
-
 
 -- Close buffer with <leader>x
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
 
 -- Folding
 map("n", "<leader>ff", "za", { desc = "Toggle Fold" })
-

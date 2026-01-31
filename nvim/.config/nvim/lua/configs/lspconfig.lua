@@ -65,7 +65,7 @@ end
 
 -- Diagnostic Config
 vim.diagnostic.config({
-  virtual_text = { prefix = "●", spacing = 4 },
+  virtual_text = false, -- Disable inline error messages
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = "󰅚 ",
@@ -77,5 +77,20 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
   severity_sort = true,
-  float = { border = "rounded", source = "always", header = "", prefix = "" },
+  float = {
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+    format = function(d)
+      local code = d.code or (d.user_data and d.user_data.lsp.code)
+      if code then
+        return string.format("%s [%s]", d.message, code)
+      end
+      return d.message
+    end,
+    -- Fix Truncation: Enable wrapping and limit width
+    wrap = true,
+    max_width = 80, 
+  },
 })
