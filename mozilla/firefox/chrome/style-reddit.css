@@ -1,0 +1,121 @@
+#titlebar { display: none; }
+.urlbar-input-box { text-align: center; }
+#nav-bar { margin: 3px; }
+#urlbar:not([focused]) #urlbar-background { opacity: 0 !important; }
+
+* {
+    font-family: "monospace";
+}
+
+/* Translucency Setup */
+:root {
+    /* 80% opacity dark background */
+    --glass-bg: rgba(30, 30, 30, 0.8);
+    --tab-min-height: 30px !important;
+    --tab-block-margin: 2px !important;
+}
+
+#urlbar-container {
+    --urlbar-container-height: 30px !important;
+}
+
+/* Hidden Elements from Original Setup */
+.titlebar-buttonbox-container,
+.titlebar-spacer,
+#tracking-protection-icon-container,
+.tabbrowser-tab::after, 
+.tabbrowser-tab::before,
+.tab-secondary-label,
+#tabs-newtab-button .toolbarbutton-text,
+*[usercontextid],
+#userContext-indicator,
+#userContext-label,
+#userContext-icons,
+.identity-box-button[usercontextid] {
+    display: none !important;
+}
+
+#main-window {
+    background-color: transparent !important;
+    appearance: none !important;
+}
+
+/* Fix UI: Use the semi-transparent color instead of fully transparent */
+#navigator-toolbox {
+    background-color: var(--glass-bg) !important;
+    border: none !important;
+}
+
+#nav-bar, #PersonalToolbar, #TabsToolbar {
+    background-color: transparent !important; /* Let the toolbox color show through */
+    background-image: none !important;
+}
+
+#urlbar-background {
+    background-color: rgba(50, 50, 50, 0.9) !important;
+}
+
+/* Attempt to make the page area see-through (for about:blank etc) */
+#tabbrowser-tabpanels,
+#browser,
+#appcontent,
+.browserContainer {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.browserContainer browser {
+    border-radius: 5px !important;
+}
+
+/* Center Tab Labels (Restored from Original) */
+.tab-label-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.tab-label {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    flex-grow: 0 !important;
+}
+
+/* Dim Inactive Tabs */
+.tabbrowser-tab:not([selected="true"]) {
+    opacity: 0.4 !important;
+    filter: grayscale(50%) !important;
+    transition: opacity 0.2s ease, filter 0.2s ease !important;
+}
+
+.tabbrowser-tab[selected="true"] {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* Brighten on hover */
+.tabbrowser-tab:not([selected="true"]):hover {
+    opacity: 0.8 !important;
+    filter: grayscale(0%) !important;
+}
+
+#navigator-toolbox {
+    max-height: 2vh;
+    overflow: hidden;
+    transition: max-height 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    & * {
+        opacity: 0;
+        transition: opacity 0.1s ease-out;
+    }
+}
+
+#navigator-toolbox:hover,
+#navigator-toolbox:focus-within {
+    max-height: 200px;
+    
+    & * {
+        opacity: 1;
+        transition: opacity 0.3s ease-in 0.1s;
+    }
+}

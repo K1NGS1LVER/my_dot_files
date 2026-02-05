@@ -1,0 +1,33 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Text Editor / IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# Firefox specific (To prevent accidental leaks if you copy profile files)
+# NEVER commit these as they contain passwords, history, and keys
+logins.json
+key3.db
+key4.db
+places.sqlite
+cookies.sqlite
+formhistory.sqlite
+permissions.sqlite
+content-prefs.sqlite
+webappsstore.sqlite
+sessionstore*
+xulstore.json
+compatibility.ini
+parent.lock
+
+# Temporary or cached files
+*.tmp
+*.log

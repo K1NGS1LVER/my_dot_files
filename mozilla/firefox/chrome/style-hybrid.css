@@ -1,0 +1,186 @@
+/* === HYBRID THEME: GWFox Layout + Reddit Transparency === */
+
+:root {
+    /* Reddit Theme Transparency Variables */
+    --glass-bg: rgba(30, 30, 30, 0.8);
+    --url-popup-bg: rgba(40, 40, 40, 0.95);
+    --tab-min-height: 32px !important;
+}
+
+/* ==========================================================================
+   1. HIDDEN ELEMENTS (Traffic Lights, Spacers, Shield, etc.)
+   ========================================================================== */
+.titlebar-buttonbox-container,
+.titlebar-spacer,
+#tracking-protection-icon-container,
+#identity-box, /* Hiding identity box to clean up URL bar like GWFox sometimes does */
+#page-action-buttons,
+.tab-secondary-label,
+#tabs-newtab-button .toolbarbutton-text,
+#alltabs-button,
+#landing-page-signup-container {
+    display: none !important;
+}
+
+/* ==========================================================================
+   2. TRANSPARENCY & BASICS
+   ========================================================================== */
+#main-window {
+    background-color: transparent !important;
+    appearance: none !important;
+}
+
+#navigator-toolbox {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+#nav-bar, #PersonalToolbar, #TabsToolbar {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.browserContainer, #browser, #appcontent, #tabbrowser-tabpanels {
+    background-color: transparent !important;
+}
+
+/* ==========================================================================
+   3. GWFOX-STYLE LAYOUT (Side-by-Side: URL Bar | Tabs)
+   ========================================================================== */
+#navigator-toolbox {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+}
+
+/* Force Nav Bar (URL) to be on the left, smaller width */
+#nav-bar {
+    order: 1 !important;
+    width: 35% !important; /* Adjust width of URL section */
+    min-width: 300px !important;
+    padding-right: 10px !important;
+}
+
+/* Force Tabs to be on the right, taking remaining space */
+#TabsToolbar {
+    order: 2 !important;
+    width: 65% !important;
+    flex-grow: 1 !important;
+}
+
+/* Hide the "Overflow" arrow if it appears */
+#nav-bar-overflow-button { display: none !important; }
+
+
+/* ==========================================================================
+   4. REDDIT AUTO-HIDE ANIMATION
+   ========================================================================== */
+#navigator-toolbox {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000 !important;
+    
+    /* Default State: Collapsed/Invisible */
+    transform: translateY(-80%) !important; /* Pull up mostly out of view */
+    opacity: 0 !important; 
+    
+    transition: transform 0.2s ease, opacity 0.2s ease !important;
+    
+    /* Ensure popup works */
+    overflow: visible !important;
+    height: 40px !important; /* Fixed height when visible */
+}
+
+/* Hover State: Show UI */
+#navigator-toolbox:hover,
+#navigator-toolbox:focus-within {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+}
+
+/* Move web content up since toolbox is fixed/overlay */
+#browser {
+    margin-top: 0 !important; 
+}
+
+
+/* ==========================================================================
+   5. GWFOX POP-UP URL BAR (The "Breakout" Effect)
+   ========================================================================== */
+@keyframes panel-grow {
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#urlbar[breakout][breakout-extend] {
+    position: fixed !important;
+    top: 20vh !important;
+    left: 25vw !important;
+    width: 50vw !important;
+    max-width: 800px !important;
+    z-index: 2000 !important; /* Above everything */
+    
+    animation: panel-grow 0.2s ease-out !important;
+}
+
+#urlbar[breakout][breakout-extend] .urlbar-background {
+    background-color: var(--url-popup-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6) !important;
+    border-radius: 12px !important;
+}
+
+#urlbar[breakout][breakout-extend] .urlbar-input-container {
+    height: 50px !important;
+    padding: 0 20px !important;
+}
+
+#urlbar[breakout][breakout-extend] .urlbar-input {
+    font-size: 20px !important;
+    text-align: center !important;
+}
+
+/* Standard URL Bar Styling (Non-popup) */
+#urlbar-background {
+    background-color: rgba(50, 50, 50, 0.5) !important;
+    border-radius: 8px !important;
+}
+.urlbar-input {
+    text-align: center !important;
+}
+
+/* ==========================================================================
+   6. TAB STYLING (Minimalist)
+   ========================================================================== */
+.tabbrowser-tab {
+    min-height: var(--tab-min-height) !important;
+}
+
+.tab-background {
+    border-radius: 5px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Center Tab Text */
+.tab-label-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.tab-label {
+    text-align: center !important;
+}
+
+/* Dim Inactive Tabs */
+.tabbrowser-tab:not([selected="true"]) {
+    opacity: 0.5 !important;
+}
+.tabbrowser-tab:not([selected="true"]):hover {
+    opacity: 0.8 !important;
+}

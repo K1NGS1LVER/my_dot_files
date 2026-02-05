@@ -65,7 +65,7 @@ end
 
 -- Diagnostic Config
 vim.diagnostic.config({
-  virtual_text = false, -- Disable inline error messages
+  virtual_text = true, -- Enable inline error messages
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = "󰅚 ",
