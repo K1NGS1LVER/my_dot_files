@@ -79,6 +79,7 @@ return {
         },
         highlight = { enable = true },
         indent = { enable = true },
+        matchup = { enable = true },
         textobjects = {
           select = {
             enable = true,
@@ -384,56 +385,38 @@ return {
     end,
   },
 
-  -- Popular Themes
+  -- Popular Themes (Lazy loaded so they don't conflict)
+  { "folke/tokyonight.nvim", lazy = true },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true },
+  { "rebelot/kanagawa.nvim", lazy = true },
+  { "rose-pine/neovim", name = "rose-pine", lazy = true },
+  { "scottmckendry/cyberdream.nvim", lazy = true },
+  { "EdenEast/nightfox.nvim", lazy = true },
+  { "ellisonleao/gruvbox.nvim", lazy = true },
+  { "sainnhe/everforest", lazy = true },
+  { "baliestri/aura-theme", lazy = true, name = "aura" },
+  { "nordtheme/vim", lazy = true, name = "nord" },
+  { "sonph/onehalf", lazy = true, rtp = "vim", name = "onehalf" },
+  { "kvrohit/mellow.nvim", lazy = true },
+  { "dracula/vim", lazy = true, name = "dracula" },
+  { "masisz/wisteria.nvim", lazy = true },
+  { "craftzdog/solarized-osaka.nvim", lazy = true },
+  { "marko-cerovac/material.nvim", lazy = true },
+  { "navarasu/onedark.nvim", lazy = true },
+  { "sainnhe/sonokai", lazy = true },
+
+  -- Transparency Control (Force transparency on any theme)
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    lazy = false,
-    priority = 1000,
+    "xiyaowong/transparent.nvim",
+    lazy = false, -- Load immediately to ensure transparency is applied on startup
     opts = {
-      transparent_background = not vim.g.neovide,
-    },
-  },
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = false,
-    priority = 1000,
-    opts = {
-      styles = {
-        transparency = true,
+      extra_groups = {
+        "NvimTreeNormal",
+        "NvimTreeNormalNC",
+        "NvimTreeWinSeparator",
+        "NvimTreeEndOfBuffer",
       },
     },
-  },
-  {
-    "scottmckendry/cyberdream.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "EdenEast/nightfox.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { options = { transparent = true } },
-  },
-  {
-    "ellisonleao/gruvbox.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = { transparent_mode = true },
   },
 
   -- Note taking features
@@ -557,6 +540,15 @@ return {
     keys = {
       { "<leader>tm", "<cmd>TableModeToggle<cr>", desc = "Toggle table mode" },
     },
+  },
+
+  -- Advanced Matching (Brackets, Tags, Keywords)
+  {
+    "andymass/vim-matchup",
+    event = "BufReadPost",
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end,
   },
   
   {

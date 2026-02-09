@@ -7,6 +7,10 @@ local M = {}
 M.base46 = {
   theme = "catppuccin", -- Popular themes: catppuccin, tokyonight, gruvbox, nord
   
+  catppuccin = {
+    flavor = "mocha", -- latte, frappe, macchiato, mocha
+  },
+  
   hl_override = {
     Comment = { italic = true },
     ["@comment"] = { italic = true },

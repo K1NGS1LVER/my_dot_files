@@ -56,6 +56,9 @@ o.tabstop = 2           -- 1 tab == 2 spaces
 o.softtabstop = 2       -- Edit as if tabs are 2 spaces
 o.smartindent = true    -- Insert indents automatically
 o.autoindent = true     -- Copy indent from current line when starting a new line
+o.smarttab = true       -- Be smart when using tabs
+o.breakindent = true    -- Wrapped lines will keep indent
+o.showmatch = true      -- Show matching brackets
 
 -- Filetype-specific indentation
 vim.api.nvim_create_autocmd("FileType", {

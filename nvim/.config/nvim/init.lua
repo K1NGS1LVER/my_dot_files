@@ -44,6 +44,7 @@ vim.opt.autoindent = true -- Indent at the same level of the previous line
 vim.opt.smartindent = true -- Smarter autoindenting (e.g. after braces)
 vim.opt.smarttab = true -- Makes tabbing smarter (e.g. backspacing over indents)
 vim.opt.breakindent = true -- Wrapped lines will continue visually indented (same amount of space as the beginning of that line), thus preserving horizontal blocks of text
+vim.o.swapfile = false -- Disable swap files
 
 -- PDF Viewer (Sioyek) Integration
 vim.api.nvim_create_user_command("Pdf", function(opts)
