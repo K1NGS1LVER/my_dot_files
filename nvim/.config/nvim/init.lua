@@ -42,6 +42,8 @@ vim.opt.shiftwidth = 2 -- The size of an indent
 vim.opt.tabstop = 2 -- The size of a tab
 vim.opt.autoindent = true -- Indent at the same level of the previous line
 vim.opt.smartindent = true -- Smarter autoindenting (e.g. after braces)
+vim.opt.smarttab = true -- Makes tabbing smarter (e.g. backspacing over indents)
+vim.opt.breakindent = true -- Wrapped lines will continue visually indented (same amount of space as the beginning of that line), thus preserving horizontal blocks of text
 
 -- PDF Viewer (Sioyek) Integration
 vim.api.nvim_create_user_command("Pdf", function(opts)
@@ -84,7 +86,7 @@ local original_open = vim.ui.open
 vim.ui.open = function(path)
   -- If path has no protocol but looks like a domain (has dot, starts with alphanum)
   -- Regex: Not protocol, starts with word/dash/dot, has a dot followed by letters, optional rest
-  if not path:match("^%a+://") and path:match("^[%w%-%.]+%.[a-z]+") then
+  if not path:match "^%a+://" and path:match "^[%w%-%.]+%.[a-z]+" then
     path = "https://" .. path
   end
   return original_open(path)

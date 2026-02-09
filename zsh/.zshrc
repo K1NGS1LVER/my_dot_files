@@ -626,3 +626,14 @@ export PATH="$HOME/.openclaw/bin:$PATH"
 
 
 
+
+# Toggle macOS Dark Mode
+toggle_dark() {
+    osascript -e "tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode"
+    if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+        echo "🌙 Dark Mode enabled"
+    else
+        echo "☀️ Light Mode enabled"
+    fi
+}
+alias dark="toggle_dark"

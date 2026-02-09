@@ -37,3 +37,4 @@ mouse-hide-while-typing = true
 # Unsupported in v1.2.3 (Causes "unknown field" error)
 # theme-transition-duration = 0.3s
 confirm-close-surface = false
+global-keybind = "cmd+shift+j=toggle_quick_terminal"
