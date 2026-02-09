@@ -49,9 +49,21 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
--- Indentation Settings (2 Spaces)
+-- Indentation Settings
 o.expandtab = true      -- Use spaces instead of tabs
 o.shiftwidth = 2        -- Shift 2 spaces when tab
 o.tabstop = 2           -- 1 tab == 2 spaces
 o.softtabstop = 2       -- Edit as if tabs are 2 spaces
+o.smartindent = true    -- Insert indents automatically
+o.autoindent = true     -- Copy indent from current line when starting a new line
+
+-- Filetype-specific indentation
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "python", "java" },
+  callback = function()
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
 
