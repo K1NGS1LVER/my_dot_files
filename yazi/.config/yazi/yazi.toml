@@ -18,3 +18,8 @@ prepend_rules = [
 separator_open  = ""
 separator_close = ""
 show_right = ["permissions", "percentage", "position", "timestamp", "size"]
+
+[preview]
+preview_protocol = "kitty"
+max_width = 800
+max_height = 1000

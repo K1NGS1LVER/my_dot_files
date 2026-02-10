@@ -7,7 +7,15 @@ font-size = 22
 font-feature = calt
 font-feature = liga
 
+# Adjust character spacing
+adjust-cell-width = 0
+adjust-cell-height = 0
+# Alternative fallback fonts for symbols/icons
+font-family-bold = "JetBrainsMono Nerd Font"
+font-family-italic = "JetBrainsMono Nerd Font"
+
 # --- Theme & Colors ---
+
 theme = catppuccin-macchiato
 background-opacity = 0.85
 background-blur-radius = 25
@@ -18,8 +26,8 @@ cursor-style = bar
 # cursor-style-blink = false  <-- Causes error in v1.2.3, removing for stability.
 
 # --- Window ---
-window-padding-x = 12
-window-padding-y = 12
+window-padding-x = 0
+window-padding-y = 0
 window-decoration = true
 # transparent is officially deprecated/buggy in some builds, but requested in ref.
 # If tabs disappear, change this back to 'tabs'
@@ -28,13 +36,93 @@ macos-titlebar-style = transparent
 # --- Shell ---
 command = /bin/zsh
 
+# Enable shell integration for better prompt/output handling
+shell-integration = detect
+osc-color-report-format = 8-bit
+
+# Unbind any default keybinds you don't use
+# keybind = clear
+
 # --- Input & Behavior ---
 macos-option-as-alt = true
-copy-on-select = true
+# cursor-color = #8aadf4  # Blue accentopy-on-select = true
 mouse-hide-while-typing = true
 
 # --- Transitions ---
-# Unsupported in v1.2.3 (Causes "unknown field" error)
-# theme-transition-duration = 0.3s
 confirm-close-surface = false
-global-keybind = "cmd+shift+j=toggle_quick_terminal"
+# global-keybind = "cmd+shift+j=toggle_quick_terminal"
+
+# Smoother rendering
+window-vsync = true
+# Better font rendering on macOS
+font-thicken = true
+
+#url and link handling
+# Click links with modifier
+link-url = true
+# Open links with specific browser (optional)
+# macos-url-handler = /Applications/Arc.app
+
+# Paste protection (warns on multi-line paste)
+clipboard-paste-protection = true
+clipboard-paste-bracketed-safe = true
+# Trim trailing whitespace when copying
+clipboard-trim-trailing-spaces = true
+# When selecting text in fzf/nvim, auto-copy
+copy-on-select = clipboard
+clipboard-read = allow  
+# Let tools like fzf read clipboard
+
+# Let Zellij own ctrl+[key] combinations
+# Ghostty handles cmd+[key] for window/tab management
+keybind = cmd+t=new_tab
+keybind = cmd+w=close_surface
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+5=goto_tab:5
+keybind = cmd+6=goto_tab:6
+keybind = cmd+7=goto_tab:7
+keybind = cmd+8=goto_tab:8
+keybind = cmd+9=goto_tab:9
+# Quick access to config reload
+keybind = cmd+shift+r=reload_config
+# Don't let Ghostty intercept these - Zellij needs them
+keybind = ctrl+a=unbind
+keybind = ctrl+b=unbind
+
+# Click behavior
+mouse-shift-capture = true
+# Scroll behavior
+mouse-scroll-multiplier = 1.0
+
+# Initial window size
+window-height = 40
+window-width = 120
+# Save/restore window position
+window-save-state = default
+# Window title
+window-title-font-family = "JetBrainsMono Nerd Font"
+
+# Scrollback buffer (lines to remember)
+scrollback-limit = 10000
+# FPS cap (useful for battery life)
+# max-fps = 120
+
+# Better emoji rendering
+grapheme-width-method = unicode
+
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.2
+
+# Ensure true color support
+term = xterm-256color
+
+# When focused on coding, hide distractions
+unfocused-split-opacity = 0.6
+focus-follows-mouse = false
+# Prevent accidental focus changes
+
+auto-update = check
