@@ -23,15 +23,12 @@ background-blur-radius = 25
 # --- Premium Aesthetic Tweaks ---
 cursor-color = #f4dbd6
 cursor-style = bar
-# cursor-style-blink = false  <-- Causes error in v1.2.3, removing for stability.
 
 # --- Window ---
 window-padding-x = 0
-window-padding-y = 0
+window-padding-y = 5
 window-decoration = true
-# transparent is officially deprecated/buggy in some builds, but requested in ref.
-# If tabs disappear, change this back to 'tabs'
-macos-titlebar-style = transparent
+macos-titlebar-style = tabs
 
 # --- Shell ---
 command = /bin/zsh
@@ -45,7 +42,6 @@ osc-color-report-format = 8-bit
 
 # --- Input & Behavior ---
 macos-option-as-alt = true
-# cursor-color = #8aadf4  # Blue accentopy-on-select = true
 mouse-hide-while-typing = true
 
 # --- Transitions ---
@@ -107,8 +103,6 @@ window-title-font-family = "JetBrainsMono Nerd Font"
 
 # Scrollback buffer (lines to remember)
 scrollback-limit = 10000
-# FPS cap (useful for battery life)
-# max-fps = 120
 
 # Better emoji rendering
 grapheme-width-method = unicode
@@ -125,4 +119,4 @@ unfocused-split-opacity = 0.6
 focus-follows-mouse = false
 # Prevent accidental focus changes
 
-auto-update = check
+auto-update = download

@@ -23,27 +23,13 @@ return {
 
   {
     "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+    },
     config = function()
+      require("mason").setup()
       require "configs.lspconfig"
     end,
-  },
-
-  {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "kotlin-language-server",
-        "jdtls",
-        "lemminx", -- XML
-        "pyright",
-        "gopls",
-        "rust-analyzer",
-        "typescript-language-server",
-        "lua-language-server",
-        "html-lsp",
-        "css-lsp",
-      },
-    },
   },
 
   {

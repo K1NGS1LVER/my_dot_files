@@ -1,96 +1,59 @@
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- Get base config from NvChad
+-- 1. ADD MASON TO PATH (Crucial for Neovim 0.11)
+local mason_path = vim.fn.stdpath("data") .. "/mason/bin"
+vim.env.PATH = mason_path .. ":" .. vim.env.PATH
+
+-- 2. Base Config
 local base_config = {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
 }
 
--- Servers to enable
+-- 3. List of Servers (Manage this list to enable/disable)
 local servers = {
   "html",
   "cssls",
-  "eslint",
-  "jsonls",
-  "yamlls",
-  "bashls",
-  "dockerls",
   "pyright",
   "ruff",
-  "vtsls",
-  "rust_analyzer",
   "gopls",
+  "rust_analyzer",
   "lua_ls",
   "kotlin_language_server",
   "jdtls",
-  "lemminx",
+  "bashls",
+  "jsonls",
 }
 
--- Loop and configure using the NEW Neovim 0.11 API
+-- 4. Enable Servers (The Neovim 0.11 Way)
 for _, name in ipairs(servers) do
-  local config = vim.tbl_deep_extend("force", {}, base_config)
+  local opts = vim.tbl_deep_extend("force", {}, base_config)
 
-  -- Pyright Optimization
+  -- Specific Server Tweaks
   if name == "pyright" then
-    config.settings = {
-      python = {
-        analysis = {
-          typeCheckingMode = "off",
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-          diagnosticMode = "workspace",
-        },
-      },
-    }
+    opts.settings = { python = { analysis = { typeCheckingMode = "off" } } }
   end
-
-  -- Ruff Optimization (Disable hover to let Pyright handle it)
+  
   if name == "ruff" then
-    config.on_attach = function(client, bufnr)
+    opts.on_attach = function(client, bufnr)
       client.server_capabilities.hoverProvider = false
       nvlsp.on_attach(client, bufnr)
     end
   end
 
-  -- Vtsls root detection
-  if name == "vtsls" then
-    config.root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' }
-  end
-
-  -- APPLY CONFIG (Neovim 0.11 Way)
-  vim.lsp.config[name] = config
+  -- This is the native Neovim 0.11 API
+  -- It's more stable than setup_handlers
+  vim.lsp.config[name] = opts
   vim.lsp.enable(name)
 end
 
--- Diagnostic Config
+-- Diagnostic Styling
 vim.diagnostic.config({
-  virtual_text = true, -- Enable inline error messages
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
-      [vim.diagnostic.severity.INFO] = " ",
-    },
-  },
+  virtual_text = true,
+  signs = true,
   underline = true,
   update_in_insert = false,
   severity_sort = true,
-  float = {
-    border = "rounded",
-    source = "always",
-    header = "",
-    prefix = "",
-    format = function(d)
-      local code = d.code or (d.user_data and d.user_data.lsp.code)
-      if code then
-        return string.format("%s [%s]", d.message, code)
-      end
-      return d.message
-    end,
-    -- Fix Truncation: Enable wrapping and limit width
-    wrap = true,
-    max_width = 80, 
-  },
+  float = { border = "rounded", wrap = true, max_width = 80 },
 })
