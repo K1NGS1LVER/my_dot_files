@@ -508,6 +508,7 @@ return {
           path = "~/notes",
         },
       },
+      ui = { enable = false },
       completion = {
         nvim_cmp = true,
         min_chars = 0,
@@ -560,6 +561,38 @@ return {
     end,
   },
 
+  -- Yazi - Faster and more feature-rich file explorer
+  {
+    "mikavilpas/yazi.nvim",
+    event = "VeryLazy",
+    keys = {
+      -- Open yazi at the current file
+      {
+        "<leader>e",
+        function()
+          require("yazi").yazi()
+        end,
+        desc = "Open yazi at the current file",
+      },
+      -- Open yazi at the project root
+      {
+        "<leader>cw",
+        function()
+          require("yazi").yazi(nil, vim.fn.getcwd())
+        end,
+        desc = "Open yazi at the project root",
+      },
+    },
+    opts = {
+      -- if you want to open yazi instead of netrw, see below for more info
+      open_for_directories = true,
+      keymaps = {
+        show_help = '<f1>',
+      },
+    },
+  },
+
+  -- [[
   {
     "nvim-tree/nvim-tree.lua",
     opts = {
@@ -604,6 +637,7 @@ return {
       require("base46").load_all_highlights()
     end,
   },
+  -- ]]
 
   -- GitHub Copilot
   {
@@ -656,7 +690,7 @@ return {
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
-    lazy = false,
+    lazy = true,
     version = false,
     opts = {
       provider = "ollama",

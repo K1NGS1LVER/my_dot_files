@@ -84,6 +84,14 @@ map("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 -- Theme Switcher (Telescope)
 map("n", "<leader>th", "<cmd>Telescope colorscheme enable_preview=true<cr>", { desc = "Theme Switcher" })
 
+-- Telescope file navigation
+map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
+map("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Live grep" })
+map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find buffers" })
+map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
+map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Find in current buffer" })
+map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Find recent files" })
+
 map("n", "<leader>tt", function()
   vim.g.transparency_enabled = not vim.g.transparency_enabled
   -- Reload current colorscheme to re-trigger the autocmd
@@ -91,12 +99,10 @@ map("n", "<leader>tt", function()
   print("Transparency: " .. tostring(vim.g.transparency_enabled))
 end, { desc = "Toggle Transparency" })
 
-map("n", "<leader>fo", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Find Obsidian Note" })
+map("n", "<leader>fn", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Find Obsidian Note" })
 
 -- Markdown Checkbox Toggle (Replacement for bullets.vim leader+x)
 map("n", "<leader>ck", "<cmd>ToggleCheckbox<cr>", { desc = "Toggle Checkbox" })
-map("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle File Explorer" })
-map("n", "<leader>o", "<cmd>NvimTreeFocus<cr>", { desc = "Focus File Explorer" })
 
 -- Terminal Compatibility Mappings (Replaces ToggleTerm)
 map({ "n", "t" }, "<C-t>", function()
@@ -142,5 +148,3 @@ end, { desc = "Toggle AI Model (Llama3 / DeepSeek)" })
 -- Close buffer with <leader>x
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
 
--- Folding
-map("n", "<leader>ff", "za", { desc = "Toggle Fold" })
