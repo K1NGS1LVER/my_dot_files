@@ -1,0 +1,61 @@
+[
+  {
+    "context": "Editor && (vim_mode == insert)",
+    "bindings": {
+      "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      ";": "command_palette::Toggle",
+      "space w": "workspace::Save",
+      "space q q": "pane::CloseActiveItem",
+      "space Q": "workspace::CloseWindow",
+      "space x": "pane::CloseActiveItem",
+      "space b d": "pane::CloseActiveItem",
+
+      "shift-h": "pane::ActivatePrevItem",
+      "shift-l": "pane::ActivateNextItem",
+
+      "space f f": "file_finder::Toggle",
+      "space f w": "pane::DeploySearch",
+      "space f b": "tab_switcher::Toggle",
+      "space f o": "file_finder::Toggle",
+      "space t h": "theme_selector::Toggle",
+
+      "space e": "project_panel::ToggleFocus",
+      "space c a": "editor::CodeActions",
+      "space r n": "editor::Rename",
+      "space l f": "editor::Format",
+
+      "g d": "editor::GoToDefinition",
+      "g r": "editor::GoToReferences",
+      "g i": "editor::GoToImplementation",
+      "g y": "editor::GoToTypeDefinition",
+      "K": "editor::Hover",
+
+      "[ d": "editor::GoToPrevDiagnostic",
+      "] d": "editor::GoToNextDiagnostic",
+      "space x x": "diagnostics::Deploy",
+      "space d": "editor::Hover",
+
+      "s": ["vim::PushOperator", { "Add": "Sneak" }],
+      "S": ["vim::PushOperator", { "Add": "SneakBackward" }],
+
+      "ctrl-t": "terminal::Toggle",
+      "space t f": "terminal::Toggle",
+
+      "ctrl-d": ["vim::Scroll", { "count": 0.5, "direction": "down" }],
+      "ctrl-u": ["vim::Scroll", { "count": 0.5, "direction": "up" }],
+
+      "space g g": ["task::Spawn", { "task_name": "LazyGit" }]
+    }
+  },
+  {
+    "context": "Empty || SharedScreen",
+    "bindings": {
+      "space f f": "file_finder::Toggle"
+    }
+  }
+]

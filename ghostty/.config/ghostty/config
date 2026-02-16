@@ -3,13 +3,14 @@
 
 # --- Fonts ---
 font-family = "JetBrainsMono Nerd Font"
-font-size = 22
+font-size = 19
 font-feature = calt
 font-feature = liga
 
 # Adjust character spacing
 adjust-cell-width = 0
-adjust-cell-height = 0
+adjust-cell-height = 15%
+
 # Alternative fallback fonts for symbols/icons
 font-family-bold = "JetBrainsMono Nerd Font"
 font-family-italic = "JetBrainsMono Nerd Font"

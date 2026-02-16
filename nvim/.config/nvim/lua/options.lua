@@ -30,15 +30,17 @@ opt.undolevels = 10000
 -- Better performance
 o.lazyredraw = false
 
--- Code Folding (Icons & Persistence)
+-- Code Folding (Treesitter based)
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldenable = true
+opt.foldlevel = 99
+opt.foldlevelstart = 99
 opt.fillchars = { foldopen = "", foldclose = "", fold = " ", foldsep = " " }
+
 
 -- Session Management (Persist folds)
 opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
--- Font configuration (for GUI only)
-opt.guifont = "JetBrainsMono Nerd Font:h12"
 
 -- Show whitespace characters
 opt.list = true
@@ -59,6 +61,14 @@ o.autoindent = true     -- Copy indent from current line when starting a new lin
 o.smarttab = true       -- Be smart when using tabs
 o.breakindent = true    -- Wrapped lines will keep indent
 o.showmatch = true      -- Show matching brackets
+
+-- Pre-define IBL highlights to prevent theme-switch crashes
+local ibl_groups = {
+  "IblChar", "IblWhitespace", "IblIndent", "IblScope", "IblScopeChar", "IblScopeIndent"
+}
+for _, group in ipairs(ibl_groups) do
+  vim.api.nvim_set_hl(0, group, { link = "Whitespace", default = true })
+end
 
 -- Filetype-specific indentation
 vim.api.nvim_create_autocmd("FileType", {

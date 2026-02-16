@@ -1,7 +1,7 @@
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- 1. ADD MASON TO PATH (Crucial for Neovim 0.11)
-local mason_path = vim.fn.stdpath("data") .. "/mason/bin"
+-- 1. ADD MASON TO PATH
+local mason_path = vim.fn.stdpath "data" .. "/mason/bin"
 vim.env.PATH = mason_path .. ":" .. vim.env.PATH
 
 -- 2. Base Config
@@ -24,6 +24,8 @@ local servers = {
   "jdtls",
   "bashls",
   "jsonls",
+  "ts_ls",
+  "eslint",
 }
 
 -- 4. Enable Servers (The Neovim 0.11 Way)
@@ -34,7 +36,7 @@ for _, name in ipairs(servers) do
   if name == "pyright" then
     opts.settings = { python = { analysis = { typeCheckingMode = "off" } } }
   end
-  
+
   if name == "ruff" then
     opts.on_attach = function(client, bufnr)
       client.server_capabilities.hoverProvider = false
@@ -49,11 +51,11 @@ for _, name in ipairs(servers) do
 end
 
 -- Diagnostic Styling
-vim.diagnostic.config({
+vim.diagnostic.config {
   virtual_text = true,
   signs = true,
   underline = true,
   update_in_insert = false,
   severity_sort = true,
   float = { border = "rounded", wrap = true, max_width = 80 },
-})
+}

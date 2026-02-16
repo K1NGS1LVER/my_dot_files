@@ -65,7 +65,6 @@ return {
         },
         highlight = { enable = true },
         indent = { enable = true },
-        matchup = { enable = true },
         textobjects = {
           select = {
             enable = true,
@@ -109,6 +108,7 @@ return {
       })
     end,
   },
+
 
   -- Git integration
   {
@@ -231,36 +231,6 @@ return {
     end,
   },
 
-  -- Sessions
-  {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
-    opts = {},
-    keys = {
-      {
-        "<leader>qs",
-        function()
-          require("persistence").load()
-        end,
-        desc = "Restore session",
-      },
-      {
-        "<leader>ql",
-        function()
-          require("persistence").load { last = true }
-        end,
-        desc = "Restore last session",
-      },
-      {
-        "<leader>qd",
-        function()
-          require("persistence").stop()
-        end,
-        desc = "Don't save session",
-      },
-    },
-  },
-
   -- Better commenting
   {
     "numToStr/Comment.nvim",
@@ -274,48 +244,6 @@ return {
     },
     config = function()
       require("Comment").setup()
-    end,
-  },
-
-  -- Surround text objects
-  {
-    "kylechui/nvim-surround",
-    version = "*",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup()
-    end,
-  },
-
-  -- Better quickfix
-  {
-    "kevinhwang91/nvim-bqf",
-    ft = "qf",
-  },
-
-  -- Todo comments
-  {
-    "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    event = "BufReadPost",
-    keys = {
-      { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find todos" },
-    },
-    opts = {},
-  },
-  -- Fix for IblChar error on theme switch
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    opts = {},
-    config = function(_, opts)
-      local hooks = require "ibl.hooks"
-      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        -- Ensure highlighting exists to prevent crash on theme switch
-        vim.api.nvim_set_hl(0, "IblChar", { fg = "#565f89" })
-        vim.api.nvim_set_hl(0, "IblScopeChar", { fg = "#565f89" })
-      end)
-      require("ibl").setup(opts)
     end,
   },
 
@@ -341,6 +269,17 @@ return {
             icons = {},
         },
     },
+  },
+
+  -- Markdown Table Management
+  {
+    "dhruvasagar/vim-table-mode",
+    ft = { "markdown" },
+    init = function()
+      -- Optimize for Markdown
+      vim.g.table_mode_syntax_check = 0 -- Faster
+      vim.g.table_mode_corner = '|'     -- Use standard markdown pipes
+    end,
   },
 
   -- Multiplexer Navigation (Tmux & Zellij)
@@ -405,16 +344,16 @@ return {
     },
   },
 
-  -- Note taking features
   {
-    "dkarter/bullets.vim",
-    ft = { "markdown", "text", "gitcommit", "scratch" },
-    init = function()
-      -- Keep auto-bulleting (Enter key) but disable default leader mappings
-      -- so it doesn't conflict with your <leader>ck or other keys.
-      vim.g.bullets_mapping_leader = ''
-    end,
+    "lukas-reineke/indent-blankline.nvim",
+    event = "User FilePost",
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = false },
+    },
+    main = "ibl",
   },
+
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
@@ -452,54 +391,19 @@ return {
       { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" },
     },
   },
-  -- REMOVED: Redundant with render-markdown.nvim
-  -- {
-  --   "iamcco/markdown-preview.nvim",
-  --   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-  --   ft = { "markdown" },
-  --   build = function() vim.fn["mkdp#util#install"]() end,
-  --   keys = {
-  --     { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
-  --   },
-  -- },
-  -- Harpoon (File navigation)
-  {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local harpoon = require("harpoon")
-      harpoon:setup()
-    end,
-    keys = {
-      { "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon Add" },
-      { "<C-e>", function() local harpoon = require("harpoon"); harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "Harpoon Menu" },
-      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "Harpoon Select 1" },
-      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "Harpoon Select 2" },
-      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "Harpoon Select 3" },
-      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "Harpoon Select 4" },
-      { "<C-S-P>", function() require("harpoon"):list():prev() end, desc = "Harpoon Prev" },
-      { "<C-S-N>", function() require("harpoon"):list():next() end, desc = "Harpoon Next" },
-    },
-  },
-
   -- Obsidian (Note linking)
   {
     "epwalsh/obsidian.nvim",
     version = "*",
+    -- Only load for markdown files in your notes directory
     event = {
-      "BufReadPre *.md",
-      "BufNewFile *.md",
-      "BufReadPre *.txt",
-      "BufNewFile *.txt",
+      "BufReadPre " .. vim.fn.expand("~") .. "/notes/*.md",
+      "BufNewFile " .. vim.fn.expand("~") .. "/notes/*.md",
     },
-    cmd = { "Obsidian", "ObsidianQuickSwitch" },
+    cmd = { "Obsidian", "ObsidianQuickSwitch", "ObsidianNew", "ObsidianSearch" },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "hrsh7th/cmp-nvim-lsp", -- Assuming these are needed for cmp_obsidian
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/nvim-cmp",
     },
     opts = {
       workspaces = {
@@ -508,36 +412,23 @@ return {
           path = "~/notes",
         },
       },
+      -- Disable heavy UI features (handled by render-markdown.nvim)
       ui = { enable = false },
       completion = {
         nvim_cmp = true,
-        min_chars = 0,
+        min_chars = 2, -- Only trigger after 2 chars
       },
       -- Optional: customize how names/IDs are generated
       note_id_func = function(title)
         return title
       end,
+      -- Better performance for large vaults
+      follow_url_func = function(url)
+        vim.fn.jobstart({"open", url})
+      end,
     },
   },
 
-  -- Table Mode
-  {
-    "dhruvasagar/vim-table-mode",
-    ft = "markdown",
-    keys = {
-      { "<leader>tm", "<cmd>TableModeToggle<cr>", desc = "Toggle table mode" },
-    },
-  },
-
-  -- Advanced Matching (Brackets, Tags, Keywords)
-  {
-    "andymass/vim-matchup",
-    event = "BufReadPost",
-    config = function()
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
-    end,
-  },
-  
   {
     "goolord/alpha-nvim",
     event = "VimEnter",
@@ -639,6 +530,34 @@ return {
   },
   -- ]]
 
+  -- Flash (Fast navigation)
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {
+      labels = "asdfghjklqwertyuiopzxcvbnm",
+      search = {
+        mode = "fuzzy",
+      },
+      jump = {
+        autojump = true,
+      },
+      label = {
+        uppercase = false,
+        after = true,
+        before = false,
+        style = "overlay", -- Overlay is often easier to read than floating
+      },
+    },
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
+  },
+
   -- GitHub Copilot
   {
     "zbirenbaum/copilot.lua",
@@ -684,96 +603,5 @@ return {
       { "<leader>ccd", "<cmd>CopilotChatDocs<cr>", desc = "Copilot Docs" },
       { "<leader>cct", "<cmd>CopilotChatTests<cr>", desc = "Copilot Tests" },
     },
-  },
-
-  -- AI - Avante.nvim (Like Cursor for Neovim)
-  {
-    "yetone/avante.nvim",
-    event = "VeryLazy",
-    lazy = true,
-    version = false,
-    opts = {
-      provider = "ollama",
-      auto_suggestions_provider = "ollama", 
-      
-      -- Force keybindings
-      mappings = {
-        submit = {
-            normal = "<C-s>",
-            insert = "<C-s>",
-        },
-      },
-      
-      providers = {
-        ollama = {
-          endpoint = "http://127.0.0.1:11434",
-          model = "llama3",
-          timeout = 30000,
-          temperature = 0,
-          max_tokens = 4096,
-        },
-      },
-    },
-    build = "make",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "zbirenbaum/copilot.lua",
-      {
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = { insert_mode = true },
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = { file_types = { "markdown", "Avante" } },
-        ft = { "markdown", "Avante" },
-      },
-    },
-  },
-
-  -- Better Folding (VSCode style)
-  {
-    "kevinhwang91/nvim-ufo",
-    dependencies = "kevinhwang91/promise-async",
-    event = "BufReadPost",
-    opts = {
-      provider_selector = function()
-        return { "treesitter", "indent" }
-      end,
-    },
-    init = function()
-      vim.o.foldcolumn = "0" -- Hide fold column to prevent UI conflict
-      vim.o.foldlevel = 99 -- Using ufo provider need a large value
-      vim.o.foldlevelstart = 99
-      vim.o.foldenable = true
-    end,
-  },
-
-  -- Smooth Scrolling
-  {
-    "karb94/neoscroll.nvim",
-    event = "WinScrolled",
-    config = function()
-      require("neoscroll").setup({
-        -- All standard keys
-        mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
-        hide_cursor = true,
-        stop_eof = true,
-        use_local_scrolloff = false,
-        respect_scrolloff = false,
-        cursor_scroll_step = 1,
-      })
-    end,
   },
 }

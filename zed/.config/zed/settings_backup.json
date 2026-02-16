@@ -12,7 +12,7 @@
     "dock": "bottom",
   },
   "tab_size": 2,
-  "relative_line_numbers": "enabled",
+  "relative_line_numbers": true,
   "cursor_shape": "block",
   "cursor_blink": false,
   "scrollbar": {
@@ -22,7 +22,7 @@
   "autosave": "off",
   "format_on_save": "on",
   "show_whitespaces": "selection",
-  "show_edit_predictions": true,
+  "show_inline_completions": true,
   "inlay_hints": {
     "enabled": true,
   },

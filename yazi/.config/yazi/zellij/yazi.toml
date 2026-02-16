@@ -1,0 +1,25 @@
+# Yazi Configuration (Zellij Override - Previews Disabled)
+
+[manager]
+show_hidden = true
+show_symlink = true
+
+[opener]
+book = [
+    { run = 'open -a Books "$@"', orphan = true, desc = "Apple Books" }
+]
+
+[open]
+prepend_rules = [
+    { name = "*.epub", use = "book" }
+]
+
+[status]
+separator_open  = ""
+separator_close = ""
+show_right = ["permissions", "percentage", "position", "timestamp", "size"]
+
+[preview]
+preview_protocol = "none"
+max_width = 800
+max_height = 1000
