@@ -1,9 +1,11 @@
 # Yazi Configuration (User Override)
 
 [manager]
+query_foreground = false
+query_background = false
+theme_mode = "dark"
 show_hidden = true
 show_symlink = true
-
 [opener]
 book = [
     { run = 'open -a Books "$@"', orphan = true, desc = "Apple Books" }
@@ -20,6 +22,6 @@ separator_close = ""
 show_right = ["permissions", "percentage", "position", "timestamp", "size"]
 
 [preview]
-preview_protocol = "kitty"
+preview_protocol = "chafa"
 max_width = 800
 max_height = 1000
