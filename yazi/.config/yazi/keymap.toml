@@ -4,9 +4,10 @@
 keymap = [
     # Core
     { on = "<Esc>", run = "escape", desc = "Exit" },
-    { on = "<A-q>", run = "quit",   desc = "Quit" },
+    { on = "q",     run = "quit",   desc = "Quit" },
+    { on = "<A-q>", run = "quit",   desc = "Quit (Alt)" },
 
-    # Navigation (Only standard keys allowed)
+    # Navigation
     { on = "k",      run = "arrow prev" },
     { on = "j",      run = "arrow next" },
     { on = "h",      run = "leave" },
@@ -16,31 +17,30 @@ keymap = [
     { on = "<Left>",  run = "leave" },
     { on = "<Right>", run = "enter" },
     { on = "<Enter>", run = "open" },
+    { on = "<Space>", run = [ "toggle", "arrow next" ], desc = "Toggle selection" },
+    { on = "v",       run = "visual_mode", desc = "Visual mode" },
+    { on = "y",       run = "yank", desc = "Copy" },
+    { on = "x",       run = "yank --cut", desc = "Cut" },
+    { on = "p",       run = "paste", desc = "Paste" },
 
-    # Hardened Commands (All prefixed with Alt)
+    # Hardened Commands
     { on = "<A-r>", run = "rename --cursor=before_ext" },
     { on = "<A-a>", run = "create" },
     { on = "<A-f>", run = "filter --smart" },
     { on = "<A-d>", run = "remove" },
     { on = "<A-D>", run = "remove --permanently" },
-    { on = "<A-y>", run = "yank" },
-    { on = "<A-x>", run = "yank --cut" },
-    { on = "<A-p>", run = "paste" },
-    { on = "<A-P>", run = "paste --force" },
     { on = "<A-/>", run = "find --smart" },
     { on = "<A-?>", run = "find --previous --smart" },
     { on = "<A-;>", run = "shell --interactive" },
     { on = "<A-:>", run = "shell --block --interactive" },
     { on = "<A-s>", run = "search --via=fd" },
     { on = "<A-S>", run = "search --via=rg" },
-    { on = "<A-v>", run = "visual_mode" },
-    { on = "<A-V>", run = "visual_mode --unset" },
     { on = "<A-t>", run = "tab_create --current" },
     { on = "<A-w>", run = "tasks:show" },
     { on = "<A-z>", run = "plugin fzf" },
     { on = "<A-Z>", run = "plugin zoxide" },
 
-    # Chords (Also prefixed with Alt)
+    # Chords
     { on = [ "<A-g>", "h" ], run = "cd ~" },
     { on = [ "<A-g>", "c" ], run = "cd ~/.config" },
     { on = [ "<A-c>", "c" ], run = "copy path" },
@@ -53,6 +53,12 @@ keymap = [
     { on = "<C-c>",   run = "close" },
     { on = "<Enter>", run = "close --submit" },
     { on = "<Esc>",   run = "escape" },
+    { on = "<Backspace>", run = "backspace" },
+    { on = "<Delete>",    run = "backspace --under" },
+    { on = "<Left>",      run = "move -1" },
+    { on = "<Right>",     run = "move 1" },
+    { on = "<C-a>",       run = "move bol" },
+    { on = "<C-e>",       run = "move eol" },
 ]
 
 [confirm]
