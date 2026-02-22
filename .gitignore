@@ -48,10 +48,6 @@ zsh/.zcompdump*
 **/.swo
 **/tmp/
 **/cache/
-nchat/.config/nchat/history/
-nchat/.config/nchat/profiles/
-nchat/.config/nchat/tmp/
-nchat/.config/nchat/log.txt*
 
 # --- RAYCAST ---
 raycast/.config/raycast/extensions/

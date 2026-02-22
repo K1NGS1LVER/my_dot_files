@@ -48,10 +48,16 @@ HYPHEN_INSENSITIVE="true"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
- ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
- COMPLETION_WAITING_DOTS="true"
+# COMPLETION_WAITING_DOTS="true"
+
+# Optimization: Limit syntax highlighting length to prevent lag on long lines
+export ZSH_HIGHLIGHT_MAXLENGTH=300
+
+# Optimization: Ensure autosuggestions use async mode for better typing performance
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -107,13 +113,6 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # export MANPATH="/usr/local/man:$MANPATH"
 # export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='nvim'
-fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -189,7 +188,10 @@ _cache_init zoxide init zsh --cmd cd
 _cache_init mole completion zsh
 
 # --- ATUIN (Advanced History) ---
-[[ -s /opt/homebrew/opt/atuin/bin/atuin.sh ]] && source /opt/homebrew/opt/atuin/bin/atuin.sh
+# Cached init with up-arrow hijacking disabled to prevent execution lag
+if command -v atuin &>/dev/null; then
+  _cache_init atuin init zsh --disable-up-arrow
+fi
 
 # --- ZCOMPILE (Auto-compile config for speed) ---
 # Compiles .zshrc to .zshrc.zwc if it has changed
@@ -239,85 +241,83 @@ export LYNX_CFG=~/.lynx.cfg
 export LYNX_LSS=~/.lynx.lss
 
 
-# Brave Browser Function (Handles URLs smart)
-brave() {
-    # 1. Handle empty arguments
+# --- Smart Browser Launcher (DRY: shared by brave/fox) ---
+# Format: "keyword|alias;base_url;search_path"
+_BROWSER_SITES=(
+    "youtube|yt;https://www.youtube.com;/results?search_query="
+    "github|gh;https://github.com;/search?q="
+    "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords="
+    "christ|cu;https://christuniversity.in;"
+    "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword="
+    "monkeytype|mt;https://monkeytype.com;"
+    "keybr|kb;https://www.keybr.com;"
+    "greasyfork|gf;https://greasyfork.org;/scripts/search?q="
+    "openjs;https://openuserjs.org;/?q="
+    "classroom|cl;https://classroom.google.com;"
+    "reddit|rd;https://www.reddit.com;/search/?q="
+    "x|twitter;https://x.com;/search?q="
+    "google|g;https://www.google.com;/search?q="
+    "net;http://192.168.100.100:8090/;"
+)
+
+_open_browser() {
+    local browser="$1"; shift
+
     if [[ -z "$1" ]]; then
-        open -a "Brave Browser"
+        open -a "$browser"
         return
     fi
 
-    # 2. Site definitions
-    # Format: "keyword|alias;base_url;search_path"
-    # We use ';' as a delimiter because it is not part of the standard URL protocol prefix (like 'https:')
-    local sites=(
-        "youtube|yt;https://www.youtube.com;/results?search_query="
-        "github|gh;https://github.com;/search?q="
-        "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords="
-        "christ|cu;https://christuniversity.in;"
-        "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword="
-        "monkeytype|mt;https://monkeytype.com;"
-        "keybr|kb;https://www.keybr.com;"
-        "greasyfork|gf;https://greasyfork.org;/scripts/search?q="
-        "openjs;https://openuserjs.org;/?q="
-        "classroom|cl;https://classroom.google.com;"
-        "reddit|rd;https://www.reddit.com;/search/?q="
-        "x|twitter;https://x.com;/search?q="
-        "google|g;https://www.google.com;/search?q="
-        "net;http://192.168.100.100:8090/;"
-    )
+    local keyword="$1"; shift
 
-    local keyword="$1"
-    shift
+    for site in "${_BROWSER_SITES[@]}"; do
+        local aliases="${site%%;*}"
+        local rest="${site#*;}"
+        local base="${rest%%;*}"
+        local search_path="${rest#*;}"
 
-    # 3. Iterate and match
-    for site in "${sites[@]}"; do
-        # Parse fields using ';' delimiter
-        local aliases="${site%%;*}"   # Everything before the first ';'
-        local rest="${site#*;}"       # Everything after the first ';'
-        local base="${rest%%;*}"      # Everything before the next ';'
-        local search_path="${rest#*;}" # Everything after that ';' (optional)
-
-        # Check if keyword matches any alias (surrounded by pipes)
         if [[ "|${aliases}|" == *"|${keyword}|"* ]]; then
             if [[ -z "$@" ]]; then
-                # No query provided -> Open Base URL
-                open -a "Brave Browser" "$base"
+                open -a "$browser" "$base"
             else
-                # Query provided -> Construct Search URL
                 local query=$(printf "%s+" "$@")
-                query=${query%+} # Remove trailing '+'
-                
-                # Use search_path if available, otherwise append query to base (fallback)
+                query=${query%+}
                 if [[ -n "$search_path" && "$search_path" != "$base" ]]; then
-                    # Check if search_path is relative (starts with /)
                     if [[ "$search_path" == /* ]]; then
-                         # Remove trailing slash from base if present to avoid double slashes
-                        open -a "Brave Browser" "${base%/}${search_path}${query}"
+                        open -a "$browser" "${base%/}${search_path}${query}"
                     else
-                        open -a "Brave Browser" "${search_path}${query}"
+                        open -a "$browser" "${search_path}${query}"
                     fi
                 else
-                    open -a "Brave Browser" "${base}${query}"
+                    open -a "$browser" "${base}${query}"
                 fi
             fi
             return
         fi
     done
 
-    # 4. Default Fallback: Treat as direct URL
     if [[ "$keyword" != http* ]]; then
-        open -a "Brave Browser" "https://$keyword"
+        open -a "$browser" "https://$keyword"
     else
-        open -a "Brave Browser" "$keyword"
+        open -a "$browser" "$keyword"
     fi
 }
+
+brave() { _open_browser "Brave Browser" "$@"; }
 
 # yazi wrapper function
 export EDITOR="nvim"
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
+    
+    # In Zellij, we must disable previews to prevent the 'j/k' jumping bug
+    # caused by mangled terminal responses to image queries.
+    if [[ -n "$ZELLIJ" ]]; then
+        YAZI_CONFIG_HOME="$HOME/.config/yazi/zellij" command yazi "$@" --cwd-file="$tmp"
+    else
+        command yazi "$@" --cwd-file="$tmp"
+    fi
+
     if [[ -f "$tmp" ]]; then
         local cwd
         IFS= read -r cwd < "$tmp"
@@ -362,6 +362,9 @@ export PATH="$PATH:/Users/dan/.local/bin"
 
 # Add Mason binaries to PATH (Neovim tools)
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+
+# Bob Neovim Version Manager
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
 # Video Players
 alias play='mpv'
@@ -466,10 +469,11 @@ esac
 # pnpm end
 
 # Neovim Playground Alias
-alias nv-play="NVIM_APPNAME=nvim-playground nvim"
+alias nv-play="NVIM_APPNAME=nvim-playground $HOME/.local/share/bob/nightly/bin/nvim"
 
 # Neovim Kickstart Alias
 alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
+alias mini="NVIM_APPNAME=mini nvim"
 
 # Cisco Packet Tracer
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
@@ -494,21 +498,100 @@ alias sepia='shortcuts run "Sepia Mode"'
 
 # --- SYSTEM EFFICIENCY ---
 
-# 1. Update Everything (Homebrew, Zsh, Pipx, Mac Store)
+# 1. Update Everything (Homebrew, Zsh, Pipx, Node, etc.)
 up() {
-    echo "🚀 Updating Homebrew..."
-    brew update && brew upgrade && brew cleanup
-    
+    echo "🚀 Starting System-wide Update..."
+
+    # Homebrew
+    if command -v brew &> /dev/null; then
+        echo "🍺 Updating Homebrew..."
+        brew update && brew upgrade && brew cleanup
+    fi
+
+    # Oh My Zsh
+    if [[ -d "$ZSH" ]]; then
+        echo "⚙️ Updating Oh My Zsh..."
+        env ZSH="$ZSH" /bin/zsh "$ZSH/tools/upgrade.sh" --no-auto-restart
+    fi
+
+    # Node.js (npm)
+    if command -v npm &> /dev/null; then
+        echo "📦 Updating npm & global packages..."
+        npm install -g npm
+        npm update -g
+    fi
+
+    # pnpm
+    if command -v pnpm &> /dev/null; then
+        echo "📦 Updating pnpm..."
+        pnpm self-update
+    fi
+
+    # Bun
+    if command -v bun &> /dev/null; then
+        echo "🍞 Updating Bun..."
+        bun upgrade
+    fi
+
+    # Deno
+    if command -v deno &> /dev/null; then
+        echo "🦕 Updating Deno..."
+        deno upgrade
+    fi
+
+    # Python (Pipx)
     if command -v pipx &> /dev/null; then
         echo "🐍 Updating Pipx packages..."
         pipx upgrade-all
     fi
-    
-    echo "💎 Updating System Gems..."
-    gem cleanup
 
-    echo "📓 Updating Obsidian MOCs..."
-    (cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py)
+    # Ruby (Gems)
+    if command -v gem &> /dev/null; then
+        echo "💎 Updating System Gems..."
+        gem update --system
+        gem update
+        gem cleanup
+    fi
+
+    # Neovim (Bob)
+    if command -v bob &> /dev/null; then
+        echo "💤 Updating Neovim versions..."
+        bob update --all
+    fi
+
+    # Tealdeer (tldr)
+    if command -v tldr &> /dev/null; then
+        echo "📖 Updating tldr pages..."
+        tldr --update
+    fi
+
+    # Conda
+    if command -v conda &> /dev/null; then
+        echo "🧪 Updating Conda..."
+        conda update -n base -c defaults conda --yes
+    fi
+
+    # ani-cli
+    if [[ -d ~/.local/share/ani-cli ]]; then
+        echo "📺 Updating ani-cli..."
+        anim-update
+    fi
+
+    # Obsidian MOCs
+    if [[ -d ~/notes ]]; then
+        echo "📓 Updating Obsidian MOCs..."
+        (cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py)
+    fi
+
+    # macOS App Store
+    if command -v mas &> /dev/null; then
+        echo "🍎 Updating Mac App Store apps..."
+        mas upgrade
+    fi
+
+    # macOS System Updates (Check only)
+    echo "🖥️ Checking for macOS updates..."
+    softwareupdate -l
 
     echo "✅ System Updated!"
 }
@@ -544,88 +627,8 @@ vf() {
 
 export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
 
-# Firefox Browser Function (Replicated from Brave)
-# Firefox Function (Handles URLs smart)
-fox() {
-    # 1. Handle empty arguments
-    if [[ -z "$1" ]]; then
-        open -a "Firefox"
-        return
-    fi
-
-    # 2. Site definitions
-    # Format: "keyword|alias;base_url;search_path"
-    # We use ';' as a delimiter because it is not part of the standard URL protocol prefix (like 'https:')
-    local sites=(
-        "youtube|yt;https://www.youtube.com;/results?search_query="
-        "github|gh;https://github.com;/search?q="
-        "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords="
-        "christ|cu;https://christuniversity.in;"
-        "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword="
-        "monkeytype|mt;https://monkeytype.com;"
-        "keybr|kb;https://www.keybr.com;"
-        "greasyfork|gf;https://greasyfork.org;/scripts/search?q="
-        "openjs;https://openuserjs.org;/?q="
-        "classroom|cl;https://classroom.google.com;"
-        "reddit|rd;https://www.reddit.com;/search/?q="
-        "x|twitter;https://x.com;/search?q="
-        "google|g;https://www.google.com;/search?q="
-        "net;http://192.168.100.100:8090/;"
-    )
-
-    local keyword="$1"
-    shift
-
-    # 3. Iterate and match
-    for site in "${sites[@]}"; do
-        # Parse fields using ';' delimiter
-        local aliases="${site%%;*}"   # Everything before the first ';'
-        local rest="${site#*;}"       # Everything after the first ';'
-        local base="${rest%%;*}"      # Everything before the next ';'
-        local search_path="${rest#*;}" # Everything after that ';' (optional)
-
-        # Check if keyword matches any alias (surrounded by pipes)
-        if [[ "|${aliases}|" == *"|${keyword}|"* ]]; then
-            if [[ -z "$@" ]]; then
-                # No query provided -> Open Base URL
-                open -a "Firefox" "$base"
-            else
-                # Query provided -> Construct Search URL
-                local query=$(printf "%s+" "$@")
-                query=${query%+} # Remove trailing '+'
-                
-                # Use search_path if available, otherwise append query to base (fallback)
-                if [[ -n "$search_path" && "$search_path" != "$base" ]]; then
-                    # Check if search_path is relative (starts with /)
-                    if [[ "$search_path" == /* ]]; then
-                         # Remove trailing slash from base if present to avoid double slashes
-                        open -a "Firefox" "${base%/}${search_path}${query}"
-                    else
-                        open -a "Firefox" "${search_path}${query}"
-                    fi
-                else
-                    open -a "Firefox" "${base}${query}"
-                fi
-            fi
-            return
-        fi
-    done
-
-    # 4. Default Fallback: Treat as direct URL
-    if [[ "$keyword" != http* ]]; then
-        open -a "Firefox" "https://$keyword"
-    else
-        open -a "Firefox" "$keyword"
-    fi
-}
-
-
-# OpenClaw Configuration
-export PATH="$HOME/.openclaw/bin:$PATH"
-
-
-
-
+# Firefox — uses shared _open_browser
+fox() { _open_browser "Firefox" "$@"; }
 
 # Toggle macOS Dark Mode
 toggle_dark() {
@@ -636,4 +639,9 @@ toggle_dark() {
         echo "☀️ Light Mode enabled"
     fi
 }
+
+
 alias dark="toggle_dark"
+
+# function which puts the computer to sleep, closes the running docker containers and does some cleanup before sleeping 
+alias goodnight='~/scripts/goodnight.sh'

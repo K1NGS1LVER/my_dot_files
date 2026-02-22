@@ -7,9 +7,6 @@
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:$PATH"
 
 # --- TOOLS ---
-# Starship (Prompt)
-# eval "$(starship init bash)"
-
 # Zoxide (Smart CD)
 eval "$(zoxide init bash)"
 

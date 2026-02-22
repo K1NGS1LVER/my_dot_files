@@ -1,4 +1,7 @@
-# Yazi Configuration (Zellij Override - Previews Disabled)
+# Yazi Configuration (Zellij Override - Image Previews DISABLED)
+# Reason: Zellij cannot passthrough terminal image protocols (Kitty/Sixel/Chafa).
+# RGB escape sequences from image rendering leak into stdin, causing ghost
+# keypresses (j/k navigation, rename popup, shell command popup).
 
 [manager]
 query_foreground = false
@@ -6,6 +9,7 @@ query_background = false
 theme_mode = "dark"
 show_hidden = true
 show_symlink = true
+
 [opener]
 book = [
     { run = 'open -a Books "$@"', orphan = true, desc = "Apple Books" }
@@ -17,11 +21,12 @@ prepend_rules = [
 ]
 
 [status]
-separator_open  = ""
-separator_close = ""
+separator_open  = ""
+separator_close = ""
 show_right = ["permissions", "percentage", "position", "timestamp", "size"]
 
 [preview]
-preview_protocol = "chafa"
+# CRITICAL: No image protocol inside Zellij — prevents RGB escape leak bug
 max_width = 800
 max_height = 1000
+image_filter = "nearest"

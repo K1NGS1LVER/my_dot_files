@@ -151,8 +151,6 @@ if status is-interactive
         atuin init fish | source
     end
 
-    # Starship Prompt (Highly recommended for cross-shell unity)
-    # starship init fish | source
 
     # --- TODO TOOL ---
     # Using your new Go binary
@@ -162,60 +160,64 @@ if status is-interactive
     fish_add_path $HOME/.local/bin
     fish_add_path $HOME/.cargo/bin
     fish_add_path /opt/homebrew/bin
-end
-# The Fuck (Lazy Load)
-function fuck
-    functions --erase fuck
-    thefuck --alias | source
-    fuck $argv
-end
-function ntmux
-    if count $argv > /dev/null
-        zellij $argv
-    else
-        # Generate random number 1-10
-        set -l roll (random 1 10)
-        if test $roll -eq 1
-            echo "🎲 Lucky roll! Generating random name..."
-            zellij
+
+    # The Fuck (Lazy Load)
+    function fuck
+        functions --erase fuck
+        thefuck --alias | source
+        fuck $argv
+    end
+
+    function ntmux
+        if count $argv > /dev/null
+            zellij $argv
         else
-            zellij attach -c "dan"
+            set -l roll (random 1 10)
+            if test $roll -eq 1
+                echo "🎲 Lucky roll! Generating random name..."
+                zellij
+            else
+                zellij attach -c "dan"
+            end
         end
     end
-end
 
-# --- FASTFETCH WRAPPER ---
-function fetch
-    if test (count $argv) -eq 0
-        fastfetch
-        return
+    # --- FASTFETCH WRAPPER ---
+    function fetch
+        if test (count $argv) -eq 0
+            fastfetch
+            return
+        end
+
+        switch $argv[1]
+            case "go"
+                fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
+            case "arch"
+                fastfetch --logo arch
+            case "random"
+                set -l logos arch android apple windows linux ubuntu fedora debian
+                set -l random_logo (random choice $logos)
+                echo "Displaying logo: $random_logo"
+                fastfetch --logo $random_logo
+            case "*"
+                fastfetch --logo $argv[1]
+        end
     end
 
-    switch $argv[1]
-        case "go"
-            fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
-        case "arch"
-            fastfetch --logo arch
-        case "random"
-            set -l logos arch android apple windows linux ubuntu fedora debian
-            set -l random_logo (random choice $logos)
-            echo "Displaying logo: $random_logo"
-            fastfetch --logo $random_logo
-        case "*"
-            fastfetch --logo $argv[1]
-    end
+    # Neovim Playground Alias
+    alias nv-play="NVIM_APPNAME=nvim-playground nvim"
+
+    # Neovim Kickstart Alias
+    alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
+
+    # Neovim Mini Alias
+    alias mini="NVIM_APPNAME=mini nvim"
+
+    # Cisco Packet Tracer
+    alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
+
+    alias explain="$HOME/scripts/explain_tree.py"
+
+    # Starship Prompt
+    starship init fish | source
 end
-
-# Neovim Playground Alias
-alias nv-play="NVIM_APPNAME=nvim-playground nvim"
-
-# Neovim Kickstart Alias
-alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
-
-# Neovim Mini Alias
-alias mini="NVIM_APPNAME=mini nvim"
-
-# Cisco Packet Tracer
-alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
-starship init fish | source
-alias explain="$HOME/scripts/explain_tree.py"
