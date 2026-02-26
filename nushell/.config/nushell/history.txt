@@ -1,0 +1,259 @@
+y
+c
+y
+c
+ls
+clear
+y
+cd dotfiels
+cd dotfiles
+cd dotfil
+ls
+home
+cd dotfiles
+cd projects
+relaod
+c
+cd docseek
+c
+ls
+c
+ollama serve<\n>
+ollama serve
+cd /Users/dan/projects/docSeek---Modular-RAG-system-<\n>source .venv/bin/activate<\n>python -m uvicorn app.server:app --host 0.0.0.0 --port 8000 --reload<\n>
+cd frontend
+zsh
+ntmux
+ls
+c
+zsh
+ollama list
+ls
+c
+ai
+c
+ps 
+ps | explore
+c
+kill -f 43311
+ls
+ps
+ollama serve --shutdown
+c
+ai
+c
+ollama serve
+c
+ls
+clear
+ps
+c
+ps | grep ollama
+kill -f 94125 
+kill -f 93696
+c
+ps | grep ollama
+ls
+c
+ls
+cls
+ls
+;c
+c
+cd notes
+cd 3tri/
+ls
+cd dcnetworks/
+ls
+c
+cd docseek
+ls
+c
+cd docseek
+ls
+c
+cd docseek frontend
+c
+cd docseek 
+c
+ls
+v .
+v .
+cd docseek 
+c
+cd tss
+ls
+cd advent
+..
+ls
+c
+ls
+cd advent_2015/
+ls
+c
+v .
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+npm run dev
+./run_server.sh
+cd gogo
+ls
+rm `$tmp`
+c
+ls
+cd bootdevPratice/
+ls
+c
+cd funs/
+ls
+c
+v .
+x
+c
+v .
+c
+home
+c
+cd dotfiles
+c
+clear
+zsh
+reload
+c
+reload
+c
+reload
+cd dcn
+c
+v .
+c
+ls
+cd docseek 
+c
+cc
+d
+c
+cc
+c
+./run_server.sh
+c
+./run_server.sh
+c
+./run_server.sh
+c
+ps
+c
+lsof -i 8000
+c
+zsh
+c
+lsof -i :8000
+lsof :8000
+c
+kill -f (lsof -t -i 8000)
+kill -f (lsof -t -i :8000)
+zsh
+kill -9 (lsof -t -i :8000)
+kill -9 $(lsof -t -i :8000)
+c
+kill -9 (lsof -t -i :8000)
+cd notes quickies
+ls
+test.md
+c kill -9 (lsof -t -i :8000 | into int)
+c
+ls
+ls
+c
+c
+ls
+c
+ls
+c
+cd goo
+..
+cd goog
+cd gogo
+ls
+c
+cd pratice/
+c
+ls
+c
+go run warmup.go
+ls
+c
+go run warmup.go
+cd gogo
+c
+cd pratice/
+c
+ls
+c
+go run task1_26.go
+ls
+go run pluggabletasksystem.go
+go run task1_26.go
+go run pluggabletasksystem.go
+go run task1_26.go
+c
+v .
+ls
+c
+ll
+cd 
+ls
+c
+ls
+c
+cd /Users/dan/Library/Android/sdk
+ls
+cd emulator/
+ls
+./emulator
+./emulator --help
+./emulator --list-avd
+bat | ./emulator --help
+ntmux
+./emulator -list-avd
+fox
+fox yt cats
+config nu
+cd dotfiles
+ls
+cd bash
+ls
+cd .config
+ls
+cd dotfiles
+ls
+cd bash
+ls
+ll
+la
+cd .bashrc
+fetch go
+cd docseek 
+ls
+cd docseek 
+cd frontend
+ls
+c
+cd docseek 
+npm run dev
+./run_server.sh
+c
+lsof -i :8000
+lsof -i 8000
+c
+fox
+c
+cd dotfiles
+ls

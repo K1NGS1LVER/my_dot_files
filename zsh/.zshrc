@@ -109,6 +109,56 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers -
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 
+# --- CATPPUCCIN MACCHIATO THEME ---
+export CATPPUCCIN_ROSEWATER="#f4dbd6"
+export CATPPUCCIN_FLAMINGO="#f0c1ce"
+export CATPPUCCIN_PINK="#f5bde6"
+export CATPPUCCIN_MAUVE="#c6a0f6"
+export CATPPUCCIN_RED="#ed8796"
+export CATPPUCCIN_MAROON="#ee99a0"
+export CATPPUCCIN_PEACH="#f5a97f"
+export CATPPUCCIN_YELLOW="#eed49f"
+export CATPPUCCIN_GREEN="#a6da95"
+export CATPPUCCIN_TEAL="#8bd5ca"
+export CATPPUCCIN_SKY="#91d7e3"
+export CATPPUCCIN_SAPPHIRE="#7dc4e4"
+export CATPPUCCIN_BLUE="#8aadf4"
+export CATPPUCCIN_LAVENDER="#b7bdf8"
+export CATPPUCCIN_TEXT="#cad3f5"
+export CATPPUCCIN_SUBTEXT1="#b8c0e0"
+export CATPPUCCIN_SUBTEXT0="#a5adcb"
+export CATPPUCCIN_OVERLAY2="#939ab7"
+export CATPPUCCIN_OVERLAY1="#8087a2"
+export CATPPUCCIN_OVERLAY0="#6e738d"
+export CATPPUCCIN_SURFACE2="#5b6078"
+export CATPPUCCIN_SURFACE1="#494d64"
+export CATPPUCCIN_SURFACE0="#363a4f"
+export CATPPUCCIN_BASE="#24273a"
+export CATPPUCCIN_MANTLE="#1e2030"
+export CATPPUCCIN_CRUST="#181926"
+
+# FZF Catppuccin Macchiato
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:$CATPPUCCIN_SURFACE0,bg:$CATPPUCCIN_BASE,spinner:$CATPPUCCIN_ROSEWATER,hl:$CATPPUCCIN_RED \
+--color=fg:$CATPPUCCIN_TEXT,header:$CATPPUCCIN_RED,info:$CATPPUCCIN_MAUVE,pointer:$CATPPUCCIN_ROSEWATER \
+--color=marker:$CATPPUCCIN_ROSEWATER,fg+:$CATPPUCCIN_TEXT,prompt:$CATPPUCCIN_MAUVE,hl+:$CATPPUCCIN_RED"
+
+# Zsh Syntax Highlighting Styles
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[command]='fg=#8aadf4' # Blue
+ZSH_HIGHLIGHT_STYLES[alias]='fg=#8bd5ca'   # Teal
+ZSH_HIGHLIGHT_STYLES[autid-command]='fg=#8aadf4'
+ZSH_HIGHLIGHT_STYLES[function]='fg=#8aadf4'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=#8aadf4'
+ZSH_HIGHLIGHT_STYLES[keyword]='fg=#c6a0f6' # Mauve
+ZSH_HIGHLIGHT_STYLES[string]='fg=#a6da95'  # Green
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#f5a97f' # Peach
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#f5a97f'
+ZSH_HIGHLIGHT_STYLES[path]='fg=#f4dbd6'    # Rosewater
+ZSH_HIGHLIGHT_STYLES[path_prefix]='fg=#f4dbd6'
+ZSH_HIGHLIGHT_STYLES[path_approx]='fg=#f4dbd6'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=#f5bde6' # Pink
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -645,3 +695,29 @@ alias dark="toggle_dark"
 
 # function which puts the computer to sleep, closes the running docker containers and does some cleanup before sleeping 
 alias goodnight='~/scripts/goodnight.sh'
+bindkey -v
+
+# --- FILE ASSOCIATIONS (Open files by typing their name) ---
+command_not_found_handler() {
+    # If it's a file, handle by extension (triggered only if not in PATH)
+    if [[ -f "$1" ]]; then
+        local ext="${1##*.}"
+        case "${ext:l}" in
+            py|js|ts|java|cpp|c|go|rs|html|css|sh)
+                nvim "$1"
+                ;;
+            pdf)
+                pdf "$1"
+                ;;
+            mp4|mov|avi|mkv|mp3|wav|ogg)
+                open -a IINA "$1"
+                ;;
+            *)
+                open "$1"
+                ;;
+        esac
+    else
+        echo "zsh: command not found: $1"
+        return 127
+    fi
+}

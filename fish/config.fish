@@ -220,4 +220,24 @@ if status is-interactive
 
     # Starship Prompt
     starship init fish | source
+
+    # --- FILE ASSOCIATIONS ---
+    function fish_command_not_found
+        set -l cmd $argv[1]
+        if test -f "$cmd"
+            set -l ext (string split -r -m1 . $cmd)[2]
+            switch (string lower "$ext")
+                case py js ts java cpp c go rs html css sh
+                    nvim $cmd
+                case pdf
+                    pdf $cmd
+                case mp4 mov avi mkv mp3 wav ogg
+                    open -a IINA $cmd
+                case '*'
+                    open $cmd
+            end
+        else
+            __fish_default_command_not_found_handler $argv
+        end
+    end
 end

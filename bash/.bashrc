@@ -229,3 +229,28 @@ alias mini="NVIM_APPNAME=mini nvim"
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
 eval "$(starship init bash)"
 alias explain="$HOME/scripts/explain_tree.py"
+set -o vi
+
+# --- FILE ASSOCIATIONS ---
+command_not_found_handle() {
+    if [[ -f "$1" ]]; then
+        local ext="${1##*.}"
+        case "${ext,,}" in
+            py|js|ts|java|cpp|c|go|rs|html|css|sh)
+                nvim "$1"
+                ;;
+            pdf)
+                pdf "$1"
+                ;;
+            mp4|mov|avi|mkv|mp3|wav|ogg)
+                open -a IINA "$1"
+                ;;
+            *)
+                open "$1"
+                ;;
+        esac
+    else
+        echo "bash: $1: command not found"
+        return 127
+    fi
+}
