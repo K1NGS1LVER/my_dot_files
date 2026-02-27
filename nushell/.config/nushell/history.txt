@@ -257,3 +257,72 @@ fox
 c
 cd dotfiles
 ls
+git add .
+c
+git commit -m "add global alias fuctions to all shells"
+git push 
+git push
+c
+git status
+c
+fox
+cd bash/
+ll
+la
+c
+la
+home
+la
+c
+ls
+cd advent_2015/
+config nu
+c
+home
+ls
+lla
+v.
+ls
+c
+cd 
+ls
+c
+cd projects
+ls
+c
+cd 3tri andriod
+ls
+cd config
+ls
+cd kitty/
+c
+ls
+ll
+lla
+c
+ls
+cd projects
+ls
+la
+c
+cd dotfiles
+ls
+y
+c
+config nu
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+sls
+ls
+c
+cd project ad
+ls
+cd dotfiles
+ls

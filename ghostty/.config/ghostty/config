@@ -70,6 +70,8 @@ confirm-close-surface = false
 window-vsync = true
 # Better font rendering on macOS
 font-thicken = true
+cursor-style = bar
+cursor-color = #f4dbd6
 
 #url and link handling
 # Click links with modifier
@@ -138,3 +140,4 @@ focus-follows-mouse = false
 # Prevent accidental focus changes
 
 auto-update = download
+custom-shader = shaders/cursor_trail.glsl
