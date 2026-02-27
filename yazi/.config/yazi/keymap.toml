@@ -1,69 +1,30 @@
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
 
-[mgr]
-keymap = [
-    # Core
-    { on = "<Esc>", run = "escape", desc = "Exit" },
-    { on = "q",     run = "quit",   desc = "Quit" },
-    { on = "<A-q>", run = "quit",   desc = "Quit (Alt)" },
-
-    # Navigation
-    { on = "k",      run = "arrow prev" },
-    { on = "j",      run = "arrow next" },
-    { on = "h",      run = "leave" },
-    { on = "l",      run = "enter" },
-    { on = "<Up>",   run = "arrow prev" },
-    { on = "<Down>", run = "arrow next" },
-    { on = "<Left>",  run = "leave" },
-    { on = "<Right>", run = "enter" },
-    { on = "<Enter>", run = "open" },
-    { on = "<Space>", run = [ "toggle", "arrow next" ], desc = "Toggle selection" },
-    { on = "v",       run = "visual_mode", desc = "Visual mode" },
-    { on = "y",       run = "yank", desc = "Copy" },
-    { on = "x",       run = "yank --cut", desc = "Cut" },
-    { on = "p",       run = "paste", desc = "Paste" },
-
+[manager]
+prepend_keymap = [
     # Hardened Commands
-    { on = "<A-r>", run = "rename --cursor=before_ext" },
-    { on = "<A-a>", run = "create" },
-    { on = "<A-f>", run = "filter --smart" },
-    { on = "<A-d>", run = "remove" },
-    { on = "<A-D>", run = "remove --permanently" },
-    { on = "<A-/>", run = "find --smart" },
-    { on = "<A-?>", run = "find --previous --smart" },
-    { on = "<A-;>", run = "shell --interactive" },
-    { on = "<A-:>", run = "shell --block --interactive" },
-    { on = "<A-s>", run = "search --via=fd" },
-    { on = "<A-S>", run = "search --via=rg" },
-    { on = "<A-t>", run = "tab_create --current" },
-    { on = "<A-w>", run = "tasks:show" },
-    { on = "<A-z>", run = "plugin fzf" },
-    { on = "<A-Z>", run = "plugin zoxide" },
+    { on = "<A-r>", run = "rename --cursor=before_ext", desc = "Rename" },
+    { on = "<A-a>", run = "create", desc = "Create" },
+    { on = "<A-f>", run = "filter --smart", desc = "Filter" },
+    { on = "<A-/>", run = "find --smart", desc = "Find" },
+    { on = "<A-?>", run = "find --previous --smart", desc = "Find (Prev)" },
+    { on = "<A-;>", run = "shell --interactive", desc = "Shell" },
+    { on = "<A-:>", run = "shell --block --interactive", desc = "Shell (Block)" },
+    { on = "<A-s>", run = "search --via=fd", desc = "Search (fd)" },
+    { on = "<A-S>", run = "search --via=rg", desc = "Search (rg)" },
+    { on = "<A-t>", run = "tab_create --current", desc = "New Tab" },
+    { on = "<A-w>", run = "tasks:show", desc = "Tasks" },
+    { on = "<A-z>", run = "plugin fzf", desc = "FZF" },
+    { on = "<A-Z>", run = "plugin zoxide", desc = "Zoxide" },
+    { on = "<A-q>", run = "quit", desc = "Quit (Alt)" },
 
     # Chords
-    { on = [ "<A-g>", "h" ], run = "cd ~" },
-    { on = [ "<A-g>", "c" ], run = "cd ~/.config" },
-    { on = [ "<A-c>", "c" ], run = "copy path" },
-    { on = [ "<A-m>", "s" ], run = "linemode size" },
-    { on = [ "<A-,>", "m" ], run = "sort mtime" },
-]
+    { on = [ "<A-g>", "h" ], run = "cd ~", desc = "Go Home" },
+    { on = [ "<A-g>", "c" ], run = "cd ~/.config", desc = "Go Config" },
+    { on = [ "<A-c>", "c" ], run = "copy path", desc = "Copy Path" },
+    { on = [ "<A-m>", "s" ], run = "linemode size", desc = "Linemode Size" },
+    { on = [ "<A-,>", "m" ], run = "sort mtime", desc = "Sort Mtime" },
 
-[input]
-keymap = [
-    { on = "<C-c>",   run = "close" },
-    { on = "<Enter>", run = "close --submit" },
-    { on = "<Esc>",   run = "escape" },
-    { on = "<Backspace>", run = "backspace" },
-    { on = "<Delete>",    run = "backspace --under" },
-    { on = "<Left>",      run = "move -1" },
-    { on = "<Right>",     run = "move 1" },
-    { on = "<C-a>",       run = "move bol" },
-    { on = "<C-e>",       run = "move eol" },
-]
-
-[confirm]
-keymap = [
-    { on = "<Esc>",   run = "close" },
-    { on = "y",       run = "close --submit" },
-    { on = "n",       run = "close" },
+    # Custom Behavior
+    { on = "<Space>", run = [ "toggle", "arrow next" ], desc = "Toggle selection" },
 ]

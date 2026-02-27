@@ -326,3 +326,121 @@ cd project ad
 ls
 cd dotfiles
 ls
+git add .
+git commit -m "add kitty config"
+git push
+c
+ls
+v .
+config nu
+c
+ls
+git push
+c
+ls
+c
+btop
+ls
+c
+ls
+ll
+ls
+ll
+la
+lla
+cd quickies
+ls
+c
+ls
+c
+ls
+touch pp.json
+v pp.json 
+open pp.json as pp.yaml
+c
+open pp.json | to yaml
+ls | sort-by size
+c
+ls
+c
+rm pp.json
+ls
+c
+home
+c
+ls
+c
+ls
+cl
+c
+ls
+c
+ls
+cl
+c
+ls
+c
+l
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+cd projects/
+ls
+c
+rm $tmp
+ls
+rm $tmp
+v .
+c
+ls
+rm `$tmp`
+c
+cd go music
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+cl
+c
+zsh
+ls
+c
+cd go music
+v .
+y
+cd dotfiles
+ls
+c
+cd gogo
+ls
+cd bootdevPratice/
+v .
+cd funs/
+touch curryingFuncs.go
+v .
+c
+cd 
+c
+cd gogo
+v .
+cd dotfiles
+c
