@@ -1,8 +1,5 @@
 # config.nu - Nushell Configuration (0.110.0)
 
-# zoxide for yazi
-source ./zoxide.nu
-
 # --- ALIASES ---
 alias k = ^kotlin
 alias kc = ^kotlinc
@@ -225,6 +222,8 @@ let catppuccin = {
 # Apply Theme to Config
 $env.config = {
     show_banner: false
+    edit_mode: 'vi'
+    highlight_resolved_externals: true
     ls: {
         use_ls_colors: true
         clickable_links: true
@@ -267,15 +266,16 @@ $env.config = {
         shape_custom: $catppuccin.green
         shape_datetime: $catppuccin.teal
         shape_directory: $catppuccin.blue
-        shape_external: $catppuccin.sky
+        shape_external: $catppuccin.red
+        shape_external_resolved: $catppuccin.green
         shape_externalarg: $catppuccin.green
         shape_filepath: $catppuccin.teal
         shape_flag: $catppuccin.sky
         shape_float: $catppuccin.mauve
-        shape_garbage: { fg: $catppuccin.text bg: $catppuccin.red }
+        shape_garbage: { fg: $catppuccin.red attr: b }
         shape_globpattern: $catppuccin.teal
         shape_int: $catppuccin.mauve
-        shape_internalcall: $catppuccin.sky
+        shape_internalcall: $catppuccin.green
         shape_keyword: $catppuccin.mauve
         shape_list: $catppuccin.sky
         shape_literal: $catppuccin.blue
@@ -318,11 +318,6 @@ $env.config = {
 }
 
 
-$env.config.show_banner = false
-
-$env.config.edit_mode = 'vi'
-
-
 # --- PLUGINS & SOURCES ---
 # source zoxide.nu
 
@@ -353,3 +348,6 @@ $env.config.hooks.command_not_found = { |cmd|
         null
     }
 }
+
+# zoxide for yazi
+source ./zoxide.nu

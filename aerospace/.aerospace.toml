@@ -201,6 +201,20 @@ on-mode-changed = []
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    alt-shift-a = 'mode abbesion' # Abbesion (Floating) Mode
+
+    # --- New Layout Controls ---
+    alt-shift-f = 'macos-native-fullscreen' # Native Fullscreen
+    alt-space = 'layout floating tiling'    # Toggle Tiling vs Floating
+
+# 'abbesion' binding mode declaration (Floating Window Management)
+[mode.abbesion.binding]
+    h = 'move left'
+    j = 'move down'
+    k = 'move up'
+    l = 'move right'
+    f = ['layout floating tiling', 'mode main'] # Toggle and exit
+    esc = 'mode main'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

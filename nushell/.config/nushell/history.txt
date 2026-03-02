@@ -444,3 +444,390 @@ cd gogo
 v .
 cd dotfiles
 c
+git add .
+git commit -m "chore: fix yazi config and conflicting keybindings"
+git push
+c
+cd bootdevPratice/
+ls
+v .
+cd 3tri dcn
+ls
+v .
+c
+ls
+c
+cd structs
+..
+cd structs/
+c
+go run nestedstructs.go
+c
+cd structs/
+cd structs
+c
+v .
+go run nestedstructs.go
+gmeini
+c
+c
+git add .
+git commit -m "structs:nested"
+git push
+c
+fox
+cd notes go
+v .
+c
+cd gogo strcuts
+cd gogo 
+cd bootdevPratice/structs/
+c
+go run structmethods.go
+go run structmethod.go
+dan 
+c
+v .
+r
+c
+v .
+c
+go run structmethod.go
+git help git 
+git help git
+help git 
+c
+git -v
+c
+zsh
+c
+git help git
+c
+fox
+cd dotfiles
+c
+git commit-tree
+c
+cfjlsjf
+c
+import React, { useState, useEffect } from "react";\<\n>import { motion } from "framer-motion";\<\n>import { CheckCircle, Circle } from "lucide-react";\<\n>\<\n>export default function Hard75Timetable() {\<\n>  const tasks = [\<\n>    { key: "workout1", label: "Workout 1" },\<\n>    { key: "dsapract", label: "DSA" },\<\n>    { key: "fullstack", label: "Full-stack" },\<\n>    { key: "workout2", label: "Workout 2" },\<\n>    { key: "academics", label: "Academics" },\<\n>    { key: "reading", label: "Reading" },\<\n>    { key: "journal", label: "Journal" },\<\n>  ];\<\n>\<\n>  const [checks, setChecks] = useState({});\<\n>  const [progress, setProgress] = useState(0);\<\n>\<\n>  useEffect(() => {\<\n>    // Load saved progress from localStorage\<\n>    const saved = {};\<\n>    tasks.forEach((t) => {\<\n>      const val = localStorage.getItem("hard75_" + t.key);\<\n>      if (val === "1") saved[t.key] = true;\<\n>    });\<\n>    setChecks(saved);\<\n>  }, []);\<\n>\<\n>  useEffect(() => {\<\n>    // Update progress\<\n>    const total = tasks.length;\<\n>    const done = Object.values(checks).filter(Boolean).length;\<\n>    setProgress(Math.round((done / total) * 100));\<\n>  }, [checks]);\<\n>\<\n>  const toggleCheck = (key) => {\<\n>    setChecks((prev) => {\<\n>      const updated = { ...prev, [key]: !prev[key] };\<\n>      localStorage.setItem("hard75_" + key, updated[key] ? "1" : "0");\<\n>      return updated;\<\n>    });\<\n>  };\<\n>\<\n>  const resetChecks = () => {\<\n>    localStorage.clear();\<\n>    setChecks({});\<\n>  };\<\n>\<\n>  return (\<\n>    <div className="min-h-screen bg-gradient-to-b from-[#0f0f14] to-[#07070a] text-[#eef0ff] p-6 md:p-10 font-inter">\<\n>      <div className="max-w-6xl mx-auto space-y-8">\<\n>        {/* Header */}\<\n>        <motion.header\<\n>          initial={{ opacity: 0, y: -15 }}\<\n>          animate={{ opacity: 1, y: 0 }}\<\n>          className="flex items-center gap-4"\<\n>        >\<\n>          <motion.div\<\n>            whileHover={{ rotate: 10, scale: 1.05 }}\<\n>            className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#5b2cff] to-[#8a5bff] flex items-center justify-center shadow-lg shadow-purple-800/20"\<\n>          >\<\n>            <h1 className="text-xl font-bold">DA</h1>\<\n>          </motion.div>\<\n>          <div>\<\n>            <h2 className="text-2xl font-semibold">\<\n>              Hard 75 —{" "}\<\n>              <span className="text-[#ffd166]">Dev Ascension Protocol</span>\<\n>            </h2>\<\n>            <p className="text-sm text-[#bfc1d6]">\<\n>              Personalized timetable for your college + commute + church +\<\n>              mentor commitments.\<\n>            </p>\<\n>          </div>\<\n>        </motion.header>\<\n>\<\n>        {/* Progress Bar */}\<\n>        <div className="bg-[#14141a] p-4 rounded-xl shadow-md border border-white/5">\<\n>          <div className="flex justify-between items-center mb-2">\<\n>            <span className="text-sm text-[#bfc1d6]">Daily Progress</span>\<\n>            <span className="text-sm font-semibold text-[#ffd166]">\<\n>              {progress}%\<\n>            </span>\<\n>          </div>\<\n>          <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">\<\n>            <motion.div\<\n>              className="h-full bg-gradient-to-r from-[#5b2cff] to-[#ffd166]"\<\n>              initial={{ width: 0 }}\<\n>              animate={{ width: `${progress}%` }}\<\n>              transition={{ type: "spring", stiffness: 120, damping: 14 }}\<\n>            ></motion.div>\<\n>          </div>\<\n>        </div>\<\n>\<\n>        {/* Task checkboxes */}\<\n>        <motion.div\<\n>          className="bg-[#14141a] rounded-xl p-6 border border-white/5 shadow-md"\<\n>          initial={{ opacity: 0 }}\<\n>          animate={{ opacity: 1 }}\<\n>        >\<\n>          <h3 className="text-xl font-semibold mb-3">Progress Tracker</h3>\<\n>          <p className="text-sm text-[#bfc1d6] mb-4">\<\n>            Check tasks you’ve completed. Progress updates live & saves locally.\<\n>          </p>\<\n>          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">\<\n>            {tasks.map((task) => (\<\n>              <motion.button\<\n>                key={task.key}\<\n>                onClick={() => toggleCheck(task.key)}\<\n>                whileTap={{ scale: 0.95 }}\<\n>                className={`flex items-center justify-between p-3 rounded-lg transition ${\<\n>                  checks[task.key]\<\n>                    ? "bg-gradient-to-r from-[#5b2cff]/30 to-[#ffd166]/20"\<\n>                    : "bg-white/5 hover:bg-white/10"\<\n>                }`}\<\n>              >\<\n>                <span className="text-sm">{task.label}</span>\<\n>                {checks[task.key] ? (\<\n>                  <CheckCircle className="text-[#ffd166]" size={18} />\<\n>                ) : (\<\n>                  <Circle className="text-[#bfc1d6]" size={18} />\<\n>                )}\<\n>              </motion.button>\<\n>            ))}\<\n>          </div>\<\n>          <div className="flex gap-3 mt-5">\<\n>            <button\<\n>              onClick={resetChecks}\<\n>              className="text-sm border border-white/10 text-[#bfc1d6] px-3 py-1.5 rounded-lg hover:bg-white/5 transition"\<\n>            >\<\n>              Reset Progress\<\n>            </button>\<\n>          </div>\<\n>        </motion.div>\<\n>\<\n>        {/* Timetable */}\<\n>        <motion.div\<\n>          className="bg-[#14141a] rounded-xl p-6 border border-white/5 shadow-md"\<\n>          initial={{ opacity: 0 }}\<\n>          animate={{ opacity: 1 }}\<\n>          transition={{ delay: 0.1 }}\<\n>        >\<\n>          <div className="flex justify-between items-center mb-2">\<\n>            <div>\<\n>              <span className="text-xs bg-white/5 px-2 py-1 rounded-full text-[#bfc1d6]">\<\n>                Wake: 5:00 AM • Sleep: 11:00 PM\<\n>              </span>\<\n>              <h3 className="mt-2 text-lg font-semibold">\<\n>                Daily Timetable (Mon–Sat)\<\n>              </h3>\<\n>              <p className="text-sm text-[#bfc1d6]">\<\n>                Two workouts • DSA • Full-stack • Academic study • Reading •\<\n>                Journal\<\n>              </p>\<\n>            </div>\<\n>            <div className="text-right">\<\n>              <div className="text-[#ffd166] text-2xl font-bold">75 Days</div>\<\n>              <div className="text-xs text-[#bfc1d6]">\<\n>                Start strong • No compromises\<\n>              </div>\<\n>            </div>\<\n>          </div>\<\n>\<\n>          <div className="overflow-x-auto mt-4">\<\n>            <table className="w-full text-sm border-collapse">\<\n>              <thead>\<\n>                <tr className="text-[#bfc1d6] border-b border-white/5">\<\n>                  <th className="text-left py-2 pr-2 font-normal">Time</th>\<\n>                  <th className="text-left py-2 font-normal">Task</th>\<\n>                </tr>\<\n>              </thead>\<\n>              <tbody>\<\n>                {[\<\n>                  ["5:00 — 5:10", "Wake, hydrate, quick stretch"],\<\n>                  ["5:10 — 5:55", "Workout 1 — Gym (Hypertrophy)"],\<\n>                  ["5:55 — 6:25", "Shower, skincare, breakfast"],\<\n>                  ["6:25 — 7:10", "Commute to college (45m)"],\<\n>                  ["7:30 — 14:00", "College"],\<\n>                  ["14:00 — 15:30", "Read / DSA review near college"],\<\n>                  ["15:30 — 16:30", "Pick up sister & travel back"],\<\n>                  ["16:30 — 17:00", "Rest / Power nap"],\<\n>                  ["17:00 — 18:00", "DSA Practice — 2 problems"],\<\n>                  ["18:00 — 19:30", "Full-stack — JS / React / Project"],\<\n>                  ["19:30 — 20:00", "Dinner + skincare"],\<\n>                  ["20:00 — 20:45", "Workout 2 — Mobility / Core / Run"],\<\n>                  ["21:00 — 21:30", "Academic study (RTOS / Embedded C)"],\<\n>                  ["21:30 — 22:00", "Journal + Reflection"],\<\n>                  ["22:00 — 22:30", "Light reading / Wind down"],\<\n>                  ["23:00", "Sleep"],\<\n>                ].map(([time, task], i) => (\<\n>                  <motion.tr\<\n>                    key={i}\<\n>                    initial={{ opacity: 0, y: 10 }}\<\n>                    animate={{ opacity: 1, y: 0 }}\<\n>                    transition={{ delay: i * 0.02 }}\<\n>                    className="border-b border-white/5 hover:bg-white/5 transition"\<\n>                  >\<\n>                    <td className="py-2 pr-3 text-[#bfc1d6]">{time}</td>\<\n>                    <td className="py-2">{task}</td>\<\n>                  </motion.tr>\<\n>                ))}\<\n>              </tbody>\<\n>            </table>\<\n>          </div>\<\n>        </motion.div>\<\n>\<\n>        {/* Footer */}\<\n>        <footer className="text-center text-sm text-[#bfc1d6] mt-6">\<\n>          Made for you — purple & yellow theme • Keep the streak honest\<\n>        </footer>\<\n>      </div>\<\n>    </div>\<\n>  );\<\n>}\
+c
+js
+c
+home
+c
+git get user.naem
+git get user.name
+cd dotfiles
+c
+git get user.name
+git config get user.name
+c
+git config get user.email
+c
+git config set --global init.defaultBranch master
+c
+cd .config
+cd
+c
+cd .gitconfig
+v .gitconfig 
+c
+cd dotfiles
+c
+ls | grep .git
+ls | grep .gitconfig
+c
+ls | grep .gitconfig > pp.txt
+c
+ls
+c
+cd projects
+ls
+c
+mkdir webflyx
+cd webflyx/
+ls
+c
+git init
+ls
+ll
+la
+c
+la
+lla
+c
+touch content.md > # contents
+ls
+rm >
+c
+ls
+v content.md 
+ls
+rm content.md
+c
+touch content.md |<\n>echo > # contents
+ls
+v content.md 
+c
+rm content.md
+c
+touch content.md && echo "# contents" > contents.md
+c
+ls
+ll
+c
+touch content.md
+c
+echo "# contents" > contents.md
+ls
+c
+mv content.md contents.md
+ls
+c
+echo "# contents" | save --append contents.md
+ls
+v .
+c
+git status
+c
+ls
+c
+lla
+c
+git status
+cc
+c
+git commit -message "A: add contents.md"
+git commit -m "A: add contents.md"
+git commit --amend -m "A: should add contents.md"
+git add .
+c
+git status
+c
+git commit -m "A: add contents.md"
+c
+git commit --amend -m "A: add contents.md"
+ls
+c
+git status
+c
+git log
+cd dotfiles
+git log
+c
+git --no-pager log n 5
+git --no-pager log -n 5
+c
+git --no-pager log 
+c
+git --no-pager log -n 5
+git log n 10
+c
+ls
+c
+cc
+c
+ls
+c
+cd webflyx/
+cd webflyx
+c
+git hash
+c
+git log
+c
+git log -n 5
+cd dotfiles
+c
+git log -n 5
+c
+ls -l .git/objects/
+c
+cd .git/
+v .
+c
+cd webflyx
+ls
+git log -n 5
+ls -lah .git/objects/
+ls -la .git/objects/
+c
+ls -la .git/objects/
+ls -l .git/objects/
+ls -al .git/objects/
+c
+ls -al .git/objects/ | grep "1c"
+ls
+c
+cd .git/objects/1c/
+ls
+cat 3f1131af05adc3e2eb229451c68d580d7054f8 
+c
+xxd 3f1131af05adc3e2eb229451c68d580d7054f8 
+c
+..
+c
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 > tmp/commit_obj_hex.txt
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 
+c
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 | tmp/commit_obj_hex.txt
+zsh
+bash
+c
+fish
+ls
+c
+fish
+ls
+c
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 >  tmp/commit_obj_hex.txt
+ls
+ll
+la
+c
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 >  tmp/commit_obj_hex.txt
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 out> /tmp/commit_object_hex.txt
+ls
+ll
+ls
+la
+c
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 | save /tmp/commit_object_hex.txt
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8 | save --append /tmp/commit_object_hex.txt
+ls
+..
+cd webflyx
+c
+la
+git status
+c
+ls /tmp
+ls
+c
+ls /tmp.
+cd /tmp
+ls
+pwd
+cd projects/
+cd webflyx
+c
+ls
+xxd .git/objects/1c/3f1131af05adc3e2eb229451c68d580d7054f8
+git cat-file -s 1c3f1131af05adc3e2eb229451c68d580d7054f8
+c
+git cat-file -p 1c3f1131af05adc3e2eb229451c68d580d7054f8
+c
+git cat-file -t 1c3f1131af05adc3e2eb229451c68d580d7054f8
+c
+git cat-file -p 1c3f1131af05adc3e2eb229451c68d580d7054f8
+c
+ls
+touch titles.md
+v .
+c
+cd upside
+home
+c
+up
+c
+up
+c
+up
+c
+cd webflyx
+c
+git log 
+git status 
+git add .
+git commit -m "B: add titles.md"
+c
+git log
+ls -la .git/objects/ac/
+xxd .git/objects/ac/6f4896b981d384002aae920c51beaa294746f9 
+git cat-file -p ac6f4896b981d384002aae920c51beaa294746f9
+xxd .git/objects/ac/a628964d37c81dab43cf581617e199a77ffbe8 
+git cat-file -p aca628964d37c81dab43cf581617e199a77ffbe8
+cd docseek 
+cd fron
+c
+npm run dev
+ac
+c
+ac
+c
+cd quickies
+cd webflyx
+c
+git log 
+c
+ls
+mkdir quotes
+ls
+cd quotes/
+c
+touch starwars.md
+v .
+touch dune.md
+rm dune.md
+c
+touch dune.md && v .
+touch dune.md & v .
+ls
+rm & v
+c
+ls
+v .
+c
+git status 
+..
+git status
+git add .
+c
+git commit 
+git log 
+c
+ls
+c
+git status
+c
+git log 
+c
+git cat-file -p 8303d20b759460f74bd1bc9aedabbbbe69c10681
+c
+git set --local webflyx.ceo "dan"
+git config set --local webflyx.ceo "dan"
+ls
+lla
+cd .git/
+ls
+v config 
+c
+ls
+c
+cat .git/config
+..
+cat .git/config
+c
+bat .git/config 
+c
+git config get user.email
+c
+git config webflyx.ceo
+c
+git config set --local webflyx.pp "dadadan"
+c
+git config get webflyx.pp
+c
+ls
+c
+git config unset webflyx.pp
+git config get webflyx.pp
+c
+git config get webflyx.pp
+c
+anim-c
+anim
+c
+cd dotfiles
+c

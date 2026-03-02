@@ -52,10 +52,20 @@ end
 
 -- Diagnostic Styling
 vim.diagnostic.config {
-  virtual_text = true,
+  virtual_text = {
+    prefix = '●', -- Or '■', '▎', 'x'
+    spacing = 4,
+  },
   signs = true,
   underline = true,
   update_in_insert = false,
   severity_sort = true,
-  float = { border = "rounded", wrap = true, max_width = 80 },
+  float = {
+    border = "rounded",
+    wrap = true,
+    max_width = 80,
+    source = "always", -- Show the source (e.g., Pyright, ESLint)
+    header = "",
+    prefix = "",
+  },
 }

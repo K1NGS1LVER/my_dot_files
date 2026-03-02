@@ -52,3 +52,6 @@ zsh/.zcompdump*
 # --- RAYCAST ---
 raycast/.config/raycast/extensions/
 raycast/.config/raycast/ai/
+
+# --- GIT ---
+git/.gitconfig
