@@ -49,6 +49,13 @@ zsh/.zcompdump*
 **/tmp/
 **/cache/
 
+# --- BACKUPS ---
+**/*~
+**/*.bak 
+*.bak
+**/*.BACKUPS
+
+
 # --- RAYCAST ---
 raycast/.config/raycast/extensions/
 raycast/.config/raycast/ai/

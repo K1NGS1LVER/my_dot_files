@@ -190,6 +190,7 @@ krun() {
 }
 
 # --- ALIASES ---
+alias zsh-alt='ZDOTDIR=~/projects/bashed zsh'
 alias reload='source ~/.zshrc && echo "Config reloaded! ♻️"'
 unalias read 2>/dev/null # Fix for previous bad alias causing conflicts
 

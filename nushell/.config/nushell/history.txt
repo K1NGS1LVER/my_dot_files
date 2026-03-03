@@ -1247,3 +1247,90 @@ v .gitignore
 git add config.nu
 cd nushell/.config/nushell/
 ls
+git add .
+git commit -m "optimize nu shell config"
+git status
+c
+git status
+git push 
+c
+git log 
+c
+nu
+ls
+c
+ls
+c
+ls | sort-by size | where size > 20MB 
+ls | sort-by size 
+ls | sort-by size | reverse
+c
+time nu -c "exit"
+gemini
+c
+ls
+ps 
+c
+ps | where status = Running 
+ls
+ls
+c
+ps | where status == running
+ps | where status == run
+ps
+c
+ps | where status == Running
+c
+explore
+c
+cd dotfiles/nushell/.config/nushell/
+ls
+v .
+c
+cd bashed
+ls
+v .
+cd dotfiles/
+ls
+lla
+..
+c
+ls
+cd lean_zsh/
+c
+ls
+v .
+..
+cd nushell/.config/nushell/
+v .
+relaod
+c
+ps | where status == running
+ls
+v .
+c
+ls
+c
+ls
+c
+cd webflyx
+git log --decorate=full
+git branch
+c
+cd docseek 
+git branch
+cd webflyx
+c
+git log --oneline
+c
+git log --decorate=no
+git log 
+c
+v .
+ls
+c
+v .
+ls
+c
+ls
+v .

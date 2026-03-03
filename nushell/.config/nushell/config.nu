@@ -55,6 +55,8 @@ alias nvconfig = ^nvim ~/.config/nvim/
 alias nvguide = ^nvim ~/.config/nvim/SETUP_GUIDE.md
 alias nvcheat = ^nvim ~/.config/nvim/CHEATSHEET.md
 
+$env.config.buffer_editor = "nvim"
+
 # ─────────────────────────────────────────────
 # ALIASES — Neovim Profiles
 # ─────────────────────────────────────────────
@@ -112,6 +114,35 @@ alias packettracer = ^open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet
 alias goodnight = ^sh ~/scripts/goodnight.sh
 alias gray = ^shortcuts run "Toggle Grayscale"
 alias sepia = ^shortcuts run "Sepia Mode"
+
+
+# ─────────────────────────────────────────────
+# CUSTOM FUNCTIONS
+# ─────────────────────────────────────────────
+
+# list listening TCP ports (requires lsof)
+def ports [] { ^lsof -iTCP -sTCP:LISTEN -n -P | lines | skip 1 | parse "{cmd} {pid} {user} {rest}" }
+
+# extract various archive formats based on file extension
+def extract [file: string] {
+    match ($file | path parse | get extension | str downcase) {
+        "zip" => { ^unzip $file }
+        "tar" | "gz" | "tgz" | "xz" | "bz2" => { ^tar xf $file }
+        "7z" => { ^7z x $file }
+        "rar" => { ^unrar x $file }
+        _ => { print $"Unknown format: ($file)" }
+    }
+}
+
+
+# kill process by fuzzy name (requires fzf) 
+def fkill [] {
+    let pid = (^ps aux | ^fzf --header 'Select process to kill' --height 40% | awk '{print $2}' | str trim)
+    if ($pid | is-not-empty) { kill ($pid | into int) }
+}
+
+# fetch cheat sheet from cheat.sh 
+def cheat [query: string] { ^curl -s $"cheat.sh/($query)" }
 
 # ─────────────────────────────────────────────
 # TERMINAL MULTIPLEXER
@@ -401,7 +432,7 @@ $env.config = {
     table: {
         mode: rounded
         index_mode: always
-        show_empty: true
+        show_empty: false
     }
 
     color_config: {
@@ -484,6 +515,28 @@ $env.config = {
             }
         ]
     }
+  completions: {
+    case_sensitive: false # set to true to enable case-sensitive completions
+    quick: true          # set to false to prevent auto-selecting completions
+    partial: true        # set to false to prevent partial filling of the matching completion
+    algorithm: "fuzzy"    # prefix or fuzzy
+    external: {
+        enable: true       # set to false to disable external completions
+        max_results: 100   # maximum number of results to return from external completers
+    }
+  }
+  buffer_editor: "nvim"
+  cursor_shape: {
+    vi_insert: line
+    vi_normal: block
+    emacs: line
+  }
+  history: {
+    file_format: "sqlite"  # "sqlite" or "plain"
+    max_size: 100_000      # maximum number of history entries to keep
+    sync_on_enter: true    # whether to sync history to disk after each command
+    isolation: false       # whether to isolate history between different shell instances
+  }
 }
 
 # ─────────────────────────────────────────────
