@@ -831,3 +831,419 @@ anim
 c
 cd dotfiles
 c
+git add .
+git status
+c
+git commit -m "fix up function and config aerospace"
+c
+ls
+git push 
+c
+ls
+c
+git log
+c
+git log n 10
+c
+git log n 10
+git log -n 10
+c
+home
+cd gogo
+cd pratice/
+c
+go run test_2_3_26.go
+c
+go run test_2_3_26.go
+v .
+c
+git add . 
+git commit -m "add pratice questions"
+git push 
+c
+anim-c
+v .
+home
+ntmux a
+gemini
+c
+zsh
+ls
+c
+ls
+c
+brew unistall skhd
+brew --help
+c
+ls
+c
+fox
+v .
+ls
+c
+atuin daemon
+c
+pgrep -x atuin
+atuin daemon
+rm /Users/dan/.local/share/atuin/atuin.sock
+ls
+c
+zsh
+cd notes 3tri dcn
+cd notes quickies
+c
+v .
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+lc
+lla
+c
+ls
+c
+ls
+c
+fox
+c
+cd webflyx
+c
+git config remove-section webflyx
+c
+git branch
+c
+git branch -m master main
+git branch 
+c
+git init default-branch main
+git init.default-branch main
+git init --help
+c
+git config --global init.branchname main
+c
+git branch add_classics
+git switch add_classics
+ls
+c
+git branch
+c
+git log 
+c
+cc
+c
+cc
+c
+cls
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+cls
+c
+ls
+c
+ls
+c
+as
+c
+ls
+c
+ls
+cl
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+cls
+c
+ls
+c
+ls
+cl
+sc
+c
+ls
+c
+ls
+cl
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+lla
+c
+lla
+c
+lla
+la
+c
+lla
+c
+lla
+c
+lla
+c
+lla
+c
+lla
+c
+cd webflyx
+ls
+git switch main 
+c
+ls
+c
+ls
+c
+ll
+lla
+c
+lla
+c
+git switch main 
+ls
+git branch
+c
+git switch add_classics
+c
+touch classic.md
+v .
+ls
+touch classics.csv
+v .
+c
+ls
+c
+v .
+c
+git add . 
+git log
+git status
+c
+git commit -m "D: add classics.md and classics.csv"
+c
+ls
+c
+git log 
+c
+ls
+c
+ls
+c
+ls
+c
+lla
+c
+ll
+c
+ls
+c
+cd docseek 
+cd frontend/
+c
+ls
+npm run dev
+ls
+c
+ls
+c
+ls
+l
+sls
+ls
+c
+cd frontend/
+v .
+c
+git status
+c
+ls
+c
+..
+todo
+zsg
+v .
+ls
+c
+v .
+npm run dev
+c
+zsh
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+cl
+c
+v .
+ls
+c
+cd frontend/
+ls
+c
+explor
+explore
+ls
+cd projects/
+c
+ls
+c
+cd bash/
+cd bashed/
+ls
+v .
+c
+config nu
+cd dotfiles
+c
+ls
+cd nushell/
+ls
+c
+lla
+cd .config/
+;s
+c
+lla
+cd nushell/
+ls
+la
+zsh
+c
+zsh
+v .
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+ls
+c
+v .
+c
+v .
+zsh
+c
+clear
+ls
+sl
+sls
+c
+ls
+c
+ls
+c
+ls
+cls
+ls
+cls
+ls
+c
+c
+ls
+ls
+c
+c
+ls
+ls | explore
+c
+..
+ls
+ll
+...
+ls
+c
+v .gitignore 
+git add config.nu
+cd nushell/.config/nushell/
+ls
