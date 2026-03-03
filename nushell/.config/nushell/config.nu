@@ -42,6 +42,8 @@ alias fetch = ^fastfetch
 alias lg = ^lazygit
 alias src = view-source
 
+
+
 # ─────────────────────────────────────────────
 # ALIASES — Editor
 # ─────────────────────────────────────────────
@@ -119,6 +121,283 @@ alias sepia = ^shortcuts run "Sepia Mode"
 # ─────────────────────────────────────────────
 # CUSTOM FUNCTIONS
 # ─────────────────────────────────────────────
+
+# ─────────────────────────────────────────────
+# QOL — Stopwatch & Timer
+# ─────────────────────────────────────────────
+
+# Simple stopwatch: run a command and show elapsed time
+def time-it [cmd: string, ...args: string] {
+    let start = (date now)
+    ^$cmd ...$args
+    let elapsed = ((date now) - $start)
+    print $"⏱️ Elapsed: ($elapsed)"
+}
+
+# Countdown timer
+def timer [seconds: int] {
+    mut remaining = $seconds
+    while $remaining > 0 {
+        print -n $"\r⏳ ($remaining)s remaining..."
+        sleep 1sec
+        $remaining = $remaining - 1
+    }
+    print "\r✅ Time's up!              "
+    if ($nu.os-info.name == "macos") {
+        ^osascript -e 'display notification "Timer finished!" with title "⏰ Timer"'
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — Clipboard Helpers
+# ─────────────────────────────────────────────
+
+# Copy file contents to clipboard
+def cpc [file: string] {
+    if ($nu.os-info.name == "macos") {
+        open --raw $file | ^pbcopy
+        print $"📋 Copied contents of ($file)"
+    } else {
+        open --raw $file | ^xclip -selection clipboard
+        print $"📋 Copied contents of ($file)"
+    }
+}
+
+# Copy current path to clipboard
+def cpwd [] {
+    if ($nu.os-info.name == "macos") {
+        $env.PWD | ^pbcopy
+    } else {
+        $env.PWD | ^xclip -selection clipboard
+    }
+    print $"📋 Copied: ($env.PWD)"
+}
+
+# ─────────────────────────────────────────────
+# QOL — Network
+# ─────────────────────────────────────────────
+
+# Quick IP info
+def myip [] {
+    let public = (^curl -s ifconfig.me | str trim)
+    let local = if ($nu.os-info.name == "macos") {
+        ^ipconfig getifaddr en0 | str trim
+    } else {
+        ^hostname -I | split row " " | first | str trim
+    }
+    print $"🌐 Public:  ($public)"
+    print $"🏠 Local:   ($local)"
+}
+
+# Speed test (requires curl)
+def speedtest [] {
+    ^curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | ^python3 -
+}
+
+# Check if a site is up
+def isup [url: string] {
+    let target = if ($url | str starts-with "http") { $url } else { $"https://($url)" }
+    let code = (^curl -s -o /dev/null -w "%{http_code}" $target | str trim)
+    if ($code | str starts-with "2") or ($code | str starts-with "3") {
+        print $"✅ ($target) is UP \(($code)\)"
+    } else {
+        print $"❌ ($target) is DOWN \(($code)\)"
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — Disk & System Info
+# ─────────────────────────────────────────────
+
+# Disk usage summary
+def duf [] {
+    if (which duf | is-not-empty) {
+        ^duf
+    } else {
+        ^df -h
+    }
+}
+
+# Top N largest files in current directory
+def big [count?: int] {
+    let n = ($count | default 10)
+    ls -la | where type == file | sort-by size -r | first $n | select name size modified
+}
+
+# Top N largest directories
+def bigd [count?: int] {
+    let n = ($count | default 10)
+    ls | where type == dir | each {|d|
+        let s = (du $d.name | first | get apparent)
+        { name: $d.name, size: $s }
+    } | sort-by size -r | first $n
+}
+
+# System info summary
+def sysinfo [] {
+    print $"🖥️  OS:      ($nu.os-info.name) ($nu.os-info.arch)"
+    print $"🐚 Shell:   Nushell ($nu.current-exe)"
+    print $"📁 Home:    ($env.HOME)"
+    print $"📂 PWD:     ($env.PWD)"
+    print $"🕐 Uptime:  (sys host | get uptime)"
+    print $"💾 Memory:  (sys mem | get used) / (sys mem | get total)"
+}
+
+# ─────────────────────────────────────────────
+# QOL — String & Data Helpers
+# ─────────────────────────────────────────────
+
+# Generate a random password
+def genpass [length?: int] {
+    let len = ($length | default 24)
+    random chars -l $len
+}
+
+# UUID generator
+def uuid [] {
+    if ($nu.os-info.name == "macos") {
+        ^uuidgen | str downcase | str trim
+    } else {
+        open /proc/sys/kernel/random/uuid | str trim
+    }
+}
+
+# Base64 encode/decode
+def b64e [input: string] { $input | encode base64 }
+def b64d [input: string] { $input | decode base64 | decode utf-8 }
+
+# JSON pretty print from clipboard
+def jsonpp [] {
+    if ($nu.os-info.name == "macos") {
+        ^pbpaste | from json | to json -i 2
+    } else {
+        ^xclip -selection clipboard -o | from json | to json -i 2
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — Project Scaffolding
+# ─────────────────────────────────────────────
+
+# Quick project init
+def --env proj [name: string, template?: string] {
+    let tmpl = ($template | default "basic")
+    mkdir $name
+    cd $name
+
+    match $tmpl {
+        "basic" => {
+            touch README.md
+            "# " + $name | save README.md
+            ^git init
+        }
+        "node" => {
+            ^npm init -y
+            ^git init
+            ".node_modules/\n.env\ndist/" | save .gitignore
+        }
+        "python" => {
+            ^git init
+            mkdir src tests
+            touch src/__init__.py
+            "venv/\n__pycache__/\n*.pyc\n.env" | save .gitignore
+            ^python3 -m venv venv
+        }
+        _ => {
+            ^git init
+            touch README.md
+        }
+    }
+    print $"📁 Project ($name) created with ($tmpl) template"
+}
+
+# ─────────────────────────────────────────────
+# QOL — Backup Helper
+# ─────────────────────────────────────────────
+
+# Quick backup of a file
+def bak [file: string] {
+    let timestamp = (date now | format date "%Y%m%d_%H%M%S")
+    let backup = $"($file).($timestamp).bak"
+    cp $file $backup
+    print $"💾 Backed up to ($backup)"
+}
+
+# ─────────────────────────────────────────────
+# QOL — Notes (quick scratch pad)
+# ─────────────────────────────────────────────
+
+def note [action?: string, ...content: string] {
+    let notes_file = ([$env.HOME ".notes.md"] | path join)
+
+    match ($action | default "show") {
+        "add" => {
+            let text = ($content | str join " ")
+            let timestamp = (date now | format date "%Y-%m-%d %H:%M")
+            $"\n- [($timestamp)] ($text)" | save --append $notes_file
+            print $"📝 Note added"
+        }
+        "edit" => {
+            ^nvim $notes_file
+        }
+        "clear" => {
+            "" | save --force $notes_file
+            print "🗑️ Notes cleared"
+        }
+        "show" | _ => {
+            if ($notes_file | path exists) {
+                open --raw $notes_file
+            } else {
+                print "📭 No notes yet. Use: note add <text>"
+            }
+        }
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — Docker Shortcuts
+# ─────────────────────────────────────────────
+
+def dps [] { ^docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" }
+def dimg [] { ^docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" }
+def dstop [] { ^docker stop (^docker ps -q | lines) }
+def dclean [] { ^docker system prune -af }
+
+# Interactive container selector
+def dsh [] {
+    let container = (^docker ps --format "{{.Names}}" | ^fzf --header 'Select container' --height 40% --reverse | str trim)
+    if ($container | is-not-empty) {
+        ^docker exec -it $container /bin/sh
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — SSH Helpers
+# ─────────────────────────────────────────────
+
+# Fuzzy SSH from ~/.ssh/config
+def sshf [] {
+    let host = (open ~/.ssh/config | lines | where {|l| $l =~ "^Host " } | each {|l| $l | str replace "Host " "" | str trim } | str join "\n" | ^fzf --header 'SSH to:' --height 40% --reverse | str trim)
+    if ($host | is-not-empty) {
+        ^ssh $host
+    }
+}
+
+# ─────────────────────────────────────────────
+# QOL — Serve current directory
+# ─────────────────────────────────────────────
+
+def serve [port?: int] {
+    let p = ($port | default 8080)
+    print $"🌐 Serving ($env.PWD) on http://localhost:($p)"
+    if (which python3 | is-not-empty) {
+        ^python3 -m http.server $p
+    } else if (which npx | is-not-empty) {
+        ^npx serve -l $p
+    } else {
+        print "❌ Need python3 or npx"
+    }
+}
 
 # list listening TCP ports (requires lsof)
 def ports [] { ^lsof -iTCP -sTCP:LISTEN -n -P | lines | skip 1 | parse "{cmd} {pid} {user} {rest}" }
@@ -430,9 +709,10 @@ $env.config = {
     }
 
     table: {
-        mode: rounded
+        mode: thin
         index_mode: always
         show_empty: false
+        padding: { left: 1, right: 1 } # Reduce horizontal padding
     }
 
     color_config: {
