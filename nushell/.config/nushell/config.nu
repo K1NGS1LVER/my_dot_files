@@ -41,7 +41,7 @@ alias sed = ^sd
 alias fetch = ^fastfetch
 alias lg = ^lazygit
 alias src = view-source
-
+alias g = git
 
 
 # ─────────────────────────────────────────────
