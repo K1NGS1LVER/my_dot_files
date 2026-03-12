@@ -549,6 +549,17 @@ alias sepia='shortcuts run "Sepia Mode"'
 
 # --- SYSTEM EFFICIENCY ---
 
+# 0. OMZ Compilation (Manual sync or run in background)
+omz_compile() {
+    echo "⚡ Byte-compiling Oh-My-Zsh scripts..."
+    for f in "$ZSH"/**/*.zsh(N) "$ZSH_CUSTOM"/**/*.zsh(N); do
+        if [[ "$f" -nt "${f}.zwc" || ! -e "${f}.zwc" ]]; then
+            zcompile "$f"
+        fi
+    done
+    echo "⚡ Done compiling OMZ!"
+}
+
 # 1. Update Everything (Homebrew, Zsh, Pipx, Node, etc.)
 up() {
     echo "🚀 Starting System-wide Update..."
@@ -563,6 +574,7 @@ up() {
     if [[ -d "$ZSH" ]]; then
         echo "⚙️ Updating Oh My Zsh..."
         env ZSH="$ZSH" /bin/zsh "$ZSH/tools/upgrade.sh" --no-auto-restart
+        omz_compile
     fi
 
     # Node.js (npm)
