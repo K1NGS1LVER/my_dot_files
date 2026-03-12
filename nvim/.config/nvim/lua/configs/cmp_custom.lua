@@ -26,8 +26,17 @@ local options = {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
+    ["<C-l>"] = cmp.mapping(function(fallback)
+      if require("copilot.suggestion").is_visible() then
+        require("copilot.suggestion").accept()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if require("copilot.suggestion").is_visible() then
+        require("copilot.suggestion").accept()
+      elseif cmp.visible() then
         cmp.select_next_item()
       elseif require("luasnip").expand_or_jumpable() then
         require("luasnip").expand_or_jump()

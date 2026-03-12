@@ -1,4 +1,12 @@
 {
+  "agent_servers": {
+    "gemini": {
+      "type": "registry"
+    }
+  },
+  "edit_predictions": {
+    "provider": "copilot"
+  },
   "theme": "Rosé Pine",
   "vim_mode": true,
   "base_keymap": "VSCode",
@@ -12,7 +20,7 @@
     "dock": "bottom",
   },
   "tab_size": 2,
-  "relative_line_numbers": "enabled",
+  "relative_line_numbers": true,
   "cursor_shape": "block",
   "cursor_blink": false,
   "scrollbar": {
@@ -22,7 +30,7 @@
   "autosave": "off",
   "format_on_save": "on",
   "show_whitespaces": "selection",
-  "show_edit_predictions": true,
+  "show_inline_completions": true,
   "inlay_hints": {
     "enabled": true,
   },
@@ -128,5 +136,12 @@
         },
       },
     },
+  },
+  "ui_background_appearance": "transparent",
+  "experimental.theme_overrides": {
+    "background.opacity": 0.5,
+  },
+  "features": {
+    "copilot": true,
   },
 }

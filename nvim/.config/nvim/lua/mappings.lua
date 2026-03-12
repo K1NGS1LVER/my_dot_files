@@ -120,4 +120,3 @@ end, { desc = "Toggle Vertical Terminal" })
 
 -- Close buffer with <leader>x
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
-
