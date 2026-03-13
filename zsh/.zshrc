@@ -1,94 +1,50 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+typeset -U path PATH
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-# --- THEME SELECTION ---
-# "agnoster" is a great theme that shows git status and path clearly.
-# Note: Requires a Powerline font installed in your terminal.
-# If icons look weird, switch this back to "robbyrussell".
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# this is to stop the prompts pop up when the terminal starts
-# POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-
-# Set list of themes to pick from when loading at random
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Optimization: Limit syntax highlighting length to prevent lag on long lines
-export ZSH_HIGHLIGHT_MAXLENGTH=300
-
-# Optimization: Ensure autosuggestions use async mode for better typing performance
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-plugins=(
-    git
-    zsh-autosuggestions  
-    fzf-tab
-    zsh-completions
-    zsh-syntax-highlighting
-    # history-substring-search # (Optional: allows typing part of a command and hitting up arrow)
+path=(
+    /opt/homebrew/bin
+    /opt/homebrew/sbin
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+    $HOME/.local/bin
+    $HOME/.cargo/bin
+    $HOME/.local/share/nvim/mason/bin
+    $HOME/.local/share/bob/nvim-bin
+    /opt/homebrew/opt/openjdk/bin
+    /Applications/Android Studio.app/Contents/MacOS
+    $HOME/Library/pnpm
+    $path
 )
 
-source $ZSH/oh-my-zsh.sh
+export EDITOR="nvim"
+export JAVA_HOME=$(/usr/libexec/java_home)
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export BAT_THEME="Catppuccin Macchiato"
+export LYNX_CFG="$HOME/.lynx.cfg"
+export LYNX_LSS="$HOME/.lynx.lss"
+export PNPM_HOME="$HOME/Library/pnpm"
+export ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+export ZSH_HIGHLIGHT_MAXLENGTH=300
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
 
-# --- THEFUCK (Lazy Load) ---
+setopt auto_cd
+setopt interactive_comments
+
+autoload -Uz compinit bashcompinit
+[[ -f "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh"
+mkdir -p "$HOME/.cache/zsh"
+compinit -d "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
+bashcompinit
+
+[[ -f "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "$ZSH_CUSTOM/plugins/fzf-tab/fzf-tab.plugin.zsh" ]] && source "$ZSH_CUSTOM/plugins/fzf-tab/fzf-tab.plugin.zsh"
+[[ -f "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
 fuck() {
     unfunction fuck
-    eval $(thefuck --alias)
+    eval "$(thefuck --alias)"
     fuck "$@"
 }
 
@@ -159,17 +115,9 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]='fg=#f4dbd6'
 ZSH_HIGHLIGHT_STYLES[path_approx]='fg=#f4dbd6'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=#f5bde6' # Pink
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-# export LANG=en_US.UTF-8
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set Java environment variables
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)"
+command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh --disable-up-arrow)"
+[[ "$TERM" != "dumb" ]] && command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # --- KOTLIN ALIASES ---
 alias k='kotlin'        # REPL
@@ -219,42 +167,8 @@ alias ls='eza --icons'
 alias ll='eza -lah --icons --git'
 alias la='eza -A --icons'
 
-# --- CACHED INITS (Optimized) ---
-# Cache init scripts to avoid spawning processes on every startup
-_cache_init() {
-  local cmd_name="$1"
-  local cache_file="$HOME/.cache/zsh/${cmd_name}_init.zsh"
-  mkdir -p "$HOME/.cache/zsh"
-  
-  if [[ ! -f "$cache_file" ]]; then
-    "$@" > "$cache_file"
-  fi
-  source "$cache_file"
-}
-
-# Initialize zoxide (smarter cd)
-_cache_init zoxide init zsh --cmd cd
-
-# Initialize Mole completion (cached)
-_cache_init mole completion zsh
-
-# --- ATUIN (Advanced History) ---
-# Cached init with up-arrow hijacking disabled to prevent execution lag
-if command -v atuin &>/dev/null; then
-  _cache_init atuin init zsh --disable-up-arrow
-fi
-
-# --- ZCOMPILE (Auto-compile config for speed) ---
-# Compiles .zshrc to .zshrc.zwc if it has changed
-if [[ ~/.zshrc -nt ~/.zshrc.zwc ]]; then
-  zcompile ~/.zshrc
-fi
-
 # --- BAT (Better Cat) ---
 alias cat='bat'
-# Colorize MAN pages using bat
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export BAT_THEME="Catppuccin Macchiato"
 
 # --- MODERN CLI REPLACEMENTS ---
 alias du='dust'
@@ -279,18 +193,6 @@ bindkey "^Y" yank            # Paste (yank) last cut text (Ctrl+Y)
 # Navigation & Transposition
 bindkey "^[t" transpose-words # Swap current and previous words (Alt+T or Esc+T)
 bindkey "^T" transpose-chars # Swap current and previous characters (Ctrl+T)
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-
-export PATH="$HOME/.cargo/bin:$PATH"
-
-
-# --- Lynx Browser Theme ---
-export LYNX_CFG=~/.lynx.cfg
-export LYNX_LSS=~/.lynx.lss
-
 
 # --- Smart Browser Launcher (DRY: shared by brave/fox) ---
 # Format: "keyword|alias;base_url;search_path"
@@ -357,7 +259,6 @@ _open_browser() {
 brave() { _open_browser "Brave Browser" "$@"; }
 
 # yazi wrapper function
-export EDITOR="nvim"
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     
@@ -407,15 +308,6 @@ alias rec='script recording_$(date +%Y%m%d_%H%M%S).txt'
 # Shows output AND copies it to clipboard.
 alias -g C='| tee /dev/tty | pbcopy'
 
-
-# Created by `pipx` on 2025-12-26 19:45:40
-export PATH="$PATH:/Users/dan/.local/bin"
-
-# Add Mason binaries to PATH (Neovim tools)
-export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
-
-# Bob Neovim Version Manager
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
 # Video Players
 alias play='mpv'
@@ -511,14 +403,6 @@ fetch() {
     esac
 }
 
-# pnpm
-export PNPM_HOME="/Users/dan/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 # Neovim Playground Alias
 alias nv-play="NVIM_APPNAME=nvim-playground $HOME/.local/share/bob/nightly/bin/nvim"
 
@@ -549,18 +433,7 @@ alias sepia='shortcuts run "Sepia Mode"'
 
 # --- SYSTEM EFFICIENCY ---
 
-# 0. OMZ Compilation (Manual sync or run in background)
-omz_compile() {
-    echo "⚡ Byte-compiling Oh-My-Zsh scripts..."
-    for f in "$ZSH"/**/*.zsh(N) "$ZSH_CUSTOM"/**/*.zsh(N); do
-        if [[ "$f" -nt "${f}.zwc" || ! -e "${f}.zwc" ]]; then
-            zcompile "$f"
-        fi
-    done
-    echo "⚡ Done compiling OMZ!"
-}
-
-# 1. Update Everything (Homebrew, Zsh, Pipx, Node, etc.)
+# 1. Update Everything (Homebrew, Pipx, Node, etc.)
 up() {
     echo "🚀 Starting System-wide Update..."
 
@@ -568,13 +441,6 @@ up() {
     if command -v brew &> /dev/null; then
         echo "🍺 Updating Homebrew..."
         brew update && brew upgrade && brew cleanup
-    fi
-
-    # Oh My Zsh
-    if [[ -d "$ZSH" ]]; then
-        echo "⚙️ Updating Oh My Zsh..."
-        env ZSH="$ZSH" /bin/zsh "$ZSH/tools/upgrade.sh" --no-auto-restart
-        omz_compile
     fi
 
     # Node.js (npm)
@@ -687,9 +553,6 @@ vf() {
     fi
 }
 
-
-export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
-
 # Firefox — uses shared _open_browser
 fox() { _open_browser "Firefox" "$@"; }
 
@@ -708,7 +571,6 @@ alias dark="toggle_dark"
 
 # function which puts the computer to sleep, closes the running docker containers and does some cleanup before sleeping 
 alias goodnight='~/scripts/goodnight.sh'
-bindkey -v
 
 # --- FILE ASSOCIATIONS (Open files by typing their name) ---
 command_not_found_handler() {

@@ -709,11 +709,20 @@ $env.config = {
     }
 
     table: {
-        mode: thin
-        index_mode: always
-        show_empty: false
-        padding: { left: 1, right: 1 } # Reduce horizontal padding
+        mode: rounded # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
+        index_mode: always # "always" show indexes, "never" show indexes, "auto" = show indexes when a table has "index" column
+        show_empty: true # show 'empty list' and 'empty record' placeholders for command output
+        padding: { left: 1, right: 1 } # a left right padding of each column in a table
+        trim: {
+            methodology: wrapping # wrapping or truncating
+            wrapping_try_keep_words: true # A strategy used by the 'wrapping' methodology
+            truncating_suffix: "..." # A suffix used by the 'truncating' methodology
+        }
+        header_on_separator: false # show header text on separator/border line
+        # abbreviated_row_count: 10 # limit data rows from top and bottom after reaching a set point
     }
+
+    error_style: "fancy" # "fancy" or "plain" for screen reader-friendly error messages
 
     color_config: {
         separator:                  $catppuccin.overlay0
@@ -804,6 +813,7 @@ $env.config = {
         enable: true       # set to false to disable external completions
         max_results: 100   # maximum number of results to return from external completers
     }
+    use_ls_colors : true   # whether to use ls colors in file completions
   }
   buffer_editor: "nvim"
   cursor_shape: {
@@ -852,15 +862,31 @@ $env.config.hooks.command_not_found = {|cmd_name|
 
 # Carapace completions
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-let carapace_cache = ([$env.HOME ".cache" "carapace"] | path join)
+let cache_root = ([$env.HOME ".cache"] | path join)
+let carapace_cache = ($cache_root | path join "carapace")
+let carapace_init = ($carapace_cache | path join "init.nu")
 mkdir $carapace_cache
-^carapace _carapace nushell | save --force ($carapace_cache | path join "init.nu")
+if not ($carapace_init | path exists) {
+    ^carapace _carapace nushell | save --force $carapace_init
+}
 source ~/.cache/carapace/init.nu
 
 # Atuin (shared history)
+let atuin_cache = ($cache_root | path join "atuin")
+let atuin_init = ($atuin_cache | path join "init.nu")
+mkdir $atuin_cache
+if not ($atuin_init | path exists) {
+    ^atuin init nu | save --force $atuin_init
+}
 source ~/.cache/atuin/init.nu
 
 # Starship (prompt)
+let starship_cache = ($cache_root | path join "starship")
+let starship_init = ($starship_cache | path join "init.nu")
+mkdir $starship_cache
+if not ($starship_init | path exists) {
+    ^starship init nu | save --force $starship_init
+}
 source ~/.cache/starship/init.nu
 
 # Zoxide
