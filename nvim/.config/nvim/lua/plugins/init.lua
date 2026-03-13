@@ -285,29 +285,7 @@ return {
   -- Multiplexer Navigation (Tmux & Zellij)
   {
     "christoomey/vim-tmux-navigator",
-    cmd = {
-      "TmuxNavigateLeft",
-      "TmuxNavigateDown",
-      "TmuxNavigateUp",
-      "TmuxNavigateRight",
-      "TmuxNavigatePrevious",
-    },
-    keys = {
-      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-    },
-    config = function()
-        -- If in Zellij, override the tmux navigator commands to send Zellij actions
-        if os.getenv("ZELLIJ") then
-            vim.keymap.set('n', '<C-h>', function() vim.fn.system("zellij action move-focus left") end)
-            vim.keymap.set('n', '<C-j>', function() vim.fn.system("zellij action move-focus down") end)
-            vim.keymap.set('n', '<C-k>', function() vim.fn.system("zellij action move-focus up") end)
-            vim.keymap.set('n', '<C-l>', function() vim.fn.system("zellij action move-focus right") end)
-        end
-    end,
+    lazy = false, -- Load immediately to ensure Ctrl-hjkl work instantly
   },
 
   -- Popular Themes (Lazy loaded so they don't conflict)

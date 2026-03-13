@@ -25,11 +25,29 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center" })
 map("n", "n", "nzzzv", { desc = "Next search result and center" })
 map("n", "N", "Nzzzv", { desc = "Previous search result and center" })
 
--- Better window navigation
--- map("n", "<C-h>", "<C-w>h", { desc = "Window left" })
--- map("n", "<C-j>", "<C-w>j", { desc = "Window down" })
--- map("n", "<C-k>", "<C-w>k", { desc = "Window up" })
--- map("n", "<C-l>", "<C-w>l", { desc = "Window right" })
+-- Smart window navigation (Tmux & Zellij aware)
+local function move_focus(dir)
+  local win = vim.api.nvim_get_current_win()
+  
+  -- Try moving within Neovim first
+  if dir == "h" then vim.cmd("TmuxNavigateLeft")
+  elseif dir == "j" then vim.cmd("TmuxNavigateDown")
+  elseif dir == "k" then vim.cmd("TmuxNavigateUp")
+  elseif dir == "l" then vim.cmd("TmuxNavigateRight")
+  end
+
+  -- If the window didn't change and we are in Zellij, tell Zellij to move
+  if win == vim.api.nvim_get_current_win() and os.getenv("ZELLIJ") then
+    local zellij_dir = { h = "left", j = "down", k = "up", l = "right" }
+    vim.fn.system("zellij action move-focus " .. zellij_dir[dir])
+  end
+end
+
+map("n", "<C-h>", function() move_focus("h") end, { desc = "Window left" })
+map("n", "<C-j>", function() move_focus("j") end, { desc = "Window down" })
+map("n", "<C-k>", function() move_focus("k") end, { desc = "Window up" })
+map("n", "<C-l>", function() move_focus("l") end, { desc = "Window right" })
+map("n", "<C-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Previous window" })
 
 -- Resize windows
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
