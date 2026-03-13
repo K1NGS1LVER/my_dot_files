@@ -609,14 +609,18 @@ def up [] {
 
     let tools = [
         [name, check, cmds];
-        ["🍺 Homebrew",  "brew",  [["brew" "update"] ["brew" "upgrade"] ["brew" "cleanup"]]]
+        ["🍺 Homebrew",  "brew",  [["brew" "update"] ["brew" "upgrade" "--greedy"] ["brew" "cleanup"]]]
         ["📦 npm",       "npm",   [["npm" "install" "-g" "npm"] ["npm" "update" "-g"]]]
         ["📦 pnpm",      "pnpm",  [["pnpm" "self-update"]]]
         ["🍞 Bun",       "bun",   [["bun" "upgrade"]]]
         ["🦕 Deno",      "deno",  [["deno" "upgrade"]]]
+        ["💎 RubyGems",  "gem",   [["gem" "update" "--system"] ["gem" "update"] ["gem" "cleanup"]]]
+        ["🧪 Conda",     "conda", [["conda" "update" "-n" "base" "-c" "defaults" "conda" "--yes"]]]
         ["🐍 Pipx",      "pipx",  [["pipx" "upgrade-all"]]]
+        ["🍎 App Store", "mas",   [["mas" "upgrade"]]]
         ["💤 Neovim",    "bob",   [["bob" "update" "--all"]]]
         ["📖 tldr",      "tldr",  [["tldr" "--update"]]]
+        ["📓 Obsidian",  "python3", [["sh" "-c" "cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py"]]]
     ]
 
     for tool in $tools {
@@ -625,29 +629,42 @@ def up [] {
             for cmd in $tool.cmds {
                 let bin = ($cmd | first)
                 let cmd_args = ($cmd | skip 1)
-                ^$bin ...$cmd_args
+                try { ^$bin ...$cmd_args } catch { print $"❌ Failed to run ($bin)" }
             }
         }
+    }
+
+    if (which softwareupdate | is-not-empty) {
+        print "🖥️ Checking for macOS updates..."
+        ^softwareupdate -l
     }
 
     print "✅ System updated!"
 }
 
 # ─────────────────────────────────────────────
-# DARK MODE TOGGLE
+# DISK CLEANUP
 # ─────────────────────────────────────────────
 
-def toggle_dark [] {
-    if ($nu.os-info.name == "macos") {
-        ^osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
-    } else {
-        print "Dark mode toggle not supported on this platform."
+def cleanup [] {
+    print "🧹 Cleaning Homebrew Cache..."
+    if (which brew | is-not-empty) {
+        let cache = (^brew --cache)
+        try { rm -rf $cache }
     }
+    
+    print "🧹 Cleaning Docker (Stopped containers, unused images)..."
+    if (which docker | is-not-empty) {
+        ^docker system prune -f
+    }
+    
+    print "🧹 Cleaning User Cache (Logs, Temp files)..."
+    try { rm -rf ~/Library/Caches/Homebrew }
+    try { rm -rf ~/.npm/_cacache }
+    
+    print "✨ Disk space reclaimed!"
 }
 
-# ─────────────────────────────────────────────
-# PDF VIEWER
-# ─────────────────────────────────────────────
 
 def pdf [...args: string] {
     if ($nu.os-info.name == "macos") {
