@@ -427,6 +427,8 @@ def cheat [query: string] { ^curl -s $"cheat.sh/($query)" }
 # TERMINAL MULTIPLEXER
 # ─────────────────────────────────────────────
 
+alias ks = kitty --session ~/.config/kitty/session.conf
+
 def ntmux [...args: string] {
     if ($args | is-empty) {
         ^zellij attach -c "dan"
@@ -609,7 +611,7 @@ def up [] {
 
     let tools = [
         [name, check, cmds];
-        ["🍺 Homebrew",  "brew",  [["brew" "update"] ["brew" "upgrade" "--greedy"] ["brew" "cleanup"]]]
+        ["🍺 Homebrew",  "brew",  [["brew" "update"] ["brew" "upgrade"] ["brew" "cleanup"]]]
         ["📦 npm",       "npm",   [["npm" "install" "-g" "npm"] ["npm" "update" "-g"]]]
         ["📦 pnpm",      "pnpm",  [["pnpm" "self-update"]]]
         ["🍞 Bun",       "bun",   [["bun" "upgrade"]]]
@@ -825,7 +827,7 @@ $env.config = {
     case_sensitive: false # set to true to enable case-sensitive completions
     quick: true          # set to false to prevent auto-selecting completions
     partial: true        # set to false to prevent partial filling of the matching completion
-    algorithm: "fuzzy"    # prefix or fuzzy
+    algorithm: "prefix"    # prefix or fuzzy
     external: {
         enable: true       # set to false to disable external completions
         max_results: 100   # maximum number of results to return from external completers
