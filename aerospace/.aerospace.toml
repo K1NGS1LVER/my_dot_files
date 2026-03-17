@@ -150,7 +150,10 @@ on-mode-changed = []
     # --- Application Shortcuts ---
     alt-b = 'exec-and-forget open -a "Firefox"'     # Browser (Firefox found in list-windows)
     alt-c = 'exec-and-forget open -a "Calculator"'  # Calculator
+    alt-f = 'exec-and-forget open -a "Finder"'      # Finder
     alt-g = 'exec-and-forget open -a "Ghostty"'     # Ghostty
+    alt-t = 'exec-and-forget open -a "kitty"'       # kitty terminal
+    alt-w = 'exec-and-forget open -a "WhatsApp"'    # WhatsApp
 
     alt-m = 'workspace M'
     alt-n = 'workspace N'
@@ -159,10 +162,10 @@ on-mode-changed = []
     alt-q = 'workspace Q'
     alt-r = 'workspace R'
     alt-s = 'workspace S'
-    alt-t = 'workspace T'
+    # alt-t = 'workspace T'
     alt-u = 'workspace U'
     alt-v = 'workspace V'
-    alt-w = 'workspace W'
+    # alt-w = 'workspace W'
     alt-x = 'workspace X'
     alt-y = 'workspace Y'
     alt-z = 'workspace Z'

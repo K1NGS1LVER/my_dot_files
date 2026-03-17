@@ -117,7 +117,6 @@ alias goodnight = ^sh ~/scripts/goodnight.sh
 alias gray = ^shortcuts run "Toggle Grayscale"
 alias sepia = ^shortcuts run "Sepia Mode"
 
-
 # ─────────────────────────────────────────────
 # CUSTOM FUNCTIONS
 # ─────────────────────────────────────────────
@@ -126,13 +125,6 @@ alias sepia = ^shortcuts run "Sepia Mode"
 # QOL — Stopwatch & Timer
 # ─────────────────────────────────────────────
 
-# Simple stopwatch: run a command and show elapsed time
-def time-it [cmd: string, ...args: string] {
-    let start = (date now)
-    ^$cmd ...$args
-    let elapsed = ((date now) - $start)
-    print $"⏱️ Elapsed: ($elapsed)"
-}
 
 # Countdown timer
 def timer [seconds: int] {
@@ -428,12 +420,53 @@ def cheat [query: string] { ^curl -s $"cheat.sh/($query)" }
 # ─────────────────────────────────────────────
 
 alias ks = kitty --session ~/.config/kitty/session.conf
+alias t = ttmux
+alias tk = tkill
+
+# ttmux: abduco wrapper that defaults to a "main" session but allows pass-through
+def --wrapped ttmux [...args: string] {
+    let shell = "nu"
+    let default_key = "^a"
+
+    if ($args | is-empty) {
+        # Default: attach/create "main" with Ctrl-a and nu shell
+        ^abduco -e $default_key -A main $shell
+    } else if ($args | length) == 1 {
+        # If single arg, treat as session name (e.g., ttmux pp)
+        let name = ($args | first)
+        if ($name | str starts-with "-") {
+            # If it's a flag (like -l), pass it through directly
+            ^abduco ...$args
+        } else {
+            # Otherwise, attach/create a session with that name
+            ^abduco -e $default_key -A $name $shell
+        }
+    } else {
+        # Pass-through all other complex arguments to abduco
+        ^abduco ...$args
+    }
+}
 
 def ntmux [...args: string] {
     if ($args | is-empty) {
         ^zellij attach -c "dan"
     } else {
         ^zellij ...$args
+    }
+}
+
+# Kills an abduco session by name
+def tkill [name: string] {
+    # Find abduco processes where the command line contains the session name
+    let sessions = (ps -l | where command =~ "abduco" | where command =~ $name)
+    
+    if ($sessions | is-empty) {
+        print $"No abduco session found matching: ($name)"
+    } else {
+        $sessions | each { |it| 
+            kill $it.pid
+            print $"Terminated abduco session: ($name) \(PID: ($it.pid)\)"
+        }
     }
 }
 
