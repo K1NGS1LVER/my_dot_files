@@ -943,3 +943,25 @@ source ~/.cache/starship/init.nu
 
 # Zoxide
 source ./zoxide.nu
+# ─────────────────────────────────────────────
+# WELCOME MESSAGE
+# ─────────────────────────────────────────────
+
+def --env welcome-message [] {
+    if (random bool) {
+        let scripts_dir = "/opt/shell-color-scripts/colorscripts"
+        if ($scripts_dir | path exists) {
+            let scripts = (ls $scripts_dir | get name)
+            if ($scripts | is-not-empty) {
+                let pick = ($scripts | get (random int 0..(($scripts | length) - 1)))
+                bash $pick
+            }
+        }
+    } else {
+        if (which fortune | is-not-empty) and (which cowsay | is-not-empty) {
+            ^fortune | ^cowsay -f small
+        }
+    }
+}
+
+welcome-message
