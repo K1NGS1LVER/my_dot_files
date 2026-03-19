@@ -964,4 +964,4 @@ def --env welcome-message [] {
     }
 }
 
-welcome-message
+ welcome-message

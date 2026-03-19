@@ -25,35 +25,48 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center" })
 map("n", "n", "nzzzv", { desc = "Next search result and center" })
 map("n", "N", "Nzzzv", { desc = "Previous search result and center" })
 
--- Smart window navigation (Tmux & Zellij aware)
+-- Smart window navigation (Multiplexer aware)
 local function move_focus(dir)
   local win = vim.api.nvim_get_current_win()
-  
+
   -- Try moving within Neovim first
-  if dir == "h" then vim.cmd("TmuxNavigateLeft")
-  elseif dir == "j" then vim.cmd("TmuxNavigateDown")
-  elseif dir == "k" then vim.cmd("TmuxNavigateUp")
-  elseif dir == "l" then vim.cmd("TmuxNavigateRight")
+  if dir == "h" or dir == "left"  then vim.cmd("TmuxNavigateLeft")
+  elseif dir == "j" or dir == "down"  then vim.cmd("TmuxNavigateDown")
+  elseif dir == "k" or dir == "up"    then vim.cmd("TmuxNavigateUp")
+  elseif dir == "l" or dir == "right" then vim.cmd("TmuxNavigateRight")
   end
 
-  -- If the window didn't change and we are in Zellij, tell Zellij to move
-  if win == vim.api.nvim_get_current_win() and os.getenv("ZELLIJ") then
-    local zellij_dir = { h = "left", j = "down", k = "up", l = "right" }
-    vim.fn.system("zellij action move-focus " .. zellij_dir[dir])
+  -- If the window didn't change, try moving the multiplexer (Zellij or Kitty)
+  if win == vim.api.nvim_get_current_win() then
+    local multiplexer_dir = { 
+      h = "left", j = "down", k = "up", l = "right",
+      left = "left", down = "down", up = "up", right = "right"
+    }
+
+    if os.getenv("ZELLIJ") then
+      vim.fn.system("zellij action move-focus " .. multiplexer_dir[dir])
+    elseif os.getenv("KITTY_PID") then
+      -- Uses kitty's remote control to focus the neighboring window
+      vim.fn.system("kitty @ --to unix:/tmp/mykitty focus-window --match neighboring:" .. multiplexer_dir[dir])
+    end
   end
 end
 
-map("n", "<C-h>", function() move_focus("h") end, { desc = "Window left" })
-map("n", "<C-j>", function() move_focus("j") end, { desc = "Window down" })
-map("n", "<C-k>", function() move_focus("k") end, { desc = "Window up" })
-map("n", "<C-l>", function() move_focus("l") end, { desc = "Window right" })
-map("n", "<C-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Previous window" })
+-- Keymaps for navigation
+map("n", "<C-Left>",  function() move_focus("left")  end, { desc = "Window left" })
+map("n", "<C-Down>",  function() move_focus("down")  end, { desc = "Window down" })
+map("n", "<C-Up>",    function() move_focus("up")    end, { desc = "Window up" })
+map("n", "<C-Right>", function() move_focus("right") end, { desc = "Window right" })
 
--- Resize windows
-map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
-map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+-- Standardized 'Close' (Universal X)
+map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })
+map("n", "<leader>X", "<cmd>q<cr>", { desc = "Close Window" })
+
+-- Resize windows (Moved to Ctrl + Shift + Arrows)
+map("n", "<C-S-Up>",    "<cmd>resize +2<cr>",          { desc = "Increase window height" })
+map("n", "<C-S-Down>",  "<cmd>resize -2<cr>",          { desc = "Decrease window height" })
+map("n", "<C-S-Left>",  "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+map("n", "<C-S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
 -- Better indenting
 map("v", "<", "<gv", { desc = "Indent left" })
