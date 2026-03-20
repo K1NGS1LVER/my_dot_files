@@ -22,6 +22,19 @@ require("lazy").setup({
     branch = "v2.5",
     import = "nvchad.plugins",
   },
+  {
+    "mistweaverco/kulala.nvim",
+    keys = {
+      {
+        "<leader>rr",
+        function()
+          require("kulala").run()
+        end,
+        desc = "Run Kulala",
+      },
+    },
+    ft = { "http", "rest" }, -- Only load when opening .http or .rest files
+  },
   { import = "plugins" },
 }, lazy_config)
 

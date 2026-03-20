@@ -4,6 +4,9 @@
 $env.PATH = (
     $env.PATH 
     | split row (char esep) 
+    | prepend [
+        ($env.HOME | path join "dotfiles" "scripts")
+    ]
     | append [
         ($env.HOME | path join ".local" "bin")
         ($env.HOME | path join ".cargo" "bin")

@@ -1,6 +1,7 @@
 typeset -U path PATH
 
 path=(
+    $HOME/dotfiles/scripts
     /opt/homebrew/bin
     /opt/homebrew/sbin
     /usr/local/bin

@@ -595,6 +595,10 @@ def fox [keyword?: string, ...query: string] {
     browse $browser $keyword ...$query
 }
 
+def wolf [keyword?: string, ...query: string] {
+    let browser = if ($nu.os-info.name == "macos") { "LibreWolf" } else { "librewolf" }
+    browse $browser $keyword ...$query
+}
 # ─────────────────────────────────────────────
 # YAZI — File Manager with CWD sync
 # ─────────────────────────────────────────────
