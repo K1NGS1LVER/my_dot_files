@@ -140,4 +140,8 @@ focus-follows-mouse = false
 # Prevent accidental focus changes
 
 auto-update = download
-custom-shader = shaders/cursor_trail.glsl
+# custom-shader = /Users/dan/.config/ghostty/shaders/underwater_true.glsl
+custom-shader = /Users/dan/.config/ghostty/shaders/starfield.glsl
+# custom-shader = /Users/dan/.config/ghostty/shaders/starfield.glsl
+#custom-shader = /Users/dan/.config/ghostty/shaders/cursor_trail.glsl
+custom-shader-animation = always

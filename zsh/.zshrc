@@ -573,27 +573,51 @@ alias dark="toggle_dark"
 # function which puts the computer to sleep, closes the running docker containers and does some cleanup before sleeping 
 alias goodnight='~/scripts/goodnight.sh'
 
-# --- FILE ASSOCIATIONS (Open files by typing their name) ---
-command_not_found_handler() {
-    # If it's a file, handle by extension (triggered only if not in PATH)
-    if [[ -f "$1" ]]; then
-        local ext="${1##*.}"
+# --- FILE ASSOCIATIONS (Explicit open command) ---
+open() {
+    if [[ $# -eq 0 ]]; then
+        /usr/bin/open .
+        return
+    fi
+
+    local target="$1"
+    # Join arguments to handle unquoted filenames with spaces
+    if [[ ! -f "$target" && $# -gt 1 && -f "$*" ]]; then
+        target="$*"
+    fi
+
+    if [[ -f "$target" ]]; then
+        local ext="${target##*.}"
         case "${ext:l}" in
-            py|js|ts|java|cpp|c|go|rs|html|css|sh)
-                nvim "$1"
+            py|js|ts|java|cpp|c|go|rs|css|sh|nu|toml|yaml|yml|json|md|lua|rb|zig|swift|kt)
+                nvim "$target"
                 ;;
             pdf)
-                pdf "$1"
+                # Force PDFs to open in Sioyek
+                /usr/bin/open -a sioyek "$target"
                 ;;
-            mp4|mov|avi|mkv|mp3|wav|ogg)
-                open -a IINA "$1"
+            html|htm)
+                /usr/bin/open "$target"
+                ;;
+            mp4|mov|avi|mkv|mp3|wav|ogg|flac|webm|m4a)
+                /usr/bin/open -a IINA "$target"
+                ;;
+            png|jpg|jpeg|gif|webp|bmp|tiff|svg)
+                /usr/bin/open "$target"
+                ;;
+            docx|doc|xlsx|xls|pptx|ppt|csv|rtf)
+                /usr/bin/open "$target"
+                ;;
+            epub)
+                /usr/bin/open -a Books "$target"
                 ;;
             *)
-                open "$1"
+                /usr/bin/open "$target"
                 ;;
         esac
+        return 0
     else
-        echo "zsh: command not found: $1"
-        return 127
+        echo "zsh: no such file or directory: $target"
+        return 1
     fi
 }

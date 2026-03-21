@@ -1,23 +1,20 @@
-// Advanced Liquid Cursor Trail for Ghostty
-void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+#version 450
+
+layout(location = 0) out vec4 fragColor;
+
+uniform float iTime;
+uniform vec3 iResolution;
+uniform sampler2D iChannel0;
+uniform vec2 iCursor;
+
+void main() {
+    vec2 fragCoord = gl_FragCoord.xy;
     vec2 uv = fragCoord / iResolution.xy;
     vec4 terminalColor = texture(iChannel0, uv);
-
-    // Calculate distance to cursor
     float dist = distance(fragCoord, iCursor);
-    
-    // Create a "Liquid" smear effect
-    // Exponential decay creates a softer, more natural falloff than linear smoothstep
-    float liquid = exp(-dist * 0.15); 
-    
-    // Mix Catppuccin Mauve with a hint of Rosewater for the core
-    vec3 coreColor = vec3(0.96, 0.86, 0.84); // Rosewater (#f4dbd6)
-    vec3 edgeColor = vec3(0.78, 0.63, 0.96); // Mauve (#c6a0f6)
-    
-    // Combine the colors for a dynamic glow
+    float liquid = exp(-dist * 0.15);
+    vec3 coreColor = vec3(0.96, 0.86, 0.84);
+    vec3 edgeColor = vec3(0.78, 0.63, 0.96);
     vec3 finalTrail = mix(edgeColor, coreColor, liquid * 0.5);
-    
-    // Blend the trail with the terminal text
-    // Using a 0.6 multiplier for a strong but translucent "afterimage"
     fragColor = mix(terminalColor, vec4(finalTrail, 1.0), liquid * 0.6);
 }

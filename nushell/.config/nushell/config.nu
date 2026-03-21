@@ -42,6 +42,7 @@ alias fetch = ^fastfetch
 alias lg = ^lazygit
 alias src = view-source
 alias g = git
+alias gs = ^git status
 
 
 # ─────────────────────────────────────────────
@@ -886,31 +887,45 @@ $env.config = {
 }
 
 # ─────────────────────────────────────────────
-# FILE ASSOCIATIONS — command_not_found hook
+# FILE ASSOCIATIONS — smart-open (Explicit open command)
 # ─────────────────────────────────────────────
 
-$env.config.hooks.command_not_found = {|cmd_name|
+def smart-open [cmd_name: string] {
     let filepath = ($cmd_name | path expand)
-    if not ($filepath | path exists) { return null }
+    if not ($filepath | path exists) { 
+        print $"(ansi red)Error: File not found: ($cmd_name)(ansi reset)"
+        return 
+    }
 
     let parsed = ($filepath | path parse)
     let ext = ($parsed.extension | str downcase)
 
-    let editor_exts = ["py" "js" "ts" "java" "cpp" "c" "go" "rs" "html" "css" "sh" "nu" "toml" "yaml" "yml" "json" "md" "lua" "rb" "zig" "swift" "kt"]
+    let editor_exts = ["py" "js" "ts" "java" "cpp" "c" "go" "rs" "css" "sh" "nu" "toml" "yaml" "yml" "json" "md" "lua" "rb" "zig" "swift" "kt"]
     let media_exts  = ["mp4" "mov" "avi" "mkv" "mp3" "wav" "ogg" "flac" "webm" "m4a"]
+    let image_exts  = ["png" "jpg" "jpeg" "gif" "webp" "bmp" "tiff" "svg"]
+    let doc_exts    = ["docx" "doc" "xlsx" "xls" "pptx" "ppt" "csv" "rtf"]
 
     let is_mac = ($nu.os-info.name == "macos")
 
     if ($ext in $editor_exts) {
         ^nvim $filepath
     } else if ($ext == "pdf") {
-        if $is_mac { ^open -a sioyek $filepath } else { ^xdg-open $filepath }
+        # Force PDFs to open in Sioyek
+        if $is_mac { ^open -a sioyek $filepath } else { ^sioyek $filepath }
+    } else if ($ext == "epub") {
+        if $is_mac { ^open -a Books $filepath } else { ^xdg-open $filepath }
+    } else if ($ext == "html" or $ext == "htm") {
+        if $is_mac { ^open $filepath } else { ^xdg-open $filepath }
     } else if ($ext in $media_exts) {
         if $is_mac { ^open -a IINA $filepath } else { ^xdg-open $filepath }
+    } else if ($ext in $image_exts or $ext in $doc_exts) {
+        if $is_mac { ^open $filepath } else { ^xdg-open $filepath }
     } else {
         if $is_mac { ^open $filepath } else { ^xdg-open $filepath }
     }
 }
+
+alias open = smart-open
 
 # ─────────────────────────────────────────────
 # PLUGINS & EXTERNAL SOURCES
