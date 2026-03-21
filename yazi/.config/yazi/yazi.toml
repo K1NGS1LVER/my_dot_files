@@ -22,6 +22,7 @@ separator_close = ""
 show_right = ["permissions", "percentage", "position", "timestamp", "size"]
 
 [preview]
-preview_protocol = "chafa"
+preview_protocol = "kitty"
+image_filter = "lanczos3"
 max_width = 800
 max_height = 1000
