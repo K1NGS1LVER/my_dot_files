@@ -64,18 +64,18 @@ $env.config.buffer_editor = "nvim"
 # ALIASES — Neovim Profiles
 # ─────────────────────────────────────────────
 
-def nv-kick [] {
+def nvim-kick [] {
     $env.NVIM_APPNAME = "nvim-kickstart"
     ^nvim
 }
 
-def nv-play [] {
+def nvim-play [] {
     $env.NVIM_APPNAME = "nvim-playground"
     let bob_bin = ([$env.HOME ".local" "share" "bob" "nightly" "bin" "nvim"] | path join)
     ^$bob_bin
 }
 
-def mini [] {
+def nvim-mini [] {
     $env.NVIM_APPNAME = "mini"
     ^nvim
 }
@@ -146,7 +146,7 @@ def timer [seconds: int] {
 # ─────────────────────────────────────────────
 
 # Copy file contents to clipboard
-def cpc [file: string] {
+def copy-file-contents [file: string] {
     if ($nu.os-info.name == "macos") {
         open --raw $file | ^pbcopy
         print $"📋 Copied contents of ($file)"
@@ -157,7 +157,7 @@ def cpc [file: string] {
 }
 
 # Copy current path to clipboard
-def cpwd [] {
+def copy-path [] {
     if ($nu.os-info.name == "macos") {
         $env.PWD | ^pbcopy
     } else {
@@ -212,13 +212,13 @@ def duf [] {
 }
 
 # Top N largest files in current directory
-def big [count?: int] {
+def big-files [count?: int] {
     let n = ($count | default 10)
     ls -la | where type == file | sort-by size -r | first $n | select name size modified
 }
 
 # Top N largest directories
-def bigd [count?: int] {
+def big-directories [count?: int] {
     let n = ($count | default 10)
     ls | where type == dir | each {|d|
         let s = (du $d.name | first | get apparent)
@@ -241,13 +241,13 @@ def sysinfo [] {
 # ─────────────────────────────────────────────
 
 # Generate a random password
-def genpass [length?: int] {
+def generate-password [length?: int] {
     let len = ($length | default 24)
     random chars -l $len
 }
 
 # UUID generator
-def uuid [] {
+def generate-uuid [] {
     if ($nu.os-info.name == "macos") {
         ^uuidgen | str downcase | str trim
     } else {
@@ -256,11 +256,11 @@ def uuid [] {
 }
 
 # Base64 encode/decode
-def b64e [input: string] { $input | encode base64 }
-def b64d [input: string] { $input | decode base64 | decode utf-8 }
+def base-64-encode [input: string] { $input | encode base64 }
+def base-64-decode [input: string] { $input | decode base64 | decode utf-8 }
 
 # JSON pretty print from clipboard
-def jsonpp [] {
+def json-prettier [] {
     if ($nu.os-info.name == "macos") {
         ^pbpaste | from json | to json -i 2
     } else {
@@ -967,13 +967,18 @@ source ./zoxide.nu
 # ─────────────────────────────────────────────
 
 def --env welcome-message [] {
-    if (random bool) {
+    let choice = (random int 0..2)
+    if $choice == 0 {
+        if (which pokemon-colorscripts | is-not-empty) {
+            ^pokemon-colorscripts -r
+        }
+    } else if $choice == 1 {
         let scripts_dir = "/opt/shell-color-scripts/colorscripts"
         if ($scripts_dir | path exists) {
             let scripts = (ls $scripts_dir | get name)
             if ($scripts | is-not-empty) {
-                let pick = ($scripts | get (random int 0..(($scripts | length) - 1)))
-                bash $pick
+                let script = ($scripts | shuffle | first 1 | get 0)
+                bash $script
             }
         }
     } else {
@@ -984,3 +989,4 @@ def --env welcome-message [] {
 }
 
  welcome-message
+

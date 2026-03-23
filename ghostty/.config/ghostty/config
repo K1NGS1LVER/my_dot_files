@@ -3,7 +3,7 @@
 
 # --- Fonts ---
 font-family = "JetBrainsMono Nerd Font"
-font-size = 19
+font-size = 16
 font-feature = calt
 font-feature = liga
 
@@ -30,6 +30,7 @@ window-padding-x = 0
 window-padding-y = 0
 window-decoration = true 
 macos-titlebar-style = hidden
+
 
 # --- Shell ---
 command = /opt/homebrew/bin/nu
@@ -140,8 +141,8 @@ focus-follows-mouse = false
 # Prevent accidental focus changes
 
 auto-update = download
-# custom-shader = /Users/dan/.config/ghostty/shaders/underwater_true.glsl
-custom-shader = /Users/dan/.config/ghostty/shaders/starfield.glsl
-# custom-shader = /Users/dan/.config/ghostty/shaders/starfield.glsl
-#custom-shader = /Users/dan/.config/ghostty/shaders/cursor_trail.glsl
+custom-shader = /Users/dan/.config/ghostty/shaders/kitty_optimised.glsl 
+# custom-shader = /Users/dan/.config/ghostty/shaders/water.glsl
+# custom-shader = /Users/dan/.config/ghostty/shaders/cursor_blaze.glsl
 custom-shader-animation = always
+# custom-shader-animation = false
