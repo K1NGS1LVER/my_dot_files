@@ -126,7 +126,7 @@ window-title-font-family = "JetBrainsMono Nerd Font"
 scrollback-limit = 10000
 
 # Better emoji rendering
-grapheme-width-method = unicode
+grapheme-width-method = legacy
 
 quick-terminal-position = top
 quick-terminal-screen = main
@@ -141,8 +141,8 @@ focus-follows-mouse = false
 # Prevent accidental focus changes
 
 auto-update = download
-custom-shader = /Users/dan/.config/ghostty/shaders/kitty_optimised.glsl 
+# custom-shader = /Users/dan/.config/ghostty/shaders/ultra_minimal_cursor.glsl
+# custom-shader = /Users/dan/.config/ghostty/shaders/cursor_for_the_weak.glsl 
+# custom-shader = /Users/dan/.config/ghostty/shaders/kitty_optimised.glsl 
 # custom-shader = /Users/dan/.config/ghostty/shaders/water.glsl
-# custom-shader = /Users/dan/.config/ghostty/shaders/cursor_blaze.glsl
-custom-shader-animation = always
-# custom-shader-animation = false
+# custom-shader-animation = always

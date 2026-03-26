@@ -62,10 +62,22 @@ if status is-interactive
         disown
     end
 
-    # Yazi Wrapper
+    # Yazi wrappers
+    function __run_yazi
+        if test -n "$ZELLIJ"
+            env TERM=xterm-kitty YAZI_CONFIG_HOME="$HOME/.config/yazi/zellij" command yazi $argv
+        else
+            command yazi $argv
+        end
+    end
+
+    function yazi
+        __run_yazi $argv
+    end
+
     function y
         set tmp (mktemp -t "yazi-cwd.XXXXXX")
-        yazi $argv --cwd-file="$tmp"
+        __run_yazi $argv --cwd-file="$tmp"
         if test -f "$tmp"
             set cwd (cat "$tmp")
             if test -n "$cwd" -a "$cwd" != "$PWD" -a -d "$cwd"

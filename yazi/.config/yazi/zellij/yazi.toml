@@ -1,7 +1,7 @@
-# Yazi Configuration (Zellij Override - Image Previews DISABLED)
-# Reason: Zellij cannot passthrough terminal image protocols (Kitty/Sixel/Chafa).
-# RGB escape sequences from image rendering leak into stdin, causing ghost
-# keypresses (j/k navigation, rename popup, shell command popup).
+# Yazi Configuration (Zellij Override)
+# Reason: Zellij's graphics support is still unreliable. We launch Yazi with
+# TERM=xterm-kitty in Zellij so it falls back to the safe non-graphics preview
+# path instead of using buggy terminal image escape sequences.
 
 [manager]
 query_foreground = false
@@ -26,7 +26,8 @@ separator_close = ""
 show_right = ["permissions", "percentage", "position", "timestamp", "size"]
 
 [preview]
-# CRITICAL: No image protocol inside Zellij — prevents RGB escape leak bug
+# Keep previews conservative inside Zellij to reduce churn while scrolling.
 max_width = 800
 max_height = 1000
 image_filter = "nearest"
+image_delay = 100

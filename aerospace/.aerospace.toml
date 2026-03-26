@@ -152,7 +152,7 @@ on-mode-changed = []
     alt-c = 'exec-and-forget open -a "Calculator"'  # Calculator
     alt-f = 'exec-and-forget open -a "Finder"'      # Finder
     alt-g = 'exec-and-forget open -a "Ghostty"'     # Ghostty
-    alt-t = 'exec-and-forget open -a "kitty"'       # kitty terminal
+    alt-t = 'exec-and-forget open -a "Ghostty"'   # default terminal
     alt-w = 'exec-and-forget open -a "WhatsApp"'    # WhatsApp
 
     alt-m = 'workspace M'

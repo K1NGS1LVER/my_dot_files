@@ -259,17 +259,25 @@ _open_browser() {
 
 brave() { _open_browser "Brave Browser" "$@"; }
 
-# yazi wrapper function
+# Yazi wrappers
+_run_yazi() {
+    # In Zellij, force Yazi onto the documented fallback adapter path.
+    # This prevents terminal graphics escape sequences from leaking back into
+    # stdin for mixed previewers such as images, PDFs, and videos.
+    if [[ -n "$ZELLIJ" ]]; then
+        TERM="xterm-kitty" YAZI_CONFIG_HOME="$HOME/.config/yazi/zellij" command yazi "$@"
+    else
+        command yazi "$@"
+    fi
+}
+
+yazi() {
+    _run_yazi "$@"
+}
+
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    
-    # In Zellij, we must disable previews to prevent the 'j/k' jumping bug
-    # caused by mangled terminal responses to image queries.
-    if [[ -n "$ZELLIJ" ]]; then
-        YAZI_CONFIG_HOME="$HOME/.config/yazi/zellij" command yazi "$@" --cwd-file="$tmp"
-    else
-        command yazi "$@" --cwd-file="$tmp"
-    fi
+    _run_yazi "$@" --cwd-file="$tmp"
 
     if [[ -f "$tmp" ]]; then
         local cwd
