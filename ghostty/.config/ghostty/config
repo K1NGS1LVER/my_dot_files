@@ -17,12 +17,12 @@ font-family-italic = "JetBrainsMono Nerd Font"
 
 # --- Theme & Colors ---
 
-theme = catppuccin-macchiato
+theme = catppuccin-mocha
 background-opacity = 0.75
 background-blur-radius = 25
 
 # --- Premium Aesthetic Tweaks ---
-cursor-color = #f4dbd6
+cursor-color = #f5e0dc
 cursor-style = bar
 
 # --- Window ---
@@ -72,7 +72,7 @@ window-vsync = true
 # Better font rendering on macOS
 font-thicken = true
 cursor-style = bar
-cursor-color = #f4dbd6
+cursor-color = #f5e0dc
 
 #url and link handling
 # Click links with modifier

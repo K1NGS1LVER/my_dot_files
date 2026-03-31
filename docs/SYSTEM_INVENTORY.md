@@ -52,7 +52,7 @@
 ### Features
 - **Mouse Mode:** Enabled (Click to select panes).
 - **Vim Navigation:** `Ctrl + h/j/k/l` to move between panes.
-- **Theme:** Catppuccin Macchiato (Manual config).
+- **Theme:** Catppuccin Mocha (Manual config).
 
 ---
 

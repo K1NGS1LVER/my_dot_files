@@ -171,7 +171,7 @@ These shortcuts allow for efficient text manipulation on the command line, simil
 ## 🛠️ **Additional Configuration**
 
 ### **Bat (Better Cat) Theme**
-*   **Active Theme**: `Catppuccin Macchiato`
+*   **Active Theme**: `Catppuccin Mocha`
 *   **Configuration**:
     *   Themes manually downloaded to `$(bat --config-dir)/themes`.
     *   Cache rebuilt via `bat cache --build`.

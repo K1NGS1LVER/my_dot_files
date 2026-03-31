@@ -5,7 +5,6 @@
                 "rules": [
                     {
                         "description": "Caps Lock dual-role (tap Esc, shift combos for paging)",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -819,20 +818,6 @@
                         ]
                     },
                     {
-                        "description": "Caps→Esc/Ctrl if held (Global Fallback)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "left_control" }],
-                                "to_if_alone": [{ "key_code": "escape" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Apple Books & Pages Vim Mode Controller",
                         "manipulators": [
                             {
@@ -1021,6 +1006,20 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "right_arrow" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps→Esc/Ctrl if held (Global Fallback)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_control" }],
+                                "to_if_alone": [{ "key_code": "escape" }],
                                 "type": "basic"
                             }
                         ]

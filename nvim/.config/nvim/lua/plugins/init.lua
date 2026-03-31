@@ -56,6 +56,8 @@ return {
           "python",
           "rust",
           "go",
+          "cpp",
+          "c",
           "dockerfile",
           "git_config",
           "gitignore",

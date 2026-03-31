@@ -145,10 +145,10 @@ on-mode-changed = []
     alt-e = 'workspace E'
     # alt-f = 'workspace F'
     # alt-g = 'workspace G'
-    alt-i = 'workspace I'
+    # alt-i = 'workspace I'
 
     # --- Application Shortcuts ---
-    alt-b = 'exec-and-forget open -a "Firefox"'     # Browser (Firefox found in list-windows)
+    alt-b = 'exec-and-forget open -a "Orion"'     # Browser (Firefox found in list-windows)
     alt-c = 'exec-and-forget open -a "Calculator"'  # Calculator
     alt-f = 'exec-and-forget open -a "Finder"'      # Finder
     alt-g = 'exec-and-forget open -a "Ghostty"'     # Ghostty
@@ -187,7 +187,7 @@ on-mode-changed = []
     alt-shift-e = 'move-node-to-workspace E'
     # alt-shift-f = 'move-node-to-workspace F'
     alt-shift-g = 'move-node-to-workspace G'
-    alt-shift-i = 'move-node-to-workspace I'
+    # alt-shift-i = 'move-node-to-workspace I'
     alt-shift-m = 'move-node-to-workspace M'
     alt-shift-n = 'move-node-to-workspace N'
     alt-shift-o = 'move-node-to-workspace O'
@@ -240,3 +240,11 @@ on-mode-changed = []
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+run = 'layout floating'

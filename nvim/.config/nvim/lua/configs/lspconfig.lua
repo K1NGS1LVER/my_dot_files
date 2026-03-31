@@ -15,6 +15,7 @@ local base_config = {
 local servers = {
   "html",
   "cssls",
+  "clangd",
   "pyright",
   "ruff",
   "gopls",

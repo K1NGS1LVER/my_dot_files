@@ -15,6 +15,8 @@ local options = {
     rust = { "rustfmt" },
     go = { "goimports" },
     sh = { "shfmt" },
+    cpp = { "clang-format" },
+    c = { "clang-format" },
   },
 
   format_on_save = {
