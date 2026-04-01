@@ -1,30 +1,48 @@
-# Starship: High-Signal, Zero-Noise Configuration
-# Focus: Context -> State -> Performance -> Action
+# Starship: High-Signal Left, Dimmed Pac-Man Right
+# Focus: Vibrant context on the left, subtle state on the right
 
-format = """$directory$git_branch$git_status$status$cmd_duration$python$nodejs
-$character"""
+# --- Palette Definitions (Catppuccin Macchiato) ---
+# Red: #ed8796 | Yellow: #eed49f | Green: #a6da95 | Blue: #8aadf4
+# Mauve: #c6a0f6 | Sky: #91d7e3 | Sapphire: #7dc4e4 | Teal: #8bd5ca
+# Peach: #f5a97f | Lavender: #b7bdf8 | Surface1: #494d64 | Overlay0: #6e738d
 
-# Spicy right-side flair (Subtle)
-right_format = """[󱐋](dimmed white)"""
+format = """
+[╭⎯](bold #494d64)$directory$git_branch$git_metrics$git_status$fill$python$nodejs$golang$rust$bun$c$cpp$cmake$battery$cmd_duration
+[╰⎯](bold #c6a0f6) """
 
-add_newline = true
+# Pac-Man Right Prompt - DIMMED (Overlay0)
+right_format = """[󰮯 ](bold #6e738d)$status"""
+
+[fill]
+symbol = " "
+
+[line_break]
+disabled = false
 
 [directory]
-truncation_length = 0
-home_symbol = "~"
+truncation_length = 3
+truncate_to_repo = true
+home_symbol = " ~"
 read_only = " "
 format = "[$path]($style)[$read_only]($read_only_style) "
-style = "bold #7ed1fb"
+style = "bold #91d7e3" # Sky
+truncation_symbol = "…/"
 
 [git_branch]
-symbol = " "
+symbol = " "
 format = "on [$symbol$branch]($style) "
-style = "bold green"
+style = "bold #c6a0f6" # Mauve
+
+[git_metrics]
+disabled = false
+added_style = "bold #a6da95" # Green
+deleted_style = "bold #ed8796" # Red
+format = "([+$added]($added_style) )([-$deleted]($deleted_style) )"
 
 [git_status]
 disabled = false
-format = "([$all_status$ahead_behind]($style) )"
-style = "bold yellow" # Signal: Uncommitted work needs attention
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold #eed49f" # Yellow
 conflicted = "="
 ahead = "⇡"
 behind = "⇣"
@@ -37,42 +55,75 @@ renamed = "»"
 deleted = "✘"
 
 [status]
+symbol = ""
+success_symbol = ""
 disabled = false
-format = '[\[$symbol $exit_code\]]($style) '
-symbol = "✘"
-success_symbol = "" # Invisible on success
-style = "bold red"
+format = '[$exit_code]($style)'
+style = "bold #ed8796" # Red (Critical Signal)
+pipestatus = true
 
 [cmd_duration]
 min_time = 500
+show_milliseconds = false
 format = "took [$duration]($style) "
-style = "bold dimmed yellow"
+style = "bold #eed49f" # Yellow
 
 [python]
 symbol = "󰌠 "
-# Only show when in a virtualenv or pyenv
 format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style) '
-style = "bold yellow"
+style = "bold #eed49f" # Yellow
 pyenv_prefix = "pyenv "
-python_binary = ["python", "python3"]
 
 [nodejs]
 symbol = "󰎙 "
 format = "via [$symbol($version )]($style) "
-style = "bold green"
+style = "bold #a6da95" # Green
 
-[character]
-success_symbol = "╰⎯ "
-error_symbol = "[╰⎯](bold red) "
+[golang]
+symbol = " "
+format = "via [$symbol($version )]($style) "
+style = "bold #7dc4e4" # Sapphire
 
-# --- Explicitly Disable Redundant Modules ---
+[rust]
+symbol = "󱘗 "
+format = "via [$symbol($version )]($style) "
+style = "bold #f5a97f" # Peach
+
+[bun]
+symbol = " "
+format = "via [$symbol($version )]($style) "
+style = "bold #eed49f" # Yellow
+
+[c]
+symbol = " "
+format = "via [$symbol($version )]($style) "
+style = "bold #8aadf4" # Blue
+
+[cpp]
+symbol = " "
+format = "via [$symbol($version )]($style) "
+style = "bold #8aadf4" # Blue
+
+[cmake]
+symbol = " "
+format = "via [$symbol($version )]($style) "
+style = "bold #8aadf4" # Blue
+
+[battery]
+full_symbol = "󰁹"
+charging_symbol = "󰂄"
+discharging_symbol = "󰂃"
+format = "[$symbol$percentage]($style) "
+
+[[battery.display]]
+threshold = 15
+style = "bold #ed8796" # Red
+
+# --- Explicitly Disable Redundant/Slow Modules ---
 [username]
 disabled = true
 
 [hostname]
-disabled = true
-
-[kubernetes]
 disabled = true
 
 [package]
@@ -81,5 +132,8 @@ disabled = true
 [os]
 disabled = true
 
-[battery]
+[kubernetes]
+disabled = true
+
+[character]
 disabled = true
