@@ -53,10 +53,11 @@ end
 
 -- Diagnostic Styling
 vim.diagnostic.config {
-  virtual_text = {
-    prefix = '●', -- Or '■', '▎', 'x'
-    spacing = 4,
-  },
+  -- virtual_text = {
+  --   prefix = '●', -- Or '■', '▎', 'x'
+  --   spacing = 4,
+  -- },
+  virtual_text = false,
   signs = true,
   underline = true,
   update_in_insert = false,
