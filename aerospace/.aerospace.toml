@@ -241,10 +241,17 @@ on-mode-changed = []
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
 
+# Orion Browser Standard Rules
 [[on-window-detected]]
 if.app-id = 'com.kagi.kagimacOS'
+if.window-title-regex-substring = 'Picture in Picture'
 run = 'layout floating'
 
 [[on-window-detected]]
 if.app-id = 'com.kagi.kagimacOS'
+if.window-title-regex-substring = 'Library'
 run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+run = 'move-node-to-workspace 2'
