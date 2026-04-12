@@ -241,15 +241,14 @@ on-mode-changed = []
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
 
-# Orion Browser Standard Rules
+# Orion Browser Rules
+# Keep utility windows floating, but still let the workspace assignment rule run.
+# Avoid broad title matches like "Search" on browsers because normal tab titles can
+# contain those words and get misclassified as popups.
 [[on-window-detected]]
 if.app-id = 'com.kagi.kagimacOS'
-if.window-title-regex-substring = 'Picture in Picture'
-run = 'layout floating'
-
-[[on-window-detected]]
-if.app-id = 'com.kagi.kagimacOS'
-if.window-title-regex-substring = 'Library'
+if.window-title-regex-substring = '^(Picture in Picture|Library|Search)$'
+check-further-callbacks = true
 run = 'layout floating'
 
 [[on-window-detected]]
