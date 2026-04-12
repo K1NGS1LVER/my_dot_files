@@ -16,11 +16,6 @@ M.ui = {
   },
 }
 
--- Disable NvimTree offset for Tabufline
-M.ui.tabufline.modules = {
-  nvimtree = false,
-}
-
 M.base46 = {
   theme = "catppuccin",
 
@@ -83,11 +78,6 @@ M.base46 = {
   },
 
   transparency = true,
-}
-
--- Disable NvimTree offset for Tabufline
-M.ui.tabufline.modules = {
-  nvimtree = false,
 }
 
 M.term = {

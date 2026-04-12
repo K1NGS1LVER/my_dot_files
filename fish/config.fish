@@ -48,8 +48,8 @@ if status is-interactive
     alias lg='lazygit'
     alias nv='nvim'
     alias nvconfig='nvim ~/.config/nvim/'
-    alias nvguide='nvim ~/.config/nvim/SETUP_GUIDE.md'
-    alias nvcheat='nvim ~/.config/nvim/CHEATSHEET.md'
+    alias nvguide='nvim ~/dotfiles/docs/SETUP_GUIDE.md'
+    alias nvcheat='nvim ~/dotfiles/docs/CHEATSHEET.md'
     
     # Recording
     alias rec='script recording_(date +%Y%m%d_%H%M%S).txt'

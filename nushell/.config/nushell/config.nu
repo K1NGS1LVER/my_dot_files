@@ -58,8 +58,8 @@ alias v = ^nvim
 alias nv = ^nvim
 alias og = ^/usr/bin/vim
 alias nvconfig = ^nvim ~/.config/nvim/
-alias nvguide = ^nvim ~/.config/nvim/SETUP_GUIDE.md
-alias nvcheat = ^nvim ~/.config/nvim/CHEATSHEET.md
+alias nvguide = ^nvim ~/dotfiles/docs/SETUP_GUIDE.md
+alias nvcheat = ^nvim ~/dotfiles/docs/CHEATSHEET.md
 
 $env.config.buffer_editor = "nvim"
 

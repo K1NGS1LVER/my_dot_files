@@ -290,25 +290,8 @@ return {
     lazy = false, -- Load immediately to ensure Ctrl-hjkl work instantly
   },
 
-  -- Popular Themes (Lazy loaded so they don't conflict)
-  { "folke/tokyonight.nvim", lazy = true },
+  -- Current colorscheme
   { "catppuccin/nvim", name = "catppuccin", lazy = true },
-  { "rebelot/kanagawa.nvim", lazy = true },
-  { "rose-pine/neovim", name = "rose-pine", lazy = true },
-  { "scottmckendry/cyberdream.nvim", lazy = true },
-  { "EdenEast/nightfox.nvim", lazy = true },
-  { "ellisonleao/gruvbox.nvim", lazy = true },
-  { "sainnhe/everforest", lazy = true },
-  { "baliestri/aura-theme", lazy = true, name = "aura" },
-  { "nordtheme/vim", lazy = true, name = "nord" },
-  { "sonph/onehalf", lazy = true, rtp = "vim", name = "onehalf" },
-  { "kvrohit/mellow.nvim", lazy = true },
-  { "dracula/vim", lazy = true, name = "dracula" },
-  { "masisz/wisteria.nvim", lazy = true },
-  { "craftzdog/solarized-osaka.nvim", lazy = true },
-  { "marko-cerovac/material.nvim", lazy = true },
-  { "navarasu/onedark.nvim", lazy = true },
-  { "sainnhe/sonokai", lazy = true },
 
   -- Transparency Control (Force transparency on any theme)
   {

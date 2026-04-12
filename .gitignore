@@ -58,6 +58,11 @@ nushell/.config/nushell/history.txt
 **/*.bak 
 *.bak
 **/*.BACKUPS
+goose/.config/goose/config.yaml.bak*
+karabiner/.config/karabiner/automatic_backups/
+yazi/.config/yazi/yazi.toml-*
+zed/.config/zed/prompts/
+zed/.config/zed/settings_backup.json
 
 
 # --- RAYCAST ---
