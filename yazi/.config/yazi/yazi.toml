@@ -13,7 +13,7 @@ book = [
 
 [open]
 prepend_rules = [
-    { name = "*.epub", use = "book" }
+    { url = "*.epub", use = "book" }
 ]
 
 [status]

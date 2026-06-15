@@ -21,10 +21,6 @@ $env.PROMPT_MULTILINE_INDICATOR = ""
 # ─────────────────────────────────────────────
 
 alias home = cd ~
-alias .. = cd ..
-alias ... = cd ../..
-alias .... = cd ../../..
-alias ..... = cd ../../../../..
 
 # ─────────────────────────────────────────────
 # ALIASES — Core Replacements
@@ -43,7 +39,7 @@ alias lg = ^lazygit
 alias src = view-source
 alias g = git
 alias gs = ^git status
-alias gd = ^git diff 
+alias gd = ^git diff
 alias gc = ^git commit
 alias gp = ^git push
 
@@ -61,8 +57,6 @@ alias nvconfig = ^nvim ~/.config/nvim/
 alias nvguide = ^nvim ~/dotfiles/docs/SETUP_GUIDE.md
 alias nvcheat = ^nvim ~/dotfiles/docs/CHEATSHEET.md
 
-$env.config.buffer_editor = "nvim"
-
 # ─────────────────────────────────────────────
 # ALIASES — Neovim Profiles
 # ─────────────────────────────────────────────
@@ -75,7 +69,7 @@ def nvim-kick [] {
 def nvim-play [] {
     $env.NVIM_APPNAME = "nvim-playground"
     let bob_bin = ([$env.HOME ".local" "share" "bob" "nightly" "bin" "nvim"] | path join)
-    ^$bob_bin
+    run-external $bob_bin
 }
 
 def nvim-mini [] {
@@ -424,8 +418,6 @@ def cheat [query: string] { ^curl -s $"cheat.sh/($query)" }
 # ─────────────────────────────────────────────
 
 alias ks = kitty --session ~/.config/kitty/session.conf
-alias t = ttmux
-alias tk = tkill
 
 # ttmux: abduco wrapper that defaults to a "main" session but allows pass-through
 def --wrapped ttmux [...args: string] {
@@ -474,6 +466,9 @@ def tkill [name: string] {
     }
 }
 
+alias t = ttmux
+alias tk = tkill
+
 # ─────────────────────────────────────────────
 # FUZZY FILE OPENER
 # ─────────────────────────────────────────────
@@ -493,7 +488,7 @@ def cap [cmd: string, ...args: string] {
     let timestamp = (date now | format date "%Y%m%d_%H%M%S")
     let logfile = $"capture_($timestamp).txt"
     print $"Saving output to ($logfile)..."
-    ^$cmd ...$args | tee { save --force $logfile }
+    run-external $cmd ...$args | tee { save --force $logfile }
 }
 
 # ─────────────────────────────────────────────
@@ -504,14 +499,14 @@ def upscale [...args: string] {
     let upscale_dir = ([$env.HOME "projects" "pythonVishal" "Real-ESRGAN-0.3.0"] | path join)
     let bin = ([$upscale_dir "realesrgan-ncnn-vulkan"] | path join)
     let models = ([$upscale_dir "models"] | path join)
-    ^$bin -m $models -n realesrgan-x4plus ...$args
+    run-external $bin "-m" $models "-n" "realesrgan-x4plus" ...$args
 }
 
 def upscale-anime [...args: string] {
     let upscale_dir = ([$env.HOME "projects" "pythonVishal" "Real-ESRGAN-0.3.0"] | path join)
     let bin = ([$upscale_dir "realesrgan-ncnn-vulkan"] | path join)
     let models = ([$upscale_dir "models"] | path join)
-    ^$bin -m $models -n realesrgan-x4plus-anime ...$args
+    run-external $bin "-m" $models "-n" "realesrgan-x4plus-anime" ...$args
 }
 
 # ─────────────────────────────────────────────
@@ -557,7 +552,7 @@ def browse [browser: string, keyword?: string, ...query: string] {
     ]
 
     if ($keyword == null or ($keyword | is-empty)) {
-        if $is_mac { ^open -a $browser } else { ^$opener "" }
+        if $is_mac { ^open -a $browser } else { run-external $opener "" }
         return
     }
 
@@ -569,7 +564,7 @@ def browse [browser: string, keyword?: string, ...query: string] {
         let site = ($matched | first)
         let open_args = if $is_mac { ["-a" $browser] } else { [] }
         if ($query | is-empty) {
-            ^$opener ...$open_args $site.base
+            run-external $opener ...$open_args $site.base
         } else {
             let q = ($query | str join "+")
             let url = if ($site.search | is-empty) {
@@ -580,12 +575,12 @@ def browse [browser: string, keyword?: string, ...query: string] {
             } else {
                 $"($site.search)($q)"
             }
-            ^$opener ...$open_args $url
+            run-external $opener ...$open_args $url
         }
     } else {
         let url = if ($keyword | str starts-with "http") { $keyword } else { $"https://($keyword)" }
         let open_args = if $is_mac { ["-a" $browser] } else { [] }
-        ^$opener ...$open_args $url
+        run-external $opener ...$open_args $url
     }
 }
 
@@ -677,7 +672,7 @@ def up [] {
             for cmd in $tool.cmds {
                 let bin = ($cmd | first)
                 let cmd_args = ($cmd | skip 1)
-                try { ^$bin ...$cmd_args } catch { print $"❌ Failed to run ($bin)" }
+                try { run-external $bin ...$cmd_args } catch { print $"❌ Failed to run ($bin)" }
             }
         }
     }
