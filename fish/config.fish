@@ -174,9 +174,9 @@ if status is-interactive
     # Initialize Zoxide (smarter cd)
     zoxide init fish | source
 
-    # Initialize Atuin (Magic History)
-    if test -f /opt/homebrew/bin/atuin
-        atuin init fish | source
+    # Initialize FZF
+    if type -q fzf
+        fzf --fish | source
     end
 
 

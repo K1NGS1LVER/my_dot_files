@@ -7,8 +7,6 @@ tap "oven-sh/bun"
 tap "steipete/tap"
 tap "yakitrak/yakitrak"
 brew "aria2"
-brew "atuin", restart_service: :changed
-brew "bash"
 brew "bash-completion@2"
 brew "bat"
 brew "btop"

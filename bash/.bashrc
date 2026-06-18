@@ -12,7 +12,7 @@ export LANG="en_IN.UTF-8"
 
 # --- TOOLS ---
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
-command -v atuin >/dev/null 2>&1 && eval "$(atuin init bash)"
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 
 # --- ENV VARS ---
 export EDITOR="nvim"

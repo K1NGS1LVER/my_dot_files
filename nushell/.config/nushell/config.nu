@@ -898,7 +898,11 @@ $env.config = {
 # FILE ASSOCIATIONS — smart-open (Explicit open command)
 # ─────────────────────────────────────────────
 
-def smart-open [cmd_name: string] {
+def smart-open [cmd_name: string, --raw (-r)] {
+    if $raw {
+        return (^open --raw $cmd_name)
+    }
+
     let filepath = ($cmd_name | path expand)
     if not ($filepath | path exists) { 
         print $"(ansi red)Error: File not found: ($cmd_name)(ansi reset)"
@@ -950,14 +954,14 @@ if not ($carapace_init | path exists) {
 }
 source ~/.cache/carapace/init.nu
 
-# Atuin (shared history)
-let atuin_cache = ($cache_root | path join "atuin")
-let atuin_init = ($atuin_cache | path join "init.nu")
-mkdir $atuin_cache
-if not ($atuin_init | path exists) {
-    ^atuin init nu | save --force $atuin_init
+# FZF (shell integration)
+let fzf_cache = ($cache_root | path join "fzf")
+let fzf_init = ($fzf_cache | path join "init.nu")
+mkdir $fzf_cache
+if not ($fzf_init | path exists) {
+    ^fzf --nushell | save --force $fzf_init
 }
-source ~/.cache/atuin/init.nu
+source ~/.cache/fzf/init.nu
 
 # Starship (prompt)
 let starship_cache = ($cache_root | path join "starship")

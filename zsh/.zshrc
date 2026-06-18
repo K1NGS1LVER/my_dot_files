@@ -117,7 +117,7 @@ ZSH_HIGHLIGHT_STYLES[path_approx]='fg=#f4dbd6'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=#f5bde6' # Pink
 
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)"
-command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh --disable-up-arrow)"
+command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
 [[ "$TERM" != "dumb" ]] && command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # --- KOTLIN ALIASES ---
