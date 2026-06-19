@@ -650,3 +650,23 @@ welcome-message() {
 }
 
 welcome-message
+
+# --- UNIVERSAL HOME DIRECTORY FUZZY FINDER ---
+fzf-universal-file-widget() {
+  local cmd
+  if command -v fd &>/dev/null; then
+    cmd="fd --type f --hidden --follow --exclude .git --exclude Library --exclude .cache --exclude node_modules --exclude .cargo --exclude .npm . ~"
+  else
+    cmd="find ~ -type f -not -path '*/.*' 2>/dev/null"
+  fi
+
+  local file=$(eval "$cmd" | fzf --preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null')
+  
+  if [[ -n "$file" ]]; then
+    LBUFFER="${LBUFFER}${file}"
+  fi
+  zle reset-prompt
+}
+
+zle -N fzf-universal-file-widget
+bindkey '^F' fzf-universal-file-widget

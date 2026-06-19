@@ -268,4 +268,16 @@ if status is-interactive
             __fish_default_command_not_found_handler $argv
         end
     end
+
+    # --- UNIVERSAL HOME DIRECTORY FUZZY FINDER ---
+    function fzf_universal_file
+        set -l cmd "fd --type f --hidden --follow --exclude .git --exclude Library --exclude .cache --exclude node_modules --exclude .cargo --exclude .npm . ~"
+        set -l file (eval $cmd | fzf --reverse --preview "bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null")
+        if test -n "$file"
+            commandline -i -- $file
+        end
+        commandline -f repaint
+    end
+
+    bind \cf fzf_universal_file
 end
