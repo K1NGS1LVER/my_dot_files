@@ -125,9 +125,9 @@ map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Find recent file
 
 map("n", "<leader>tt", function()
   vim.g.transparency_enabled = not vim.g.transparency_enabled
-  -- Reload current colorscheme to re-trigger the autocmd
-  vim.cmd("colorscheme " .. vim.g.colors_name)
-  print("Transparency: " .. tostring(vim.g.transparency_enabled))
+  -- Fire ColorScheme event directly — NvChad base46 does not set vim.g.colors_name
+  vim.api.nvim_exec_autocmds("ColorScheme", { modeline = false })
+  vim.notify("Transparency: " .. (vim.g.transparency_enabled and "ON" or "OFF"), vim.log.levels.INFO)
 end, { desc = "Toggle Transparency" })
 
 map("n", "<leader>fn", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Find Obsidian Note" })
@@ -149,5 +149,3 @@ map({ "n", "t" }, "<leader>v", function()
   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
 end, { desc = "Toggle Vertical Terminal" })
 
--- Close buffer with <leader>x
-map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close Buffer" })

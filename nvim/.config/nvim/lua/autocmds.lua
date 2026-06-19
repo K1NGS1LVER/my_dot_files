@@ -2,6 +2,7 @@ require "nvchad.autocmds"
 
 local autocmd = vim.api.nvim_create_autocmd
 
+-- Toggle relative line numbers based on mode
 autocmd("InsertEnter", {
   callback = function()
     vim.opt.relativenumber = false
@@ -14,22 +15,61 @@ autocmd("InsertLeave", {
   end,
 })
 
--- Automatically show diagnostic floating window on hover (CursorHold)
+-- Show diagnostic float on cursor hold
 autocmd("CursorHold", {
   callback = function()
-    local opts = {
+    vim.diagnostic.open_float(nil, {
       focusable = false,
       close_events = { "CursorMoved", "CursorMovedI", "BufLeave", "InsertEnter" },
       border = "rounded",
       source = "always",
       prefix = " ",
-      scope = "line", -- Show all diagnostics on the current line
-    }
-    vim.diagnostic.open_float(nil, opts)
+      scope = "line",
+    })
   end,
 })
 
--- Force Grey Statusline (Bypass NvChad Caching)
+-- Native transparency enforcement. Replaces transparent.nvim plugin.
+-- Gated behind vim.g.transparency_enabled for <leader>tt toggle support.
+vim.g.transparency_enabled = true
+
+autocmd({ "VimEnter", "ColorScheme" }, {
+  callback = function()
+    if not vim.g.transparency_enabled then return end
+
+    local clear_groups = {
+      -- Core editor
+      "Normal", "NormalNC", "NormalFloat", "FloatBorder", "FloatTitle",
+      "SignColumn", "FoldColumn", "LineNr", "CursorLineNr",
+      "EndOfBuffer", "MsgArea",
+
+      -- Status / tab / winbar
+      "StatusLine", "StatusLineNC",
+      "TabLine", "TabLineFill",
+      "WinBar", "WinBarNC", "WinSeparator", "VertSplit",
+
+      -- Popup menu
+      "Pmenu", "PmenuSbar",
+
+      -- Telescope
+      "TelescopeNormal", "TelescopeBorder",
+      "TelescopePromptNormal", "TelescopePromptBorder",
+      "TelescopeResultsNormal", "TelescopeResultsBorder",
+      "TelescopePreviewNormal", "TelescopePreviewBorder",
+    }
+
+    for _, group in ipairs(clear_groups) do
+      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
+      if ok then
+        hl.bg = nil
+        hl.ctermbg = nil
+        pcall(vim.api.nvim_set_hl, 0, group, hl)
+      end
+    end
+  end,
+})
+
+-- Force grey statusline (Bypass NvChad base46 caching)
 autocmd({ "VimEnter", "ColorScheme" }, {
   callback = function()
     local grey = "#6c7086"
@@ -79,4 +119,3 @@ autocmd({ "VimEnter", "ColorScheme" }, {
     end
   end,
 })
-

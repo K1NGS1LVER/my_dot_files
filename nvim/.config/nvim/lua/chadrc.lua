@@ -12,7 +12,7 @@ M.ui = {
   tabufline = {
     lazyload = false,
     enabled = true,
-    order = { "treeOffset", "buffers", "tabs", "btns" },
+    order = { "buffers", "tabs", "btns" },
   },
 }
 
@@ -77,7 +77,6 @@ M.base46 = {
     St_cwd_sep = { fg = "#6c7086", bg = "NONE" },
   },
 
-  transparency = true,
 }
 
 M.term = {

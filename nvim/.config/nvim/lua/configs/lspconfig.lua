@@ -1,8 +1,7 @@
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- 1. ADD MASON TO PATH
-local mason_path = vim.fn.stdpath "data" .. "/mason/bin"
-vim.env.PATH = mason_path .. ":" .. vim.env.PATH
+-- Mason's setup() handles PATH prepend automatically
+
 
 -- 2. Base Config
 local base_config = {

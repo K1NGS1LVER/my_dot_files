@@ -17,7 +17,7 @@ o.ignorecase = true
 o.smartcase = true
 
 -- Better completion
-opt.completeopt = { 'menu', 'menuone', 'menuone', 'noselect' }
+opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
 -- Better splits
 o.splitbelow = true
@@ -62,13 +62,7 @@ o.smarttab = true       -- Be smart when using tabs
 o.breakindent = true    -- Wrapped lines will keep indent
 o.showmatch = true      -- Show matching brackets
 
--- Pre-define IBL highlights to prevent theme-switch crashes
-local ibl_groups = {
-  "IblChar", "IblWhitespace", "IblIndent", "IblScope", "IblScopeChar", "IblScopeIndent"
-}
-for _, group in ipairs(ibl_groups) do
-  vim.api.nvim_set_hl(0, group, { link = "Whitespace", default = true })
-end
+
 
 -- Filetype-specific indentation
 vim.api.nvim_create_autocmd("FileType", {
