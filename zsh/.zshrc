@@ -660,7 +660,7 @@ fzf-universal-file-widget() {
     cmd="find ~ -type f -not -path '*/.*' 2>/dev/null"
   fi
 
-  local file=$(eval "$cmd" | fzf --preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null')
+  local file=$(eval "$cmd" | fzf --preview 'sh -c "bat --style=numbers --color=always --line-range :500 \"$1\" 2>/dev/null || cat \"$1\" 2>/dev/null" -- {}')
   
   if [[ -n "$file" ]]; then
     LBUFFER="${LBUFFER}${file}"
