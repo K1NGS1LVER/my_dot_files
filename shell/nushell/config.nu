@@ -199,7 +199,7 @@ let fzf_universal_binding = {
                 let cmd = 'fd --type f --hidden --follow --exclude .git --exclude Library --exclude .cache --exclude node_modules --exclude .cargo --exclude .npm . ~'
                 let fzf_opts = '--reverse --preview \"bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null\"'
                 let sh_cmd = [$cmd '| fzf' $fzf_opts] | str join ' '
-                let result = (with-env { FZF_DEFAULT_OPTS: '', FZF_DEFAULT_OPTS_FILE: '' } { ^sh -c $sh_cmd } | str trim)
+                let result = (with-env { FZF_DEFAULT_OPTS: '', FZF_DEFAULT_OPTS_FILE: '', SHELL: '/bin/sh' } { ^sh -c $sh_cmd } | str trim)
                 if ($result | is-not-empty) {
                     commandline edit --append $result
                     commandline set-cursor --end
