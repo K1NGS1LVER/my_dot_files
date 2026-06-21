@@ -8,7 +8,7 @@ def cap [cmd: string, ...args: string] {
 }
 
 def vf [] {
-    let file = (^fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' | str trim)
+    let file = (^fzf --preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null' | str trim)
     if ($file | is-not-empty) {
         ^nvim $file
     }
