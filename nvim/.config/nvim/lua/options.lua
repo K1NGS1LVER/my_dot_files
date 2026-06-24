@@ -46,11 +46,12 @@ opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal
 opt.list = true
 opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
--- Disable unused providers
+-- Disable unused providers (Python 3 is kept enabled for molten-nvim)
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.g.loaded_python3_provider = 0
+vim.g.loaded_python3_provider = nil
+vim.g.python3_host_prog = "/opt/homebrew/bin/python3"
 -- Indentation Settings
 o.expandtab = true      -- Use spaces instead of tabs
 o.shiftwidth = 2        -- Shift 2 spaces when tab

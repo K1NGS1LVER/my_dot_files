@@ -64,3 +64,6 @@ command -v fzf &>/dev/null && source <(fzf --zsh)
 
 # ─── Startup ─────────────────────────────────
 welcome-message
+
+# bun completions
+[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"

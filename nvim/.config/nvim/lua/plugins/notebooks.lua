@@ -1,0 +1,115 @@
+-- Jupyter Notebook (.ipynb) and Markdown editing + execution ecosystem.
+return {
+  -- GCBallesteros/jupytext.nvim: Automatically convert .ipynb to markdown when opened
+  -- and sync back to .ipynb when saved.
+  {
+    "GCBallesteros/jupytext.nvim",
+    lazy = false,
+    config = function()
+      require("jupytext").setup({
+        style = "markdown",
+        output_extension = "md",
+        force_ft = "markdown",
+      })
+    end,
+  },
+
+  -- benlubas/molten-nvim: Code execution, kernel management, and inline outputs
+  {
+    "benlubas/molten-nvim",
+    version = "^1.0.0",
+    build = ":UpdateRemotePlugins",
+    lazy = false,
+    init = function()
+      -- Configure Molten behavior
+      vim.g.molten_auto_open_output = false
+      vim.g.molten_wrap_output = true
+      vim.g.molten_virt_text_output = true
+      vim.g.molten_virt_lines_off_by_1 = true
+      vim.g.molten_output_show_more = true
+
+      -- Keymaps for Molten execution & outputs
+      vim.keymap.set("n", "<leader>mi", ":MoltenInit<CR>", { silent = true, desc = "Initialize Kernel" })
+      vim.keymap.set("n", "<leader>me", ":set operatorfunc=MoltenOperatorfunc<CR>g@", { silent = true, desc = "Run operator" })
+      vim.keymap.set("n", "<leader>mo", ":MoltenEvaluateLine<CR>", { silent = true, desc = "Run line" })
+      vim.keymap.set("v", "<leader>me", ":<C-u>MoltenEvaluateVisual<CR>gv", { silent = true, desc = "Run visual selection" })
+      vim.keymap.set("n", "<leader>mr", ":MoltenReevaluateCell<CR>", { silent = true, desc = "Re-evaluate cell" })
+      vim.keymap.set("n", "<leader>md", ":MoltenDelete<CR>", { silent = true, desc = "Delete output" })
+      vim.keymap.set("n", "<leader>ms", ":MoltenShowOutput<CR>", { silent = true, desc = "Show output window" })
+      vim.keymap.set("n", "<leader>mh", ":MoltenHideOutput<CR>", { silent = true, desc = "Hide output window" })
+      vim.keymap.set("n", "<leader>mx", ":MoltenInterrupt<CR>", { silent = true, desc = "Interrupt kernel" })
+    end,
+  },
+
+  -- jmbuhr/otter.nvim: LSP completion and hover for code blocks inside markdown
+  {
+    "jmbuhr/otter.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      buffers = {
+        set_filetype = true,
+        write_to_disk = true,
+      },
+    },
+    init = function()
+      -- Automatically activate Otter for python and lua blocks in markdown files
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+        pattern = { "*.md", "*.qmd", "*.ipynb" },
+        callback = function()
+          local ok, otter = pcall(require, "otter")
+          if ok then
+            otter.activate({ "python", "lua" })
+          end
+        end,
+      })
+    end,
+  },
+
+  -- quarto-dev/quarto-nvim: Integrates Otter, Molten, and adds cell running support
+  {
+    "quarto-dev/quarto-nvim",
+    dependencies = {
+      "jmbuhr/otter.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      lspFeatures = {
+        enabled = true,
+        languages = { "python", "lua" },
+        chunks = "all",
+      },
+      codeRunner = {
+        enabled = true,
+        default_method = "molten",
+      },
+    },
+    init = function()
+      -- Keymaps for Quarto runner
+      vim.keymap.set("n", "<leader>rc", function()
+        require("quarto.runner").run_cell()
+      end, { desc = "Run Cell", silent = true })
+      vim.keymap.set("n", "<leader>ra", function()
+        require("quarto.runner").run_above()
+      end, { desc = "Run Cell & Above", silent = true })
+      vim.keymap.set("n", "<leader>rA", function()
+        require("quarto.runner").run_all()
+      end, { desc = "Run All Cells", silent = true })
+      vim.keymap.set("n", "<leader>rl", function()
+        require("quarto.runner").run_line()
+      end, { desc = "Run Line", silent = true })
+      vim.keymap.set("v", "<leader>r", function()
+        require("quarto.runner").run_range()
+      end, { desc = "Run Range", silent = true })
+
+      -- Jump between code cell blocks
+      vim.keymap.set("n", "]x", function()
+        vim.fn.search("^```")
+      end, { desc = "Jump to next cell" })
+      vim.keymap.set("n", "[x", function()
+        vim.fn.search("^```", "b")
+      end, { desc = "Jump to previous cell" })
+    end,
+  },
+}
