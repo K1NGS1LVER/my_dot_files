@@ -14,6 +14,32 @@ return {
     end,
   },
 
+  -- 3rd/image.nvim: Render images/graphs directly in the terminal
+  {
+    "3rd/image.nvim",
+    dependencies = {
+      "kiyoon/magick.nvim",
+    },
+    opts = {
+      backend = "kitty", -- Kitty/Ghostty compatible backend
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown", "vimwiki", "quarto" },
+        },
+      },
+      max_width = 100,
+      max_height = 12,
+      max_width_window_percentage = math.huge,
+      max_height_window_percentage = math.huge,
+      window_overlap_clear_enabled = true,
+      window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+    },
+  },
+
   -- benlubas/molten-nvim: Code execution, kernel management, and inline outputs
   {
     "benlubas/molten-nvim",
@@ -22,7 +48,8 @@ return {
     lazy = false,
     init = function()
       -- Configure Molten behavior
-      vim.g.molten_auto_open_output = false
+      vim.g.molten_image_provider = "image.nvim"
+      vim.g.molten_auto_open_output = true
       vim.g.molten_wrap_output = true
       vim.g.molten_virt_text_output = true
       vim.g.molten_virt_lines_off_by_1 = true
@@ -44,24 +71,22 @@ return {
   -- jmbuhr/otter.nvim: LSP completion and hover for code blocks inside markdown
   {
     "jmbuhr/otter.nvim",
+    ft = { "markdown", "quarto" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },
-    opts = {
-      buffers = {
-        set_filetype = true,
-        write_to_disk = true,
-      },
-    },
-    init = function()
-      -- Automatically activate Otter for python and lua blocks in markdown files
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-        pattern = { "*.md", "*.qmd", "*.ipynb" },
+    config = function()
+      require("otter").setup({
+        buffers = {
+          set_filetype = true,
+          write_to_disk = true,
+        },
+      })
+      -- Activate otter on markdown/quarto buffers after plugin is loaded
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "markdown", "quarto" },
         callback = function()
-          local ok, otter = pcall(require, "otter")
-          if ok then
-            otter.activate({ "python", "lua" })
-          end
+          require("otter").activate({ "python", "lua" })
         end,
       })
     end,

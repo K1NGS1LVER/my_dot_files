@@ -22,7 +22,7 @@ autocmd("CursorHold", {
       focusable = false,
       close_events = { "CursorMoved", "CursorMovedI", "BufLeave", "InsertEnter" },
       border = "rounded",
-      source = "always",
+      source = true,
       prefix = " ",
       scope = "line",
     })

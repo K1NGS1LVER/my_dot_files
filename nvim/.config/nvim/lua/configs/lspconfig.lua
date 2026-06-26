@@ -65,7 +65,7 @@ vim.diagnostic.config {
     border = "rounded",
     wrap = true,
     max_width = 80,
-    source = "always", -- Show the source (e.g., Pyright, ESLint)
+    source = true, -- Show the source (e.g., Pyright, ESLint)
     header = "",
     prefix = "",
   },

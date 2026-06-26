@@ -1,0 +1,25 @@
+
+==============================================================================
+molten:                                                                   4 ⚠️
+
+molten-nvim ~
+- ✅ OK NeoVim >=0.9
+- ✅ OK Python >=3.10
+- ✅ OK Python module pynvim found
+- ✅ OK Python module jupyter-client found
+- ✅ OK Python module cairosvg found
+- ⚠️ WARNING Optional python module pnglatex not found
+  - ADVICE:
+    - pip install pnglatex
+- ⚠️ WARNING Optional python module plotly not found
+  - ADVICE:
+    - pip install plotly
+- ⚠️ WARNING Optional python module kaleido not found
+  - ADVICE:
+    - pip install kaleido
+- ⚠️ WARNING Optional python module pyperclip not found
+  - ADVICE:
+    - pip install pyperclip
+- ✅ OK Python module nbformat found
+- ✅ OK Python module pillow found
+

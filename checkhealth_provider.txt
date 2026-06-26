@@ -1,0 +1,26 @@
+
+==============================================================================
+vim.provider:                                                               ✅
+
+Clipboard (optional) ~
+- ✅ OK Clipboard tool found: pbcopy
+
+Node.js provider (optional) ~
+- Disabled (loaded_node_provider=0).
+
+Perl provider (optional) ~
+- Disabled (loaded_perl_provider=0).
+
+Python 3 provider (optional) ~
+- Using: g:python3_host_prog = "/opt/homebrew/bin/python3"
+- Executable: /opt/homebrew/bin/python3
+- Python version: 3.14.6
+- pynvim version: 0.6.0
+- ✅ OK Latest pynvim is installed.
+
+Python virtualenv ~
+- ✅ OK no $VIRTUAL_ENV
+
+Ruby provider (optional) ~
+- Disabled (loaded_ruby_provider=0).
+

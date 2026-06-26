@@ -6,9 +6,9 @@ require("cmp_path")
 require("cmp_luasnip")
 
 local options = {
-  completion = {
-    throttle_time = 100, -- Don't trigger completion too often
-    debounce_time = 100, -- Debounce completion requests
+  performance = {
+    throttle = 100, -- Don't trigger completion too often
+    debounce = 100, -- Debounce completion requests
   },
   window = {
     completion = cmp.config.window.bordered(),
