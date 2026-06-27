@@ -1,1 +1,1 @@
-themes/monokai-pro.zsh
+themes/kanagawa-wave.zsh

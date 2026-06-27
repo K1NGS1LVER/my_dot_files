@@ -7,7 +7,7 @@ set -euo pipefail
 DOTFILES="/Users/dan/dotfiles"
 
 # Theme options
-THEMES=("catppuccin-macchiato" "monokai-pro")
+THEMES=("catppuccin-macchiato" "monokai-pro" "tokyonight-storm" "rose-pine" "gruvbox-dark" "kanagawa-wave")
 
 usage() {
     echo "Usage: switch-theme [theme_name]"
@@ -59,10 +59,18 @@ ln -sfn "themes/$theme.nu" "$SHELL_THEME_DIR/active-theme.nu"
 # 4. Update Ghostty Configuration
 GHOSTTY_CONFIG="$DOTFILES/ghostty/.config/ghostty/config"
 if [ -f "$GHOSTTY_CONFIG" ]; then
-    # Map name cleanly for Ghostty (which uses Monokai Pro built-in)
+    # Map name cleanly for Ghostty (which uses built-in themes)
     ghostty_theme="catppuccin-macchiato"
     if [ "$theme" = "monokai-pro" ]; then
         ghostty_theme="Monokai Pro"
+    elif [ "$theme" = "tokyonight-storm" ]; then
+        ghostty_theme="TokyoNight Storm"
+    elif [ "$theme" = "rose-pine" ]; then
+        ghostty_theme="Rose Pine"
+    elif [ "$theme" = "gruvbox-dark" ]; then
+        ghostty_theme="Gruvbox Dark"
+    elif [ "$theme" = "kanagawa-wave" ]; then
+        ghostty_theme="Kanagawa Wave"
     fi
     
     python3 -c "

@@ -1,1 +1,1 @@
-return "monokai-pro"
+return "kanagawa-wave"

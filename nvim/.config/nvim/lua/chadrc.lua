@@ -22,6 +22,10 @@ if ok and active_theme then
   local nvchad_themes = {
     ["catppuccin-macchiato"] = "catppuccin",
     ["monokai-pro"] = "monekai",
+    ["tokyonight-storm"] = "tokyonight",
+    ["rose-pine"] = "rosepine",
+    ["gruvbox-dark"] = "gruvbox",
+    ["kanagawa-wave"] = "kanagawa",
   }
   theme = nvchad_themes[active_theme] or active_theme
 end

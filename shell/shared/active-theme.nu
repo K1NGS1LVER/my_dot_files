@@ -1,1 +1,1 @@
-themes/monokai-pro.nu
+themes/kanagawa-wave.nu
