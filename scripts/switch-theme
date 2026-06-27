@@ -62,7 +62,7 @@ if [ -f "$GHOSTTY_CONFIG" ]; then
     # Map name cleanly for Ghostty (which uses Monokai Pro built-in)
     ghostty_theme="catppuccin-macchiato"
     if [ "$theme" = "monokai-pro" ]; then
-        ghostty_theme="monokai-pro"
+        ghostty_theme="Monokai Pro"
     fi
     
     python3 -c "

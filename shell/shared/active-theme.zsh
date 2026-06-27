@@ -1,1 +1,1 @@
-themes/monokai-pro.zsh
+themes/catppuccin-macchiato.zsh
