@@ -3,7 +3,6 @@
 
 export EDITOR="nvim"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export BAT_THEME="Catppuccin Macchiato"
 export LYNX_CFG="$HOME/.lynx.cfg"
 export LYNX_LSS="$HOME/.lynx.lss"
 export PNPM_HOME="$HOME/Library/pnpm"

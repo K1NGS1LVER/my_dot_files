@@ -98,3 +98,6 @@ command_not_found_handle() {
         return 127
     fi
 }
+
+# Airflow Assignment Environment Configuration
+export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"

@@ -66,6 +66,12 @@ alias ai='ollama run qwen2.5-coder:7b'
 alias gray='toggle-gray'
 alias sepia='shortcuts run "Sepia Mode"'
 alias dark='toggle_dark'
+theme-switch() {
+    /Users/dan/dotfiles/scripts/switch-theme "$@"
+    if [ -f "$HOME/dotfiles/shell/shared/active-theme.zsh" ]; then
+        source "$HOME/dotfiles/shell/shared/active-theme.zsh"
+    fi
+}
 alias goodnight='~/scripts/goodnight.sh'
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
 

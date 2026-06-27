@@ -281,3 +281,6 @@ if status is-interactive
 
     bind \cf fzf_universal_file
 end
+
+# Airflow Assignment Environment Configuration
+set -gx AIRFLOW_HOME "/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"

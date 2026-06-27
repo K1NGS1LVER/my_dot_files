@@ -3,7 +3,6 @@
 
 $env.EDITOR = "nvim"
 $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
-$env.BAT_THEME = "Catppuccin Macchiato"
 $env.LYNX_CFG = ($env.HOME | path join ".lynx.cfg")
 $env.LYNX_LSS = ($env.HOME | path join ".lynx.lss")
 $env.PNPM_HOME = ($env.HOME | path join "Library" "pnpm")

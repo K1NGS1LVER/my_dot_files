@@ -1,5 +1,7 @@
 # Catppuccin Macchiato — Zsh color palette + FZF theme + syntax highlighting
-# Identical palette to catppuccin.nu — do not edit one without the other.
+# Identical palette to catppuccin-macchiato.nu — do not edit one without the other.
+
+export BAT_THEME="Catppuccin Macchiato"
 
 # --- Palette Exports ---
 export CATPPUCCIN_ROSEWATER="#f4dbd6"

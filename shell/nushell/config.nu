@@ -2,7 +2,7 @@
 # Lean root config. All paths/env in env.nu. All logic in modules.
 
 # ─── Catppuccin (must be const — parse-time for color_config) ───
-source ~/dotfiles/shell/shared/catppuccin.nu
+source ~/dotfiles/shell/shared/active-theme.nu
 
 # ─── Prompt (suppressed — Starship handles it) ──────────────────
 $env.PROMPT_INDICATOR = ""

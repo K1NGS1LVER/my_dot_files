@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# switch-theme — Dynamic terminal and shell theme switcher
+# Works for Kitty, Ghostty, Zsh, Nushell, and Starship.
+
+set -euo pipefail
+
+DOTFILES="/Users/dan/dotfiles"
+
+# Theme options
+THEMES=("catppuccin-macchiato" "monokai-pro")
+
+usage() {
+    echo "Usage: switch-theme [theme_name]"
+    echo "Available themes:"
+    for t in "${THEMES[@]}"; do
+        echo "  - $t"
+    done
+    exit 1
+}
+
+# 1. Interactive selection if no argument is provided
+if [ $# -eq 0 ]; then
+    if command -v fzf &>/dev/null; then
+        theme=$(printf "%s\n" "${THEMES[@]}" | fzf --prompt="Select theme  " --height=10% --layout=reverse --border)
+    else
+        echo "No theme specified and fzf is not installed."
+        usage
+    fi
+else
+    theme="$1"
+fi
+
+# Validate theme
+valid=false
+for t in "${THEMES[@]}"; do
+    if [ "$t" = "$theme" ]; then
+        valid=true
+        break
+    fi
+done
+
+if [ "$valid" = false ]; then
+    echo "Error: Unknown theme '$theme'."
+    usage
+fi
+
+echo "Switching theme to: $theme..."
+
+# 2. Update Kitty Theme Symlink
+KITTY_THEME_DIR="$DOTFILES/kitty/.config/kitty/themes"
+mkdir -p "$KITTY_THEME_DIR"
+ln -sfn "$theme.conf" "$KITTY_THEME_DIR/current-theme.conf"
+
+# 3. Update Shell Theme Symlinks
+SHELL_THEME_DIR="$DOTFILES/shell/shared"
+ln -sfn "themes/$theme.zsh" "$SHELL_THEME_DIR/active-theme.zsh"
+ln -sfn "themes/$theme.nu" "$SHELL_THEME_DIR/active-theme.nu"
+
+# 4. Update Ghostty Configuration
+GHOSTTY_CONFIG="$DOTFILES/ghostty/.config/ghostty/config"
+if [ -f "$GHOSTTY_CONFIG" ]; then
+    # Map name cleanly for Ghostty (which uses Monokai Pro built-in)
+    ghostty_theme="catppuccin-macchiato"
+    if [ "$theme" = "monokai-pro" ]; then
+        ghostty_theme="monokai-pro"
+    fi
+    
+    python3 -c "
+path = '$GHOSTTY_CONFIG'
+theme = '$ghostty_theme'
+with open(path, 'r') as f:
+    lines = f.readlines()
+with open(path, 'w') as f:
+    for line in lines:
+        if line.strip().startswith('theme =') or line.strip().startswith('theme='):
+            f.write(f'theme = {theme}\n')
+        else:
+            f.write(line)
+"
+fi
+
+# 5. Reload Kitty instances dynamically
+if command -v killall &>/dev/null; then
+    killall -USR1 kitty 2>/dev/null || true
+fi
+
+# Ghostty reloads its configuration automatically.
+
+echo "✨ Theme successfully changed to $theme!"

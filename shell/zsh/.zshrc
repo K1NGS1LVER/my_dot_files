@@ -23,7 +23,7 @@ bashcompinit
 
 # ─── Shared Modules (source of truth) ────────
 source "$HOME/dotfiles/shell/shared/aliases.zsh"
-source "$HOME/dotfiles/shell/shared/catppuccin.zsh"
+source "$HOME/dotfiles/shell/shared/active-theme.zsh"
 source "$HOME/dotfiles/shell/shared/browser-sites.zsh"
 
 # ─── Function Modules ────────────────────────
@@ -67,3 +67,9 @@ welcome-message
 
 # bun completions
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
+
+# Airflow Assignment Environment Configuration
+export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
+
+# Added by Antigravity IDE
+export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"

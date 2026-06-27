@@ -1,5 +1,5 @@
 # Catppuccin Macchiato — Nushell color palette + FZF theme
-# Identical palette to catppuccin.zsh — do not edit one without the other.
+# Identical palette to catppuccin-macchiato.zsh — do not edit one without the other.
 # Uses `const` so the record is available at parse time for $env.config.color_config.
 
 const catppuccin = {

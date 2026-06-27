@@ -1,17 +1,13 @@
 # Starship: High-Signal Left, Dimmed Pac-Man Right
 # Focus: Vibrant context on the left, subtle state on the right
-
-# --- Palette Definitions (Catppuccin Macchiato) ---
-# Red: #ed8796 | Yellow: #eed49f | Green: #a6da95 | Blue: #8aadf4
-# Mauve: #c6a0f6 | Sky: #91d7e3 | Sapphire: #7dc4e4 | Teal: #8bd5ca
-# Peach: #f5a97f | Lavender: #b7bdf8 | Surface1: #494d64 | Overlay0: #6e738d
+# Configured with dynamic ANSI colors so it adapts to the active terminal theme.
 
 format = """
-[╭⎯](bold #494d64)$directory$git_branch$git_metrics$git_status$fill$python$nodejs$golang$rust$bun$c$cpp$cmake$battery$cmd_duration
-[╰⎯](bold #c6a0f6) """
+[╭⎯](bold bright-black)$directory$git_branch$git_metrics$git_status$fill$python$nodejs$golang$rust$bun$c$cpp$cmake$battery$cmd_duration
+[╰⎯](bold purple) """
 
-# Pac-Man Right Prompt - DIMMED (Overlay0)
-right_format = """[󰮯 ](bold #6e738d)$status"""
+# Pac-Man Right Prompt - DIMMED (bright-black)
+right_format = """[󰮯 ](bold bright-black)$status"""
 
 [fill]
 symbol = " "
@@ -25,24 +21,24 @@ truncate_to_repo = true
 home_symbol = " ~"
 read_only = " "
 format = "[$path]($style)[$read_only]($read_only_style) "
-style = "bold #91d7e3" # Sky
+style = "bold cyan"
 truncation_symbol = "…/"
 
 [git_branch]
 symbol = " "
 format = "on [$symbol$branch]($style) "
-style = "bold #c6a0f6" # Mauve
+style = "bold purple"
 
 [git_metrics]
 disabled = false
-added_style = "bold #a6da95" # Green
-deleted_style = "bold #ed8796" # Red
+added_style = "bold green"
+deleted_style = "bold red"
 format = "([+$added]($added_style) )([-$deleted]($deleted_style) )"
 
 [git_status]
 disabled = false
 format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "bold #eed49f" # Yellow
+style = "bold yellow"
 conflicted = "="
 ahead = "⇡"
 behind = "⇣"
@@ -59,55 +55,55 @@ symbol = ""
 success_symbol = ""
 disabled = false
 format = '[$exit_code]($style)'
-style = "bold #ed8796" # Red (Critical Signal)
+style = "bold red"
 pipestatus = true
 
 [cmd_duration]
 min_time = 500
 show_milliseconds = false
 format = "took [$duration]($style) "
-style = "bold #eed49f" # Yellow
+style = "bold yellow"
 
 [python]
 symbol = "󰌠 "
 format = 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style) '
-style = "bold #eed49f" # Yellow
+style = "bold yellow"
 pyenv_prefix = "pyenv "
 
 [nodejs]
 symbol = "󰎙 "
 format = "via [$symbol($version )]($style) "
-style = "bold #a6da95" # Green
+style = "bold green"
 
 [golang]
 symbol = " "
 format = "via [$symbol($version )]($style) "
-style = "bold #7dc4e4" # Sapphire
+style = "bold blue"
 
 [rust]
 symbol = "󱘗 "
 format = "via [$symbol($version )]($style) "
-style = "bold #f5a97f" # Peach
+style = "bold yellow"
 
 [bun]
 symbol = " "
 format = "via [$symbol($version )]($style) "
-style = "bold #eed49f" # Yellow
+style = "bold yellow"
 
 [c]
 symbol = " "
 format = "via [$symbol($version )]($style) "
-style = "bold #8aadf4" # Blue
+style = "bold blue"
 
 [cpp]
 symbol = " "
 format = "via [$symbol($version )]($style) "
-style = "bold #8aadf4" # Blue
+style = "bold blue"
 
 [cmake]
 symbol = " "
 format = "via [$symbol($version )]($style) "
-style = "bold #8aadf4" # Blue
+style = "bold blue"
 
 [battery]
 full_symbol = "󰁹"
@@ -117,7 +113,7 @@ format = "[$symbol$percentage]($style) "
 
 [[battery.display]]
 threshold = 15
-style = "bold #ed8796" # Red
+style = "bold red"
 
 # --- Explicitly Disable Redundant/Slow Modules ---
 [username]
