@@ -21,7 +21,7 @@ usage() {
 # 1. Interactive selection if no argument is provided
 if [ $# -eq 0 ]; then
     if command -v fzf &>/dev/null; then
-        theme=$(printf "%s\n" "${THEMES[@]}" | fzf --prompt="Select theme  " --height=10% --layout=reverse --border)
+        theme=$(printf "%s\n" "${THEMES[@]}" | fzf --prompt="Select theme  " --height=15 --layout=reverse --border --preview="python3 $DOTFILES/scripts/preview-theme.py {}" --preview-window=right:55%)
     else
         echo "No theme specified and fzf is not installed."
         usage
