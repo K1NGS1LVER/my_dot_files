@@ -16,8 +16,18 @@ M.ui = {
   },
 }
 
+local ok, active_theme = pcall(require, "active-theme")
+local theme = "catppuccin"
+if ok and active_theme then
+  local nvchad_themes = {
+    ["catppuccin-macchiato"] = "catppuccin",
+    ["monokai-pro"] = "monekai",
+  }
+  theme = nvchad_themes[active_theme] or active_theme
+end
+
 M.base46 = {
-  theme = "catppuccin",
+  theme = theme,
 
   catppuccin = {
     flavor = "mocha",

@@ -79,7 +79,13 @@ with open(path, 'w') as f:
 "
 fi
 
-# 5. Reload Kitty instances dynamically
+# 5. Update Neovim Active Theme
+NVIM_THEME_FILE="$DOTFILES/nvim/.config/nvim/lua/active-theme.lua"
+if [ -d "$(dirname "$NVIM_THEME_FILE")" ]; then
+    echo "return \"$theme\"" > "$NVIM_THEME_FILE"
+fi
+
+# 6. Reload Kitty instances dynamically
 if command -v killall &>/dev/null; then
     killall -USR1 kitty 2>/dev/null || true
 fi
