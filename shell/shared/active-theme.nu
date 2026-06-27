@@ -1,1 +1,1 @@
-themes/catppuccin-macchiato.nu
+themes/monokai-pro.nu
