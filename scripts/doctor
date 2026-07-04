@@ -132,6 +132,31 @@ else
 fi
 rm -f /tmp/doctor-nvim-health.txt
 
+# nvim-treesitter's `master` branch is frozen upstream and known to crash on
+# markdown files with HTML blocks (e.g. <img> in READMEs) on newer Neovim.
+# Confirm the lockfile still tracks `main`, and that the actual crash
+# scenario parses clean. lazy.nvim checks plugins out detached, so the
+# lockfile (not `git branch`) is the authoritative record of the tracked branch.
+ts_branch=$(awk -F'"' '/"nvim-treesitter":/ {for(i=1;i<=NF;i++) if($i=="branch") print $(i+2)}' "$DOTFILES/nvim/.config/nvim/lazy-lock.json" 2>/dev/null)
+if [[ -z "$ts_branch" ]]; then
+    warn "could not determine nvim-treesitter's tracked branch from lazy-lock.json"
+elif [[ "$ts_branch" == "main" ]]; then
+    pass "nvim-treesitter tracks the main branch (master is frozen, do not revert)"
+else
+    fail "nvim-treesitter's lockfile tracks '$ts_branch', not main" "check plugins/treesitter.lua specifies branch = \"main\""
+fi
+
+md_test_file="/tmp/doctor-md-injection-test.md"
+printf '# Test\n\n<p align="center">\n  <img src="x.png" alt="x">\n</p>\n\n```bash\necho hi\n```\n' > "$md_test_file"
+nvim --headless -n -c "doautocmd UIEnter" "$md_test_file" -c "doautocmd BufReadPost" -c "doautocmd FileType" \
+    -c "lua vim.treesitter.get_parser(0):parse(true)" -c "qa!" >/tmp/doctor-md-injection-out.txt 2>&1
+if grep -qi "error\|attempt to call" /tmp/doctor-md-injection-out.txt; then
+    fail "markdown+HTML injection parse crashed" "cat /tmp/doctor-md-injection-out.txt"
+else
+    pass "markdown with HTML image block parses without error"
+fi
+rm -f "$md_test_file" /tmp/doctor-md-injection-out.txt
+
 # ---------------------------------------------------------------------------
 section "Notebook venv"
 
