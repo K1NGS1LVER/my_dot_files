@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
+import csv
 import sys
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REGISTRY = SCRIPT_DIR.parent / "shell" / "shared" / "themes" / "registry.tsv"
 
 theme = sys.argv[1] if len(sys.argv) > 1 else "catppuccin-macchiato"
+theme = theme.lower().strip()
 
 themes = {
     "catppuccin-macchiato": {
@@ -132,8 +138,25 @@ themes = {
     }
 }
 
-theme_clean = theme.lower().replace("\r", "").replace("\n", "").strip()
-t = themes.get(theme_clean, themes["catppuccin-macchiato"])
+def registry_names():
+    with open(REGISTRY, newline="") as f:
+        return {row["name"] for row in csv.DictReader(f, delimiter="\t")}
+
+
+registry_names_set = registry_names()
+if registry_names_set != set(themes.keys()):
+    missing_from_dict = registry_names_set - set(themes.keys())
+    missing_from_registry = set(themes.keys()) - registry_names_set
+    sys.exit(
+        "preview-theme.py: color dict and registry.tsv are out of sync.\n"
+        f"  in registry, not in preview dict: {sorted(missing_from_dict)}\n"
+        f"  in preview dict, not in registry: {sorted(missing_from_registry)}"
+    )
+
+theme_clean = theme.replace("\r", "").replace("\n", "").strip()
+if theme_clean not in themes:
+    sys.exit(f"preview-theme.py: unknown theme '{theme_clean}'")
+t = themes[theme_clean]
 
 def fg_col(rgb, text):
     return f"\x1b[38;2;{rgb[0]};{rgb[1]};{rgb[2]}m{text}\x1b[0m"

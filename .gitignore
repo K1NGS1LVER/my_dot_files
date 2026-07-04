@@ -74,3 +74,12 @@ nchat/.config/nchat/emojis/
 
 # --- GIT ---
 git/.gitconfig
+
+# --- THEME STATE ---
+# Runtime state written by scripts/switch-theme, not config.
+# Source of truth is shell/shared/themes/registry.tsv + default-theme.
+kitty/.config/kitty/themes/current-theme.conf
+shell/shared/active-theme.zsh
+shell/shared/active-theme.nu
+ghostty/.config/ghostty/active-theme.conf
+nvim/.config/nvim/lua/active-theme.lua

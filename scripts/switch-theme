@@ -1,103 +1,176 @@
 #!/usr/bin/env bash
-# switch-theme — Dynamic terminal and shell theme switcher
-# Works for Kitty, Ghostty, Zsh, Nushell, and Starship.
-
+# switch-theme — theme switcher for Kitty, Ghostty, Zsh, Nushell, and Neovim.
+#
+# Theme identity lives in one place: shell/shared/themes/registry.tsv.
+# The 5 per-app "active theme" artifacts are runtime STATE, not config:
+# they are gitignored, and are materialized from shell/shared/themes/default-theme
+# (or ~/.local/state/dotfiles/current-theme, if it already exists) by --ensure.
+#
+# Usage:
+#   switch-theme [theme_name]   switch to theme_name (fzf picker if omitted)
+#   switch-theme --ensure       materialize state files if missing; no-op otherwise
+#   switch-theme --list         list available theme names
 set -euo pipefail
 
-DOTFILES="/Users/dan/dotfiles"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Theme options
-THEMES=("catppuccin-macchiato" "monokai-pro" "tokyonight-storm" "rose-pine" "gruvbox-dark" "kanagawa-wave")
+REGISTRY="$DOTFILES/shell/shared/themes/registry.tsv"
+DEFAULT_THEME_FILE="$DOTFILES/shell/shared/themes/default-theme"
+STATE_DIR="$HOME/.local/state/dotfiles"
+STATE_FILE="$STATE_DIR/current-theme"
+
+KITTY_THEME_DIR="$DOTFILES/kitty/.config/kitty/themes"
+KITTY_CURRENT="$KITTY_THEME_DIR/current-theme.conf"
+SHELL_THEME_DIR="$DOTFILES/shell/shared"
+ZSH_ACTIVE="$SHELL_THEME_DIR/active-theme.zsh"
+NU_ACTIVE="$SHELL_THEME_DIR/active-theme.nu"
+GHOSTTY_ACTIVE="$DOTFILES/ghostty/.config/ghostty/active-theme.conf"
+NVIM_ACTIVE="$DOTFILES/nvim/.config/nvim/lua/active-theme.lua"
+
+# --- registry helpers -------------------------------------------------------
+
+theme_names() {
+    tail -n +2 "$REGISTRY" | cut -f1
+}
+
+registry_row() {
+    # $1 = theme name; prints ghostty_display_name<TAB>nvchad_base46_name, or nothing
+    awk -F'\t' -v t="$1" 'NR>1 && $1==t {print $2"\t"$3; found=1} END {exit !found}' "$REGISTRY"
+}
 
 usage() {
-    echo "Usage: switch-theme [theme_name]"
+    echo "Usage: switch-theme [theme_name|--ensure|--list]"
     echo "Available themes:"
-    for t in "${THEMES[@]}"; do
-        echo "  - $t"
-    done
+    theme_names | sed 's/^/  - /'
     exit 1
 }
 
-# 1. Interactive selection if no argument is provided
-if [ $# -eq 0 ]; then
-    if command -v fzf &>/dev/null; then
-        theme=$(printf "%s\n" "${THEMES[@]}" | fzf --prompt="Select theme  " --height=15 --layout=reverse --border --preview="python3 $DOTFILES/scripts/preview-theme.py {}" --preview-window=right:55%)
+# --- per-app asset existence check -----------------------------------------
+
+assets_exist() {
+    local t="$1"
+    [[ -f "$KITTY_THEME_DIR/$t.conf" ]] || { echo "missing kitty theme: $KITTY_THEME_DIR/$t.conf" >&2; return 1; }
+    [[ -f "$SHELL_THEME_DIR/themes/$t.zsh" ]] || { echo "missing zsh theme: $SHELL_THEME_DIR/themes/$t.zsh" >&2; return 1; }
+    [[ -f "$SHELL_THEME_DIR/themes/$t.nu" ]] || { echo "missing nu theme: $SHELL_THEME_DIR/themes/$t.nu" >&2; return 1; }
+}
+
+# --- atomic write helper -----------------------------------------------------
+
+write_atomic() {
+    # $1 = target path, $2 = content
+    local target="$1" content="$2"
+    local tmp
+    tmp="$(mktemp "${target}.XXXXXX")"
+    printf '%s\n' "$content" > "$tmp"
+    chmod 644 "$tmp"
+    mv -f "$tmp" "$target"
+}
+
+# --- apply a theme (all writes; assumes validation already passed) ---------
+
+apply_theme() {
+    local t="$1"
+    local row ghostty_name base46_name
+    row="$(registry_row "$t")"
+    ghostty_name="$(cut -f1 <<<"$row")"
+    base46_name="$(cut -f2 <<<"$row")"
+
+    mkdir -p "$KITTY_THEME_DIR" "$(dirname "$GHOSTTY_ACTIVE")" "$(dirname "$NVIM_ACTIVE")" "$STATE_DIR"
+
+    ln -sfn "$t.conf" "$KITTY_CURRENT"
+    ln -sfn "themes/$t.zsh" "$ZSH_ACTIVE"
+    ln -sfn "themes/$t.nu" "$NU_ACTIVE"
+    write_atomic "$GHOSTTY_ACTIVE" "theme = $ghostty_name"
+    write_atomic "$NVIM_ACTIVE" "return \"$t\""
+    write_atomic "$STATE_FILE" "$t"
+}
+
+current_theme() {
+    if [[ -f "$STATE_FILE" ]]; then
+        cat "$STATE_FILE"
+    elif [[ -f "$DEFAULT_THEME_FILE" ]]; then
+        cat "$DEFAULT_THEME_FILE"
     else
-        echo "No theme specified and fzf is not installed."
+        echo ""
+    fi
+}
+
+reload_apps() {
+    command -v killall &>/dev/null && killall -USR1 kitty 2>/dev/null || true
+    # Ghostty reloads its configuration automatically.
+}
+
+# --- subcommands -------------------------------------------------------------
+
+cmd_list() {
+    theme_names
+    exit 0
+}
+
+cmd_ensure() {
+    local t
+    t="$(current_theme)"
+    if [[ -z "$t" ]]; then
+        echo "No default theme configured (missing $DEFAULT_THEME_FILE)." >&2
+        exit 1
+    fi
+    if [[ -L "$KITTY_CURRENT" && -L "$ZSH_ACTIVE" && -L "$NU_ACTIVE" && -f "$GHOSTTY_ACTIVE" && -f "$NVIM_ACTIVE" ]]; then
+        exit 0
+    fi
+    if ! assets_exist "$t"; then
+        echo "Error: theme '$t' is missing assets; cannot bootstrap." >&2
+        exit 1
+    fi
+    apply_theme "$t"
+    echo "Bootstrapped theme state: $t"
+}
+
+cmd_switch() {
+    local theme="$1"
+
+    if [[ -z "$theme" ]]; then
+        if command -v fzf &>/dev/null; then
+            theme=$(theme_names | fzf --prompt="Select theme  " --height=15 --layout=reverse --border \
+                --preview="python3 $SCRIPT_DIR/preview-theme.py {}" --preview-window=right:55%)
+            [[ -z "$theme" ]] && exit 1
+        else
+            echo "No theme specified and fzf is not installed."
+            usage
+        fi
+    fi
+
+    if [[ -z "$(registry_row "$theme")" ]]; then
+        echo "Error: Unknown theme '$theme'."
         usage
     fi
-else
-    theme="$1"
-fi
 
-# Validate theme
-valid=false
-for t in "${THEMES[@]}"; do
-    if [ "$t" = "$theme" ]; then
-        valid=true
-        break
+    if ! assets_exist "$theme"; then
+        echo "Error: theme '$theme' is missing one or more per-app assets. No changes made." >&2
+        exit 1
     fi
-done
 
-if [ "$valid" = false ]; then
-    echo "Error: Unknown theme '$theme'."
-    usage
-fi
+    local previous
+    previous="$(current_theme)"
 
-echo "Switching theme to: $theme..."
-
-# 2. Update Kitty Theme Symlink
-KITTY_THEME_DIR="$DOTFILES/kitty/.config/kitty/themes"
-mkdir -p "$KITTY_THEME_DIR"
-ln -sfn "$theme.conf" "$KITTY_THEME_DIR/current-theme.conf"
-
-# 3. Update Shell Theme Symlinks
-SHELL_THEME_DIR="$DOTFILES/shell/shared"
-ln -sfn "themes/$theme.zsh" "$SHELL_THEME_DIR/active-theme.zsh"
-ln -sfn "themes/$theme.nu" "$SHELL_THEME_DIR/active-theme.nu"
-
-# 4. Update Ghostty Configuration
-GHOSTTY_CONFIG="$DOTFILES/ghostty/.config/ghostty/config"
-if [ -f "$GHOSTTY_CONFIG" ]; then
-    # Map name cleanly for Ghostty (which uses built-in themes)
-    ghostty_theme="catppuccin-macchiato"
-    if [ "$theme" = "monokai-pro" ]; then
-        ghostty_theme="Monokai Pro"
-    elif [ "$theme" = "tokyonight-storm" ]; then
-        ghostty_theme="TokyoNight Storm"
-    elif [ "$theme" = "rose-pine" ]; then
-        ghostty_theme="Rose Pine"
-    elif [ "$theme" = "gruvbox-dark" ]; then
-        ghostty_theme="Gruvbox Dark"
-    elif [ "$theme" = "kanagawa-wave" ]; then
-        ghostty_theme="Kanagawa Wave"
+    echo "Switching theme to: $theme..."
+    if ! apply_theme "$theme"; then
+        echo "Error applying theme '$theme'; attempting to restore previous theme '$previous'." >&2
+        if [[ -n "$previous" ]] && assets_exist "$previous"; then
+            apply_theme "$previous" || echo "Rollback also failed; state may be inconsistent." >&2
+        fi
+        exit 1
     fi
-    
-    python3 -c "
-path = '$GHOSTTY_CONFIG'
-theme = '$ghostty_theme'
-with open(path, 'r') as f:
-    lines = f.readlines()
-with open(path, 'w') as f:
-    for line in lines:
-        if line.strip().startswith('theme =') or line.strip().startswith('theme='):
-            f.write(f'theme = {theme}\n')
-        else:
-            f.write(line)
-"
-fi
 
-# 5. Update Neovim Active Theme
-NVIM_THEME_FILE="$DOTFILES/nvim/.config/nvim/lua/active-theme.lua"
-if [ -d "$(dirname "$NVIM_THEME_FILE")" ]; then
-    echo "return \"$theme\"" > "$NVIM_THEME_FILE"
-fi
+    reload_apps
+    echo "Theme successfully changed to $theme!"
+}
 
-# 6. Reload Kitty instances dynamically
-if command -v killall &>/dev/null; then
-    killall -USR1 kitty 2>/dev/null || true
-fi
+# --- entry point --------------------------------------------------------------
 
-# Ghostty reloads its configuration automatically.
-
-echo "✨ Theme successfully changed to $theme!"
+case "${1:-}" in
+    --ensure) cmd_ensure ;;
+    --list) cmd_list ;;
+    --help|-h) usage ;;
+    *) cmd_switch "${1:-}" ;;
+esac
