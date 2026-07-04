@@ -17,6 +17,11 @@ return {
   -- 3rd/image.nvim: Render images/graphs directly in the terminal
   {
     "3rd/image.nvim",
+    -- kiyoon/magick.nvim vendors a prebuilt ImageMagick binding so image.nvim
+    -- doesn't need luarocks (disabled in configs/lazy.lua: rocks.enabled =
+    -- false). Do not "fix" that by re-enabling luarocks; imagemagick itself
+    -- still comes from the Brewfile (`brew "imagemagick"`) for the `magick`
+    -- CLI molten/other tooling shells out to.
     dependencies = {
       "kiyoon/magick.nvim",
     },

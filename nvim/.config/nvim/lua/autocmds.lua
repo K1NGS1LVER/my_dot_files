@@ -69,13 +69,25 @@ autocmd({ "VimEnter", "ColorScheme" }, {
   end,
 })
 
+-- Muted statusline colors, derived from the active colorscheme's own
+-- highlight groups so the look adapts across themes (switch-theme cycles
+-- through 6 unrelated palettes). Falls back to the original Catppuccin-ish
+-- hardcoded hexes only if a highlight group is missing its color entirely.
+local function hl_hex(name, attr, fallback)
+  local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+  if ok and hl and hl[attr] then
+    return string.format("#%06x", hl[attr])
+  end
+  return fallback
+end
+
 -- Force grey statusline (Bypass NvChad base46 caching)
 autocmd({ "VimEnter", "ColorScheme" }, {
   callback = function()
-    local grey = "#6c7086"
-    local bg = "#1e1e2e"
-    local muted_red = "#a67474"
-    local muted_gold = "#a69574"
+    local grey = hl_hex("Comment", "fg", "#6c7086")
+    local bg = hl_hex("Normal", "bg", "#1e1e2e")
+    local muted_red = hl_hex("DiagnosticError", "fg", "#a67474")
+    local muted_gold = hl_hex("DiagnosticWarn", "fg", "#a69574")
 
     local groups = {
       -- Normal Mode
