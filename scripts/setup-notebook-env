@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# setup-notebook-env: create/repair the pinned Python venv used by Neovim's
+# python3_host_prog and the molten/jupytext/quarto notebook stack.
+#
+# The venv lives outside any Neovim data directory (~/.venvs/nvim) so that
+# clearing Neovim's plugin/data state (e.g. `rm -rf ~/.local/share/nvim`)
+# can never destroy it. Its base interpreter is the versioned python@3.13
+# formula, not the floating `python3` symlink, so a `brew upgrade` cannot
+# silently move the interpreter out from under it.
+#
+# Usage: setup-notebook-env
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+VENV_DIR="$HOME/.venvs/nvim"
+REQUIREMENTS="$DOTFILES/nvim/.config/nvim/python-requirements.txt"
+BASE_PYTHON="/opt/homebrew/opt/python@3.13/bin/python3.13"
+KERNEL_NAME="nvim-venv"
+
+if [[ ! -x "$BASE_PYTHON" ]]; then
+    echo "Error: $BASE_PYTHON not found. Run: brew install python@3.13" >&2
+    exit 1
+fi
+
+if [[ ! -d "$VENV_DIR" ]]; then
+    echo "Creating venv at $VENV_DIR ..."
+    "$BASE_PYTHON" -m venv "$VENV_DIR"
+fi
+
+echo "Installing pinned requirements ..."
+"$VENV_DIR/bin/pip" install --upgrade pip --quiet
+"$VENV_DIR/bin/pip" install -r "$REQUIREMENTS" --quiet
+
+echo "Registering Jupyter kernel '$KERNEL_NAME' ..."
+"$VENV_DIR/bin/python" -m ipykernel install --user --name "$KERNEL_NAME" --display-name "Neovim venv" >/dev/null
+
+echo "Running smoke test ..."
+"$VENV_DIR/bin/python" - <<'EOF'
+import importlib
+import sys
+
+modules = ["pynvim", "jupyter_client", "ipykernel", "jupytext", "nbformat", "cairosvg", "PIL", "pyperclip"]
+failed = []
+for m in modules:
+    try:
+        importlib.import_module(m)
+    except ImportError as e:
+        failed.append((m, str(e)))
+
+if failed:
+    for m, err in failed:
+        print(f"FAILED to import {m}: {err}", file=sys.stderr)
+    sys.exit(1)
+print(f"OK: imported {len(modules)} modules ({sys.executable}, Python {sys.version.split()[0]})")
+EOF
+
+if ! "$VENV_DIR/bin/jupyter" kernelspec list 2>/dev/null | grep -q "$KERNEL_NAME"; then
+    echo "Error: kernelspec '$KERNEL_NAME' was not registered." >&2
+    exit 1
+fi
+
+echo "setup-notebook-env: OK. venv=$VENV_DIR python=$("$VENV_DIR/bin/python" --version)"

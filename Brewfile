@@ -50,6 +50,10 @@ brew "nushell"
 brew "ollama"
 brew "pandoc"
 brew "pipx"
+# Pinned interpreter for the Neovim/molten notebook venv (see scripts/setup-notebook-env).
+# Deliberately versioned so `brew upgrade` moving the python3/python@3 alias
+# (currently 3.14) cannot silently change what the notebook stack runs on.
+brew "python@3.13"
 brew "pnpm"
 brew "ripgrep"
 brew "qwen-code"

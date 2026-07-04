@@ -51,7 +51,24 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = nil
-vim.g.python3_host_prog = "/opt/homebrew/bin/python3"
+
+-- Notebook stack (molten/jupytext/quarto) runs on a pinned venv, not the
+-- floating brew python3, so brew upgrades cannot break it underneath us.
+-- See scripts/setup-notebook-env and nvim/.config/nvim/python-requirements.txt.
+local notebook_venv_python = vim.fn.expand("~/.venvs/nvim/bin/python")
+if vim.uv.fs_stat(notebook_venv_python) then
+  vim.g.python3_host_prog = notebook_venv_python
+else
+  vim.g.python3_host_prog = "/opt/homebrew/bin/python3"
+  vim.schedule(function()
+    vim.notify(
+      "Notebook venv not found at ~/.venvs/nvim. Run scripts/setup-notebook-env "
+        .. "to fix molten/jupytext. Falling back to system python3 for now.",
+      vim.log.levels.WARN,
+      { title = "nvim python provider" }
+    )
+  end)
+end
 -- Indentation Settings
 o.expandtab = true      -- Use spaces instead of tabs
 o.shiftwidth = 2        -- Shift 2 spaces when tab

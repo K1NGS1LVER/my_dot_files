@@ -1,0 +1,12 @@
+# Pinned Python deps for the Neovim notebook stack (molten, jupytext, quarto).
+# Installed into ~/.venvs/nvim by scripts/setup-notebook-env, never into the
+# system/brew python3. To upgrade deliberately, run
+# scripts/update-notebook-env --upgrade, verify, then commit the new pins.
+pynvim==0.6.0
+jupyter-client==8.9.1
+ipykernel==7.3.0
+jupytext==1.19.4
+nbformat==5.10.4
+cairosvg==2.9.0
+pillow==12.3.0
+pyperclip==1.11.0
