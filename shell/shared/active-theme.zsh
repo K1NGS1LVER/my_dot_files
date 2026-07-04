@@ -1,1 +1,1 @@
-themes/kanagawa-wave.zsh
+themes/tokyonight-storm.zsh

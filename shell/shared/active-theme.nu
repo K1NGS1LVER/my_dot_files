@@ -1,1 +1,1 @@
-themes/kanagawa-wave.nu
+themes/tokyonight-storm.nu

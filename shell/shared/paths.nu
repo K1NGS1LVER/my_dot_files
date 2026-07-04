@@ -23,6 +23,7 @@ $env.PATH = (
         "/opt/homebrew/opt/openjdk/bin"                             # 13. Java (OpenJDK)
         "/Applications/Android Studio.app/Contents/MacOS"           # 14. Android Studio
         ($env.HOME | path join "Library" "pnpm")                    # 15. pnpm global binaries
+        ($env.HOME | path join "go" "bin")                          # 16. Go install binaries
     ]
     | uniq
 )

@@ -17,7 +17,7 @@ font-family-italic = "JetBrainsMono Nerd Font"
 
 # --- Theme & Colors ---
 
-theme = Kanagawa Wave
+theme = TokyoNight Storm
 background-opacity = 0.75
 background-blur-radius = 25
 
