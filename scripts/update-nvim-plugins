@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# update-nvim-plugins: update all lazy.nvim plugins, verify, and offer to
+# commit the new lockfile. On failure, offers to restore the previous
+# lockfile and revert plugins to it.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
+LOCKFILE="$DOTFILES/nvim/.config/nvim/lazy-lock.json"
+
+cd "$DOTFILES"
+
+if [[ -n "$(git status --porcelain -- "$LOCKFILE")" ]]; then
+    echo "Error: $LOCKFILE already has uncommitted changes. Commit or stash first." >&2
+    exit 1
+fi
+
+echo "Snapshotting current lockfile (git HEAD is the restore point)..."
+
+echo "Updating plugins..."
+nvim --headless "+Lazy! update" +qa
+
+echo "Running health checks..."
+health_ok=1
+nvim --headless -c "checkhealth lazy vim.provider" -c "w! /tmp/nvim-update-health.txt" -c "qa!" 2>&1 || true
+if grep -qi "error" /tmp/nvim-update-health.txt; then
+    health_ok=0
+fi
+if ! nvim --headless -c "qa!" 2>/tmp/nvim-update-startup.txt; then
+    health_ok=0
+fi
+if [[ -s /tmp/nvim-update-startup.txt ]]; then
+    health_ok=0
+fi
+
+if [[ "$health_ok" -eq 0 ]]; then
+    echo "Health check failed after update. See /tmp/nvim-update-health.txt and /tmp/nvim-update-startup.txt" >&2
+    read -r -p "Restore previous lockfile and revert plugins? [Y/n] " reply
+    if [[ ! "$reply" =~ ^[Nn]$ ]]; then
+        git checkout -- "$LOCKFILE"
+        nvim --headless "+Lazy! restore" +qa
+        echo "Restored. Plugins reverted to the previous lockfile."
+    fi
+    exit 1
+fi
+
+echo "Health checks passed."
+rm -f /tmp/nvim-update-health.txt /tmp/nvim-update-startup.txt
+
+if [[ -n "$(git status --porcelain -- "$LOCKFILE")" ]]; then
+    echo
+    git --no-pager diff --stat -- "$LOCKFILE"
+    read -r -p "Commit updated lazy-lock.json? [Y/n] " reply
+    if [[ ! "$reply" =~ ^[Nn]$ ]]; then
+        git add "$LOCKFILE"
+        git commit -m "chore: update nvim plugins"
+        echo "Committed."
+    fi
+else
+    echo "No plugin versions changed."
+fi

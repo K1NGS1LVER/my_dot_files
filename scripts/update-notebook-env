@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# update-notebook-env: manage the pinned venv for the nvim notebook stack.
+#
+# Usage:
+#   update-notebook-env            reinstall exactly from the committed pins (default)
+#   update-notebook-env --sync     same as above, explicit
+#   update-notebook-env --upgrade  upgrade packages, rewrite pins, smoke test, offer to commit
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+VENV_DIR="$HOME/.venvs/nvim"
+REQUIREMENTS="$DOTFILES/nvim/.config/nvim/python-requirements.txt"
+
+MODE="${1:---sync}"
+
+case "$MODE" in
+    --sync)
+        "$SCRIPT_DIR/setup-notebook-env"
+        ;;
+    --upgrade)
+        if [[ ! -d "$VENV_DIR" ]]; then
+            echo "No venv at $VENV_DIR yet; running setup first." >&2
+            "$SCRIPT_DIR/setup-notebook-env"
+        fi
+
+        # Package names only (strip pins) so pip resolves latest compatible versions.
+        names=$(grep -v '^#' "$REQUIREMENTS" | grep -v '^\s*$' | sed -E 's/(==|>=|<=|~=).*//')
+
+        echo "Upgrading: $(echo "$names" | tr '\n' ' ')"
+        # shellcheck disable=SC2086
+        "$VENV_DIR/bin/pip" install --upgrade $names --quiet
+
+        echo "Running smoke test..."
+        "$VENV_DIR/bin/python" - <<'EOF'
+import importlib
+import sys
+
+modules = ["pynvim", "jupyter_client", "ipykernel", "jupytext", "nbformat", "cairosvg", "PIL", "pyperclip"]
+failed = []
+for m in modules:
+    try:
+        importlib.import_module(m)
+    except ImportError as e:
+        failed.append((m, str(e)))
+
+if failed:
+    for m, err in failed:
+        print(f"FAILED to import {m}: {err}", file=sys.stderr)
+    sys.exit(1)
+print(f"OK: imported {len(modules)} modules")
+EOF
+
+        echo "Rewriting pinned requirements..."
+        tmp_requirements="$(mktemp)"
+        {
+            echo "# Pinned Python deps for the Neovim notebook stack (molten, jupytext, quarto)."
+            echo "# Installed into ~/.venvs/nvim by scripts/setup-notebook-env, never into the"
+            echo "# system/brew python3. To upgrade deliberately, run"
+            echo "# scripts/update-notebook-env --upgrade, verify, then commit the new pins."
+        } > "$tmp_requirements"
+        for name in $names; do
+            "$VENV_DIR/bin/pip" list --format=freeze | grep -i "^${name}==" >> "$tmp_requirements" || true
+        done
+        mv "$tmp_requirements" "$REQUIREMENTS"
+
+        if [[ -n "$(git -C "$DOTFILES" status --porcelain -- "$REQUIREMENTS")" ]]; then
+            echo
+            git -C "$DOTFILES" --no-pager diff -- "$REQUIREMENTS"
+            read -r -p "Commit updated python-requirements.txt? [Y/n] " reply
+            if [[ ! "$reply" =~ ^[Nn]$ ]]; then
+                git -C "$DOTFILES" add "$REQUIREMENTS"
+                git -C "$DOTFILES" commit -m "chore: upgrade notebook env pins"
+                echo "Committed."
+            fi
+        else
+            echo "No version changes."
+        fi
+        ;;
+    *)
+        echo "Usage: update-notebook-env [--sync|--upgrade]" >&2
+        exit 1
+        ;;
+esac

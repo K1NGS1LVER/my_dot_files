@@ -75,6 +75,13 @@ theme-switch() {
 alias goodnight='~/scripts/goodnight.sh'
 alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
 
+# --- Dotfiles maintenance ---
+alias dotfiles-deploy='/Users/dan/dotfiles/scripts/deploy'
+alias dotfiles-doctor='/Users/dan/dotfiles/scripts/doctor'
+alias update-nvim-plugins='/Users/dan/dotfiles/scripts/update-nvim-plugins'
+alias update-notebook-env='/Users/dan/dotfiles/scripts/update-notebook-env'
+alias update-brew='/Users/dan/dotfiles/scripts/update-brew'
+
 # --- Misc ---
 alias explain='$HOME/scripts/explain_tree.py'
 alias rec='script recording_$(date +%Y%m%d_%H%M%S).txt'

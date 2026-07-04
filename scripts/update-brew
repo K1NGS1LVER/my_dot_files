@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# update-brew: apply the Brewfile, then show what brew bundle dump would add
+# so manually-installed packages can be captured into the manifest deliberately.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
+BREWFILE="$DOTFILES/Brewfile"
+
+echo "Applying Brewfile (brew bundle)..."
+brew bundle --file "$BREWFILE"
+
+echo
+echo "Checking for manually-installed packages not yet in the Brewfile..."
+tmp_brewfile="$(mktemp)"
+brew bundle dump --force --file "$tmp_brewfile"
+
+if diff -q "$BREWFILE" "$tmp_brewfile" >/dev/null; then
+    echo "Brewfile already reflects installed state."
+    rm -f "$tmp_brewfile"
+else
+    echo
+    diff -u "$BREWFILE" "$tmp_brewfile" || true
+    echo
+    read -r -p "Replace Brewfile with the diff above? [y/N] " reply
+    if [[ "$reply" =~ ^[Yy]$ ]]; then
+        mv "$tmp_brewfile" "$BREWFILE"
+        cd "$DOTFILES"
+        git add "$BREWFILE"
+        read -r -p "Commit updated Brewfile? [Y/n] " reply2
+        if [[ ! "$reply2" =~ ^[Nn]$ ]]; then
+            git commit -m "chore: sync Brewfile with installed packages"
+            echo "Committed."
+        fi
+    else
+        rm -f "$tmp_brewfile"
+        echo "Left Brewfile unchanged."
+    fi
+fi
