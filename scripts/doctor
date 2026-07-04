@@ -157,6 +157,46 @@ else
 fi
 rm -f "$md_test_file" /tmp/doctor-md-injection-out.txt
 
+# image.nvim's built-in markdown integration only recognizes ![alt](url)
+# syntax, not raw HTML <img> tags (see lua/image/integrations/markdown_html.lua).
+# Exercise that integration's real query_buffer_images against a synthetic
+# file with one <img> to confirm the detection logic itself still works,
+# not just that the module loads.
+md_html_test_file="/tmp/doctor-md-html-img-test.md"
+printf '<p align="center">\n  <img src="x.png" alt="x">\n</p>\n' > "$md_html_test_file"
+cat > /tmp/doctor-md-html-check.lua <<'LUA'
+local buf = vim.api.nvim_get_current_buf()
+vim.treesitter.get_parser(buf, "markdown"):parse(true)
+
+-- query_buffer_images isn't exposed on the returned integration table
+-- (it's closed over inside document.create_document_integration), so
+-- capture it by stubbing the document module just for this check.
+local captured
+package.loaded["image/utils/document"] = {
+  create_document_integration = function(config)
+    captured = config.query_buffer_images
+    return { setup = function() end }
+  end,
+}
+package.loaded["image/integrations/markdown_html"] = nil
+dofile(vim.fn.expand("~/dotfiles/nvim/.config/nvim/lua/image/integrations/markdown_html.lua"))
+
+local ok, images = pcall(captured, buf)
+if ok and #images == 1 and images[1].url == "x.png" then
+  print("markdown_html detection: OK")
+else
+  print("markdown_html detection: FAIL " .. vim.inspect({ ok = ok, images = images }))
+end
+LUA
+nvim --headless -n -c "doautocmd UIEnter" "$md_html_test_file" -c "doautocmd BufReadPost" -c "doautocmd FileType" \
+    -c "luafile /tmp/doctor-md-html-check.lua" -c "qa!" >/tmp/doctor-md-html-out.txt 2>&1
+if grep -q "markdown_html detection: OK" /tmp/doctor-md-html-out.txt; then
+    pass "custom markdown_html integration detects HTML <img> tags"
+else
+    fail "markdown_html integration failed to detect a test <img> tag" "cat /tmp/doctor-md-html-out.txt"
+fi
+rm -f "$md_html_test_file" /tmp/doctor-md-html-check.lua /tmp/doctor-md-html-out.txt
+
 # ---------------------------------------------------------------------------
 section "Notebook venv"
 

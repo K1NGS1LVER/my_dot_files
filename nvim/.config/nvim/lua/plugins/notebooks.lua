@@ -35,6 +35,18 @@ return {
           only_render_image_at_cursor = false,
           filetypes = { "markdown", "vimwiki", "quarto" },
         },
+        -- image.nvim's built-in "markdown" integration only recognizes
+        -- native ![alt](url) syntax, not raw HTML <img> tags (the common
+        -- <p align="center"><img ...></p> README pattern). This custom
+        -- integration (lua/image/integrations/markdown_html.lua) covers
+        -- that case; see its comments for why it's a separate module.
+        markdown_html = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown", "vimwiki", "quarto" },
+        },
       },
       max_width = 100,
       max_height = 12,
