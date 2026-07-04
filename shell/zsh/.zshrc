@@ -5,6 +5,13 @@
 setopt auto_cd
 setopt interactive_comments
 
+# ─── Third-party installer appends ───────────
+# Installers append raw `export` lines to the end of this file, which breaks
+# zoxide's "init must be last" requirement. Keep such appends here,
+# right after Shell Options, so External Tool Init below stays genuinely last.
+export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
+export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"
+
 # ─── Completion System ────────────────────────
 export ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 export ZSH_HIGHLIGHT_MAXLENGTH=300
@@ -67,9 +74,3 @@ welcome-message
 
 # bun completions
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
-
-# Airflow Assignment Environment Configuration
-export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
-
-# Added by Antigravity IDE
-export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"

@@ -93,6 +93,23 @@ done
 rm -f /tmp/doctor-zsh-err.txt
 [[ "$zsh_ok" -eq 1 ]] && pass "zsh -n syntax check passed for .zshrc, .zprofile, shell/shared/*.zsh"
 
+# Third-party installers (Antigravity IDE, project setups, etc.) like to
+# append raw `export` lines to the end of .zshrc, which silently breaks
+# zoxide's "init must be last" requirement (previously happened twice:
+# an Airflow project setup and the Antigravity IDE installer). The known-good
+# file always ends with the bun completions line; anything appended after
+# that is a foreign installer append that needs relocating.
+zshrc="$DOTFILES/shell/zsh/.zshrc"
+if [[ -f "$zshrc" ]]; then
+    last_code_line=$(grep -vn '^\s*#\|^\s*$' "$zshrc" | tail -1)
+    if [[ "$last_code_line" == *'bun/_bun'* ]]; then
+        pass "nothing appended to .zshrc after the known-good tail (bun completions)"
+    else
+        fail "something was appended to the end of .zshrc, after the bun completions line: ${last_code_line#*:}" \
+            "move the appended export/source lines into the 'Third-party installer appends' section near the top of shell/zsh/.zshrc, above External Tool Init"
+    fi
+fi
+
 # ---------------------------------------------------------------------------
 section "Neovim"
 
