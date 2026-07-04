@@ -1,0 +1,254 @@
+#!/usr/bin/env bash
+# doctor: single error-detection entry point for the whole dotfiles setup.
+# Prints PASS/WARN/FAIL per check with an actionable fix hint on failure,
+# and exits nonzero if anything FAILed.
+set -uo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/lib/manifest.sh"
+
+FAIL_COUNT=0
+WARN_COUNT=0
+PASS_COUNT=0
+
+pass() { echo "  PASS: $1"; PASS_COUNT=$((PASS_COUNT + 1)); }
+warn() { echo "  WARN: $1"; [[ -n "${2:-}" ]] && echo "        fix: $2"; WARN_COUNT=$((WARN_COUNT + 1)); }
+fail() { echo "  FAIL: $1"; [[ -n "${2:-}" ]] && echo "        fix: $2"; FAIL_COUNT=$((FAIL_COUNT + 1)); }
+section() { echo; echo "== $1 =="; }
+
+# ---------------------------------------------------------------------------
+section "Symlinks"
+
+for entry in "${LINKS[@]}"; do
+    src="$DOTFILES/${entry%%|*}"
+    target="$HOME/${entry##*|}"
+    if [[ -L "$target" && "$(readlink "$target")" == "$src" ]]; then
+        : # fine, checked in bulk below
+    elif [[ -L "$target" ]]; then
+        fail "$target points to $(readlink "$target"), expected $src" "$SCRIPT_DIR/deploy"
+    elif [[ -e "$target" ]]; then
+        fail "$target exists but is not a symlink into the repo" "$SCRIPT_DIR/deploy"
+    else
+        fail "$target is missing" "$SCRIPT_DIR/deploy"
+    fi
+done
+pass "all ${#LINKS[@]} manifest links resolve into the repo (any listed above are the exceptions)"
+
+for rel in "${OBSOLETE_LINKS[@]}"; do
+    target="$HOME/$rel"
+    if [[ -e "$target" || -L "$target" ]]; then
+        warn "$target still present (should have been removed)" "$SCRIPT_DIR/deploy"
+    fi
+done
+
+broken=$(find "$HOME" "$HOME/.config" -maxdepth 2 -xtype l 2>/dev/null)
+if [[ -n "$broken" ]]; then
+    while IFS= read -r b; do
+        fail "broken symlink: $b"
+    done <<<"$broken"
+else
+    pass "no broken symlinks under ~ or ~/.config (depth 2)"
+fi
+
+# ---------------------------------------------------------------------------
+section "Nushell"
+
+for cache in carapace fzf starship zoxide; do
+    if [[ -f "$HOME/.cache/$cache/init.nu" ]]; then
+        pass "~/.cache/$cache/init.nu present"
+    else
+        fail "~/.cache/$cache/init.nu missing" "nu-regen-cache (inside nushell) or just start nushell, it self-heals"
+    fi
+done
+
+if [[ -d "$HOME/.config/nushell" && ! -L "$HOME/.config/nushell" ]]; then
+    pass "~/.config/nushell is a real directory (holds runtime history)"
+else
+    fail "~/.config/nushell should be a real directory, not a symlink" "$SCRIPT_DIR/deploy"
+fi
+
+if command -v nu &>/dev/null; then
+    if nu -l -c "version" >/dev/null 2>&1; then
+        pass "nu -l starts cleanly"
+    else
+        fail "nu -l failed to start" "run 'nu -l' manually to see the error"
+    fi
+else
+    warn "nu not found on PATH"
+fi
+
+# ---------------------------------------------------------------------------
+section "Zsh"
+
+zsh_files=("$HOME/.zshrc" "$HOME/.zprofile" "$DOTFILES"/shell/shared/*.zsh)
+zsh_ok=1
+for f in "${zsh_files[@]}"; do
+    [[ -f "$f" ]] || continue
+    if ! zsh -n "$f" 2>/tmp/doctor-zsh-err.txt; then
+        fail "zsh -n failed for $f: $(cat /tmp/doctor-zsh-err.txt)"
+        zsh_ok=0
+    fi
+done
+rm -f /tmp/doctor-zsh-err.txt
+[[ "$zsh_ok" -eq 1 ]] && pass "zsh -n syntax check passed for .zshrc, .zprofile, shell/shared/*.zsh"
+
+# ---------------------------------------------------------------------------
+section "Neovim"
+
+if nvim --headless -c "qa!" 2>/tmp/doctor-nvim-startup.txt; then
+    if [[ -s /tmp/doctor-nvim-startup.txt ]]; then
+        fail "nvim --headless startup printed errors" "cat /tmp/doctor-nvim-startup.txt"
+    else
+        pass "nvim --headless starts with no errors"
+    fi
+else
+    fail "nvim --headless exited nonzero" "cat /tmp/doctor-nvim-startup.txt"
+fi
+rm -f /tmp/doctor-nvim-startup.txt
+
+nvim --headless -c "checkhealth lazy vim.provider molten" -c "w! /tmp/doctor-nvim-health.txt" -c "qa!" >/dev/null 2>&1
+if grep -qi "error" /tmp/doctor-nvim-health.txt 2>/dev/null; then
+    fail "nvim checkhealth reported errors" "nvim -c 'checkhealth lazy vim.provider molten'"
+else
+    pass "nvim checkhealth (lazy, provider, molten) reports no errors"
+fi
+rm -f /tmp/doctor-nvim-health.txt
+
+# ---------------------------------------------------------------------------
+section "Notebook venv"
+
+VENV_DIR="$HOME/.venvs/nvim"
+if [[ -x "$VENV_DIR/bin/python" ]]; then
+    pass "venv present at $VENV_DIR"
+    if "$VENV_DIR/bin/python" -c "import pynvim, jupyter_client, ipykernel, jupytext, nbformat, cairosvg, PIL, pyperclip" 2>/tmp/doctor-venv-err.txt; then
+        pass "all pinned notebook packages import cleanly"
+    else
+        fail "a pinned package failed to import: $(cat /tmp/doctor-venv-err.txt)" "$SCRIPT_DIR/setup-notebook-env"
+    fi
+    rm -f /tmp/doctor-venv-err.txt
+    if "$VENV_DIR/bin/jupyter" kernelspec list 2>/dev/null | grep -q "nvim-venv"; then
+        pass "nvim-venv jupyter kernel registered"
+    else
+        fail "nvim-venv kernel not registered" "$SCRIPT_DIR/setup-notebook-env"
+    fi
+else
+    fail "notebook venv missing at $VENV_DIR" "$SCRIPT_DIR/setup-notebook-env"
+fi
+
+# ---------------------------------------------------------------------------
+section "Theme consistency"
+
+STATE_FILE="$HOME/.local/state/dotfiles/current-theme"
+REGISTRY="$DOTFILES/shell/shared/themes/registry.tsv"
+if [[ -f "$STATE_FILE" ]]; then
+    current="$(cat "$STATE_FILE")"
+    row="$(awk -F'\t' -v t="$current" 'NR>1 && $1==t {print $2"\t"$3; found=1} END{exit !found}' "$REGISTRY")"
+    if [[ -z "$row" ]]; then
+        fail "current theme '$current' has no row in registry.tsv" "$SCRIPT_DIR/switch-theme --list"
+    else
+        ghostty_name="$(cut -f1 <<<"$row")"
+        kitty_target="$(readlink "$DOTFILES/kitty/.config/kitty/themes/current-theme.conf" 2>/dev/null)"
+        zsh_target="$(readlink "$DOTFILES/shell/shared/active-theme.zsh" 2>/dev/null)"
+        nu_target="$(readlink "$DOTFILES/shell/shared/active-theme.nu" 2>/dev/null)"
+        ghostty_content="$(cat "$DOTFILES/ghostty/.config/ghostty/active-theme.conf" 2>/dev/null)"
+        nvim_content="$(cat "$DOTFILES/nvim/.config/nvim/lua/active-theme.lua" 2>/dev/null)"
+
+        ok=1
+        [[ "$kitty_target" == "$current.conf" ]] || { fail "kitty active theme is '$kitty_target', expected '$current.conf'"; ok=0; }
+        [[ "$zsh_target" == "themes/$current.zsh" ]] || { fail "zsh active theme is '$zsh_target', expected 'themes/$current.zsh'"; ok=0; }
+        [[ "$nu_target" == "themes/$current.nu" ]] || { fail "nu active theme is '$nu_target', expected 'themes/$current.nu'"; ok=0; }
+        [[ "$ghostty_content" == "theme = $ghostty_name" ]] || { fail "ghostty active-theme.conf is '$ghostty_content', expected 'theme = $ghostty_name'"; ok=0; }
+        [[ "$nvim_content" == "return \"$current\"" ]] || { fail "nvim active-theme.lua is '$nvim_content', expected 'return \"$current\"'"; ok=0; }
+        [[ "$ok" -eq 1 ]] && pass "all 5 theme artifacts agree on '$current'"
+    fi
+else
+    warn "no theme state yet" "$SCRIPT_DIR/switch-theme --ensure"
+fi
+
+# ---------------------------------------------------------------------------
+section "Homebrew"
+
+if command -v brew &>/dev/null; then
+    if brew bundle check --file "$DOTFILES/Brewfile" >/tmp/doctor-brew.txt 2>&1; then
+        pass "brew bundle check: all Brewfile entries installed"
+    else
+        fail "brew bundle check failed" "cat /tmp/doctor-brew.txt; then run: $SCRIPT_DIR/update-brew"
+    fi
+    rm -f /tmp/doctor-brew.txt
+else
+    warn "brew not found on PATH"
+fi
+
+# ---------------------------------------------------------------------------
+section "LSP"
+
+mason_packages_dir="$HOME/.local/share/nvim/mason/packages"
+declare -A mason_needed=(
+    [html-lsp]=1 [css-lsp]=1 [clangd]=1 [pyright]=1 [ruff]=1
+    [lua-language-server]=1 [kotlin-language-server]=1 [jdtls]=1
+    [bash-language-server]=1 [json-lsp]=1 [typescript-language-server]=1
+    [eslint-lsp]=1
+)
+missing_mason=()
+for pkg in "${!mason_needed[@]}"; do
+    [[ -d "$mason_packages_dir/$pkg" ]] || missing_mason+=("$pkg")
+done
+if [[ "${#missing_mason[@]}" -eq 0 ]]; then
+    pass "all 12 mason-managed LSP servers installed"
+else
+    fail "missing mason servers: ${missing_mason[*]}" "open nvim, they auto-install, or :MasonToolsInstall"
+fi
+
+for bin in gopls rust-analyzer; do
+    if command -v "$bin" &>/dev/null; then
+        pass "$bin on PATH (system/Brewfile-managed)"
+    else
+        fail "$bin not on PATH" "brew bundle --file $DOTFILES/Brewfile"
+    fi
+done
+
+if command -v magick &>/dev/null; then
+    pass "magick CLI available"
+else
+    fail "magick CLI not found" "brew bundle --file $DOTFILES/Brewfile (imagemagick)"
+fi
+
+# ---------------------------------------------------------------------------
+section "AeroSpace"
+
+if command -v aerospace &>/dev/null; then
+    pass "aerospace CLI present"
+    if aerospace reload-config --dry-run >/tmp/doctor-aerospace.txt 2>&1; then
+        pass "aerospace config validates (dry-run)"
+    else
+        if grep -q "incompatible" /tmp/doctor-aerospace.txt; then
+            fail "aerospace CLI/server version mismatch" "restart AeroSpace.app (e.g. after a brew upgrade)"
+        else
+            fail "aerospace config failed to validate: $(cat /tmp/doctor-aerospace.txt)"
+        fi
+    fi
+    rm -f /tmp/doctor-aerospace.txt
+else
+    warn "aerospace CLI not found on PATH"
+fi
+
+# ---------------------------------------------------------------------------
+section "Git"
+
+cd "$DOTFILES"
+dirty="$(git status --porcelain)"
+if [[ -z "$dirty" ]]; then
+    pass "repo is clean"
+else
+    warn "repo has uncommitted changes" "git status"
+fi
+
+# ---------------------------------------------------------------------------
+echo
+echo "======================================================================"
+echo "doctor: $PASS_COUNT pass, $WARN_COUNT warn, $FAIL_COUNT fail"
+if [[ "$FAIL_COUNT" -gt 0 ]]; then
+    exit 1
+fi
+exit 0
