@@ -26,7 +26,7 @@ shell/
 │   ├── paths.zsh / paths.nu       # Identical path order
 │   ├── env.zsh / env.nu           # Identical environment variables
 │   ├── aliases.zsh / aliases.nu   # Unified alias map
-│   ├── catppuccin.zsh / .nu       # Catppuccin Macchiato palette + FZF theme
+│   ├── themes/                    # Per-theme palettes + registry.tsv + default-theme
 │   └── browser-sites.zsh          # Browser URL registry
 ├── zsh/
 │   ├── .zprofile                  # Login: brew shellenv + shared paths/env
@@ -47,16 +47,19 @@ The repo tree mirrors the target filesystem under `$HOME`:
 - `ghostty/.config/ghostty/` → `~/.config/ghostty/`
 - etc.
 
-All deployments are symlinks (`ln -s`). See [`docs/SETUP_GUIDE.md`](docs/SETUP_GUIDE.md) for the full link table.
+All deployments are symlinks, created and repaired by `scripts/deploy` from the link manifest in `scripts/lib/manifest.sh`.
+See [`docs/SETUP_GUIDE.md`](docs/SETUP_GUIDE.md) for the full bootstrap procedure.
+
+Run `scripts/doctor` any time to check the whole setup in one pass: symlinks, both shells, Neovim, the notebook venv, theme consistency, Homebrew, LSP servers, and AeroSpace.
 
 ## Rules
 
 - Edit the repo target, never the symlink destination.
-- Keep symlink paths stable — don't rename package folders.
-- Do not commit runtime state: history databases, caches, lock files, plugin bundles, or backup files.
-- Nushell init caches (`~/.cache/{carapace,fzf,starship,zoxide}/init.nu`) are generated at deploy time and regenerated on demand with `nu-regen-cache`. Do not commit them.
+- Keep symlink paths stable - don't rename package folders.
+- Do not commit runtime state: history databases, caches, lock files, plugin bundles, theme state, or backup files.
+- Nushell init caches (`~/.cache/{carapace,fzf,starship,zoxide}/init.nu`) self-heal on shell startup if missing, and can be forced with `nu-regen-cache`. Do not commit them.
 
 ## Docs
 
-- [`docs/SETUP_GUIDE.md`](docs/SETUP_GUIDE.md) — bootstrap, symlink table, post-edit reload commands
-- [`docs/CHEATSHEET.md`](docs/CHEATSHEET.md) — daily commands and keybindings
+- [`docs/SETUP_GUIDE.md`](docs/SETUP_GUIDE.md) - bootstrap, deploy, doctor, update commands, post-edit reload commands
+- [`docs/CHEATSHEET.md`](docs/CHEATSHEET.md) - daily commands and keybindings

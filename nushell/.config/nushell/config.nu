@@ -1,1 +1,0 @@
-/Users/dan/dotfiles/shell/nushell/config.nu

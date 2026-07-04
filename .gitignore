@@ -35,12 +35,6 @@ gh/.config/gh/config.yml
 **/.gemini/state.json
 
 # --- HISTORY ---
-zsh/.zsh_history
-zsh/.zcompdump*
-nushell/.config/nushell/history.sqlite3
-nushell/.config/nushell/history.sqlite3-shm
-nushell/.config/nushell/history.sqlite3-wal
-nushell/.config/nushell/history.txt
 **/.bash_history
 **/.python_history
 **/.node_repl_history
@@ -71,6 +65,9 @@ raycast/.config/raycast/ai/
 
 # --- APP STATE ---
 nchat/.config/nchat/emojis/
+
+# --- NVIM RUNTIME DUMPS ---
+checkhealth_*.txt
 
 # --- GIT ---
 git/.gitconfig
