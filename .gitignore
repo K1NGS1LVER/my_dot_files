@@ -80,3 +80,9 @@ shell/shared/active-theme.zsh
 shell/shared/active-theme.nu
 ghostty/.config/ghostty/active-theme.conf
 nvim/.config/nvim/lua/active-theme.lua
+
+# claude and agent state FILES
+claude/.config/claude/state.json
+agent/.config/agent/state.json
+CLAUDE.md 
+

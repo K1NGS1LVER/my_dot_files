@@ -27,6 +27,13 @@ return {
     },
     opts = {
       backend = "kitty", -- Kitty/Ghostty compatible backend
+      -- "unicode-placeholders" renders images through the normal text grid
+      -- instead of absolute cursor positioning, which is the reliable method
+      -- under tmux (placements scroll/clip with the pane instead of floating
+      -- over the whole terminal). The default "normal" method also works once
+      -- the get_tty() fix in config below is in place, but placeholders
+      -- behave better in this tmux-centric setup.
+      kitty_method = "unicode-placeholders",
       integrations = {
         markdown = {
           enabled = true,
@@ -52,9 +59,43 @@ return {
       max_height = 12,
       max_width_window_percentage = math.huge,
       max_height_window_percentage = math.huge,
-      window_overlap_clear_enabled = true,
+      -- When true, the renderer silently bails out ("overlap" mask) whenever
+      -- ANY other window is open, not just ones actually covering the image,
+      -- so images never render in a normal multi-split layout.
+      window_overlap_clear_enabled = false,
       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
     },
+    config = function(_, opts)
+      -- Neovim 0.11+ runs plugin Lua inside an `nvim --embed` server process
+      -- whose io.popen children get pipes (not the pty) as stdio, so
+      -- image.nvim's get_tty() (io.popen("tty")) returns the literal string
+      -- "not a tty". Under tmux, that garbage value makes the kitty backend's
+      -- get_clear_tty_override() think nvim's tty differs from the pane tty,
+      -- so every clear/delete is written RAW (no tmux passthrough wrapper)
+      -- to the pane tty. tmux forwards those through its buffered pane-output
+      -- path, so the delete-all reaches Ghostty AFTER the passthrough-wrapped
+      -- renders it preceded in code and wipes them out: images "render
+      -- successfully" per the plugin's own state, but are never visible.
+      -- The server's own fd 1 IS the pty, so resolve its name via libc
+      -- ttyname(3) instead of a subprocess. Must run before require("image")
+      -- .setup() because the kitty backend captures editor_tty at require
+      -- time.
+      local term = require("image/utils/term")
+      local original_get_tty = term.get_tty
+      term.get_tty = function()
+        local ok, tty = pcall(function()
+          local ffi = require("ffi")
+          pcall(ffi.cdef, "char *ttyname(int fd);")
+          local name = ffi.C.ttyname(1)
+          return name ~= nil and ffi.string(name) or nil
+        end)
+        if ok and tty and tty:sub(1, 1) == "/" then return tty end
+        local fallback = original_get_tty()
+        if fallback and fallback:sub(1, 1) == "/" then return fallback end
+        return nil
+      end
+      require("image").setup(opts)
+    end,
   },
 
   -- benlubas/molten-nvim: Code execution, kernel management, and inline outputs
