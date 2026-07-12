@@ -6,7 +6,7 @@ welcome-message() {
         0)
             if [[ -d "/opt/shell-color-scripts/colorscripts" ]]; then
                 local script
-                script=$(find /opt/shell-color-scripts/colorscripts -maxdepth 1 -type f -name '*.sh' | shuf -n 1)
+                script=$(find /opt/shell-color-scripts/colorscripts -maxdepth 1 -type f -perm +111 | shuf -n 1)
                 [[ -n "$script" ]] && bash "$script"
             fi
             ;;

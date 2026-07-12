@@ -5,16 +5,11 @@
 setopt auto_cd
 setopt interactive_comments
 
-# ─── Third-party installer appends ───────────
-# Installers append raw `export` lines to the end of this file, which breaks
-# zoxide's "init must be last" requirement. Keep such appends here,
-# right after Shell Options, so External Tool Init below stays genuinely last.
-export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
-export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"
-export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
-[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
-
 # ─── Completion System ────────────────────────
+# Runs before any third-party installer appends below: several bundled
+# completion scripts (e.g. bun's `_bun`) only call `compdef` if `compinit`
+# is already loaded, otherwise they bootstrap their own unguarded compinit
+# and pay a full compaudit scan. Loading ours first makes theirs a no-op.
 export ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 export ZSH_HIGHLIGHT_MAXLENGTH=300
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
@@ -22,8 +17,25 @@ export ZSH_AUTOSUGGEST_USE_ASYNC=1
 autoload -Uz compinit bashcompinit
 [[ -f "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh"
 mkdir -p "$HOME/.cache/zsh"
-compinit -d "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
+zcompdump="$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
+# compinit's compaudit security scan costs ~100ms every startup regardless of
+# cache validity. Only pay that cost once a day; otherwise skip straight to
+# the cached dump. Force a full re-scan any time with `zsh-recompinit`.
+if [[ -f "$zcompdump" && -n "$(find "$zcompdump" -mtime -1 2>/dev/null)" ]]; then
+  compinit -C -d "$zcompdump"
+else
+  compinit -d "$zcompdump"
+fi
 bashcompinit
+
+# ─── Third-party installer appends ───────────
+# Installers append raw `export` lines to the end of this file, which breaks
+# zoxide's "init must be last" requirement. Keep such appends here, above
+# Plugins/Shared Modules, so External Tool Init below stays genuinely last.
+export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
+export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
 
 # Plugins — guarded, sourced directly (OMZ framework not used)
 [[ -f "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -45,6 +57,7 @@ source "$HOME/dotfiles/shell/zsh/functions/welcome.zsh"
 
 # ─── Zsh-Specific Aliases ────────────────────
 alias reload='source ~/.zshrc && echo "Config reloaded! ♻️"'
+alias zsh-recompinit='rm -f "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION" && exec zsh'
 alias zsh-alt='ZDOTDIR=~/projects/bashed zsh'
 unalias read 2>/dev/null
 
