@@ -20,6 +20,7 @@ LINKS=(
   "aerospace/.aerospace.toml|.aerospace.toml"
   "surfingkeys/.surfingkeys.js|.surfingkeys.js"
   ".prettierrc|.prettierrc"
+  ".hushlogin|.hushlogin"
 
   # ~/.config single files
   "starship/.config/starship.toml|.config/starship.toml"
