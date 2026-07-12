@@ -97,15 +97,17 @@ rm -f /tmp/doctor-zsh-err.txt
 # append raw `export` lines to the end of .zshrc, which silently breaks
 # zoxide's "init must be last" requirement (previously happened twice:
 # an Airflow project setup and the Antigravity IDE installer). The known-good
-# file always ends with the bun completions line; anything appended after
-# that is a foreign installer append that needs relocating.
+# file ends with welcome-message; bun completions and postgres PATH now live
+# in the 'Third-party installer appends' section near the top (above External
+# Tool Init), so zoxide stays genuinely last. Anything appended after
+# welcome-message is a foreign installer append that needs relocating.
 zshrc="$DOTFILES/shell/zsh/.zshrc"
 if [[ -f "$zshrc" ]]; then
     last_code_line=$(grep -vn '^\s*#\|^\s*$' "$zshrc" | tail -1)
-    if [[ "$last_code_line" == *'bun/_bun'* ]]; then
-        pass "nothing appended to .zshrc after the known-good tail (bun completions)"
+    if [[ "$last_code_line" == *'welcome-message'* ]]; then
+        pass "nothing appended to .zshrc after the known-good tail (welcome-message)"
     else
-        fail "something was appended to the end of .zshrc, after the bun completions line: ${last_code_line#*:}" \
+        fail "something was appended to the end of .zshrc, after welcome-message: ${last_code_line#*:}" \
             "move the appended export/source lines into the 'Third-party installer appends' section near the top of shell/zsh/.zshrc, above External Tool Init"
     fi
 fi

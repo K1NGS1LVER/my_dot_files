@@ -11,6 +11,8 @@ setopt interactive_comments
 # right after Shell Options, so External Tool Init below stays genuinely last.
 export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
 export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
 
 # ─── Completion System ────────────────────────
 export ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
@@ -71,7 +73,3 @@ command -v fzf &>/dev/null && source <(fzf --zsh)
 
 # ─── Startup ─────────────────────────────────
 welcome-message
-
-# bun completions
-[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
-export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
