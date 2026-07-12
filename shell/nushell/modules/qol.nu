@@ -41,7 +41,7 @@ def isup [url: string] {
 def generate-password [length?: int] { random chars -l ($length | default 24) }
 
 def generate-uuid [] {
-    if ($nu.os-info.name == "macos") { ^uuidgen | str downcase | str trim } else { open /proc/sys/kernel/random/uuid | str trim }
+    if ($nu.os-info.name == "macos") { ^uuidgen | str lowercase | str trim } else { open /proc/sys/kernel/random/uuid | str trim }
 }
 
 def base-64-encode [input: string] { $input | encode base64 }
@@ -94,7 +94,7 @@ def serve [port?: int] {
 def ports [] { ^lsof -iTCP -sTCP:LISTEN -n -P | lines | skip 1 | parse "{cmd} {pid} {user} {rest}" }
 
 def extract [file: string] {
-    match ($file | path parse | get extension | str downcase) {
+    match ($file | path parse | get extension | str lowercase) {
         "zip" => { ^unzip $file }
         "tar" | "gz" | "tgz" | "xz" | "bz2" => { ^tar xf $file }
         "7z" => { ^7z x $file }

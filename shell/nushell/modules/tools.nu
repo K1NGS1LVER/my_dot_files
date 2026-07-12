@@ -87,11 +87,10 @@ def smart-open [cmd_name: string, --raw (-r)] {
     let filepath = ($cmd_name | path expand)
     if not ($filepath | path exists) {
         print $"(ansi red)Error: File not found: ($cmd_name)(ansi reset)"
-        return
-    }
+        return }
 
     let parsed = ($filepath | path parse)
-    let ext = ($parsed.extension | str downcase)
+    let ext = ($parsed.extension | str lowercase)
 
     let editor_exts = ["py" "js" "ts" "java" "cpp" "c" "go" "rs" "css" "sh" "nu" "toml" "yaml" "yml" "json" "md" "lua" "rb" "zig" "swift" "kt"]
     let media_exts  = ["mp4" "mov" "avi" "mkv" "mp3" "wav" "ogg" "flac" "webm" "m4a"]

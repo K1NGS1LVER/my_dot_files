@@ -22,7 +22,7 @@ font-family-italic = "JetBrainsMono Nerd Font"
 # file cannot break Ghostty; scripts/switch-theme --ensure recreates it.
 config-file = ?active-theme.conf
 background-opacity = 0.75
-background-blur-radius = 25
+background-blur-radius = 50
 
 # --- Premium Aesthetic Tweaks ---
 cursor-color = #f5e0dc
