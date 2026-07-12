@@ -70,6 +70,9 @@ alias theme-switch = ^/Users/dan/dotfiles/scripts/switch-theme
 alias goodnight = ^sh ~/scripts/goodnight.sh
 alias packettracer = ^open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"
 
+# --- tmux ---
+alias tmux-sessionizer = ^/Users/dan/dotfiles/scripts/tmux-sessionizer
+
 # --- Dotfiles maintenance ---
 alias dotfiles-deploy = ^/Users/dan/dotfiles/scripts/deploy
 alias dotfiles-doctor = ^/Users/dan/dotfiles/scripts/doctor
