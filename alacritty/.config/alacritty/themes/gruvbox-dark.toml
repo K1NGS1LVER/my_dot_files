@@ -1,0 +1,45 @@
+# Gruvbox Dark Alacritty Theme
+
+[colors.primary]
+background = "#282828"
+foreground = "#ebdbb2"
+dim_foreground = "#a89984"
+bright_foreground = "#ebdbb2"
+
+[colors.cursor]
+text = "#282828"
+cursor = "#a89984"
+
+[colors.selection]
+text = "#ebdbb2"
+background = "#504945"
+
+[colors.normal]
+black = "#3c3836"
+red = "#cc241d"
+green = "#98971a"
+yellow = "#d79921"
+blue = "#458588"
+magenta = "#b16286"
+cyan = "#689d6a"
+white = "#a89984"
+
+[colors.bright]
+black = "#928374"
+red = "#fb4934"
+green = "#b8bb26"
+yellow = "#fabd2f"
+blue = "#83a598"
+magenta = "#d3869b"
+cyan = "#8ec07c"
+white = "#ebdbb2"
+
+[colors.dim]
+black = "#3c3836"
+red = "#a85a47"
+green = "#747536"
+yellow = "#b4874a"
+blue = "#345a7a"
+magenta = "#874b5f"
+cyan = "#426b5a"
+white = "#8c8472"

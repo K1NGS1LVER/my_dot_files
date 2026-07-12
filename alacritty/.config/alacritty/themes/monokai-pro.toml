@@ -1,0 +1,45 @@
+# Monokai Pro Alacritty Theme (Classic Filter)
+
+[colors.primary]
+background = "#2d2a2e"
+foreground = "#fcfcfa"
+dim_foreground = "#727072"
+bright_foreground = "#fcfcfa"
+
+[colors.cursor]
+text = "#2d2a2e"
+cursor = "#fcfcfa"
+
+[colors.selection]
+text = "#2d2a2e"
+background = "#fcfcfa"
+
+[colors.normal]
+black = "#2d2a2e"
+red = "#ff6188"
+green = "#a9dc76"
+yellow = "#ffd866"
+blue = "#fc9867"
+magenta = "#ab9df2"
+cyan = "#78dce8"
+white = "#fcfcfa"
+
+[colors.bright]
+black = "#727072"
+red = "#ff6188"
+green = "#a9dc76"
+yellow = "#ffd866"
+blue = "#fc9867"
+magenta = "#ab9df2"
+cyan = "#78dce8"
+white = "#fcfcfa"
+
+[colors.dim]
+black = "#2d2a2e"
+red = "#d85562"
+green = "#86ae6f"
+yellow = "#c8a862"
+blue = "#d08561"
+magenta = "#8f7fa6"
+cyan = "#5fa896"
+white = "#c0bcb7"

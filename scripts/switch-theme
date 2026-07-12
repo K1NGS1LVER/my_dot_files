@@ -26,6 +26,8 @@ SHELL_THEME_DIR="$DOTFILES/shell/shared"
 ZSH_ACTIVE="$SHELL_THEME_DIR/active-theme.zsh"
 NU_ACTIVE="$SHELL_THEME_DIR/active-theme.nu"
 GHOSTTY_ACTIVE="$DOTFILES/ghostty/.config/ghostty/active-theme.conf"
+ALACRITTY_THEME_DIR="$DOTFILES/alacritty/.config/alacritty/themes"
+ALACRITTY_ACTIVE="$DOTFILES/alacritty/.config/alacritty/active-theme.toml"
 NVIM_ACTIVE="$DOTFILES/nvim/.config/nvim/lua/active-theme.lua"
 
 # --- registry helpers -------------------------------------------------------
@@ -53,6 +55,7 @@ assets_exist() {
     [[ -f "$KITTY_THEME_DIR/$t.conf" ]] || { echo "missing kitty theme: $KITTY_THEME_DIR/$t.conf" >&2; return 1; }
     [[ -f "$SHELL_THEME_DIR/themes/$t.zsh" ]] || { echo "missing zsh theme: $SHELL_THEME_DIR/themes/$t.zsh" >&2; return 1; }
     [[ -f "$SHELL_THEME_DIR/themes/$t.nu" ]] || { echo "missing nu theme: $SHELL_THEME_DIR/themes/$t.nu" >&2; return 1; }
+    [[ -f "$ALACRITTY_THEME_DIR/$t.toml" ]] || { echo "missing alacritty theme: $ALACRITTY_THEME_DIR/$t.toml" >&2; return 1; }
 }
 
 # --- atomic write helper -----------------------------------------------------
@@ -76,12 +79,13 @@ apply_theme() {
     ghostty_name="$(cut -f1 <<<"$row")"
     base46_name="$(cut -f2 <<<"$row")"
 
-    mkdir -p "$KITTY_THEME_DIR" "$(dirname "$GHOSTTY_ACTIVE")" "$(dirname "$NVIM_ACTIVE")" "$STATE_DIR"
+    mkdir -p "$KITTY_THEME_DIR" "$(dirname "$GHOSTTY_ACTIVE")" "$(dirname "$ALACRITTY_ACTIVE")" "$(dirname "$NVIM_ACTIVE")" "$STATE_DIR"
 
     ln -sfn "$t.conf" "$KITTY_CURRENT"
     ln -sfn "themes/$t.zsh" "$ZSH_ACTIVE"
     ln -sfn "themes/$t.nu" "$NU_ACTIVE"
     write_atomic "$GHOSTTY_ACTIVE" "theme = $ghostty_name"
+    cat "$ALACRITTY_THEME_DIR/$t.toml" > "$ALACRITTY_ACTIVE"
     write_atomic "$NVIM_ACTIVE" "return \"$t\""
     write_atomic "$STATE_FILE" "$t"
 }
@@ -115,7 +119,7 @@ cmd_ensure() {
         echo "No default theme configured (missing $DEFAULT_THEME_FILE)." >&2
         exit 1
     fi
-    if [[ -L "$KITTY_CURRENT" && -L "$ZSH_ACTIVE" && -L "$NU_ACTIVE" && -f "$GHOSTTY_ACTIVE" && -f "$NVIM_ACTIVE" ]]; then
+    if [[ -L "$KITTY_CURRENT" && -L "$ZSH_ACTIVE" && -L "$NU_ACTIVE" && -f "$GHOSTTY_ACTIVE" && -f "$ALACRITTY_ACTIVE" && -f "$NVIM_ACTIVE" ]]; then
         exit 0
     fi
     if ! assets_exist "$t"; then

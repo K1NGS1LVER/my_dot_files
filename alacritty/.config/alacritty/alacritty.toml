@@ -1,0 +1,137 @@
+# --- Alacritty Configuration ---
+
+# --- General ---
+[general]
+# Use Nushell as default shell (matches your Ghostty/Kitty setup)
+shell = { program = "/opt/homebrew/bin/nu" }
+import = ["~/.config/alacritty/active-theme.toml"]
+
+# --- Window Settings ---
+[window]
+padding = { x = 0, y = 0 }
+opacity = 0.75
+dimensions = { columns = 120, lines = 40 }
+position = { x = 50, y = 50 }
+decorations = "full"
+# Enable macOS title bar integration
+title = "Alacritty"
+class.instance = "Alacritty"
+class.general = "Alacritty"
+
+# --- Font Configuration ---
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+size = 16.0
+# Enable ligatures and stylistic sets
+use_thin_strokes = true
+
+# --- Scrollback ---
+[scrolling]
+# Match your Ghostty config (10k lines)
+history = 10000
+# Faster scrolling multiplier
+multiplier = 3
+
+# --- Bell Configuration ---
+[bell]
+# Disable all bells
+animation = "None"
+duration = 0
+
+# --- Cursor ---
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+blinking_interval = 750
+vi_mode_style = { shape = "Block" }
+thickness = 0.15
+
+# --- Selection ---
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+save_to_clipboard = true
+
+# --- Keyboard ---
+[keyboard]
+bindings = [
+  # Don't intercept Ctrl+A and Ctrl+B - let Zellij handle them
+  # Let cmd+key combinations work for tabs/nav (macOS native)
+  { key = "T", mods = "Command", action = "CreateNewWindow" },
+  { key = "W", mods = "Command", action = "Quit" },
+  { key = "Q", mods = "Command", action = "Quit" },
+
+  # Tab management - let Zellij handle these instead
+  # cmd+[1-9] for tab switching would go here if using tabs
+
+  # macOS option key as alt
+  { key = "A", mods = "Alt", chars = "ª" },
+  { key = "B", mods = "Alt", chars = "∫" },
+  { key = "C", mods = "Alt", chars = "ç" },
+  { key = "D", mods = "Alt", chars = "∂" },
+  { key = "E", mods = "Alt", chars = "´" },
+  { key = "F", mods = "Alt", chars = "ƒ" },
+  { key = "G", mods = "Alt", chars = "˝" },
+  { key = "H", mods = "Alt", chars = "˙" },
+  { key = "I", mods = "Alt", chars = "ˆ" },
+  { key = "J", mods = "Alt", chars = "∆" },
+  { key = "K", mods = "Alt", chars = "˚" },
+  { key = "L", mods = "Alt", chars = "¬" },
+  { key = "M", mods = "Alt", chars = "µ" },
+  { key = "N", mods = "Alt", chars = "˜" },
+  { key = "O", mods = "Alt", chars = "ø" },
+  { key = "P", mods = "Alt", chars = "π" },
+  { key = "Q", mods = "Alt", chars = "œ" },
+  { key = "R", mods = "Alt", chars = "®" },
+  { key = "S", mods = "Alt", chars = "ß" },
+  { key = "T", mods = "Alt", chars = "†" },
+  { key = "U", mods = "Alt", chars = "¨" },
+  { key = "V", mods = "Alt", chars = "√" },
+  { key = "W", mods = "Alt", chars = "∑" },
+  { key = "X", mods = "Alt", chars = "≈" },
+  { key = "Y", mods = "Alt", chars = "¥" },
+  { key = "Z", mods = "Alt", chars = "Ω" },
+  { key = "1", mods = "Alt", chars = "¡" },
+  { key = "2", mods = "Alt", chars = "™" },
+  { key = "3", mods = "Alt", chars = "£" },
+  { key = "4", mods = "Alt", chars = "¢" },
+  { key = "5", mods = "Alt", chars = "∞" },
+  { key = "6", mods = "Alt", chars = "§" },
+  { key = "7", mods = "Alt", chars = "¶" },
+  { key = "8", mods = "Alt", chars = "•" },
+  { key = "9", mods = "Alt", chars = "ª" },
+  { key = "0", mods = "Alt", chars = "º" },
+
+  # Copy/Paste
+  { key = "C", mods = "Command", action = "Copy" },
+  { key = "V", mods = "Command", action = "Paste" },
+]
+
+# --- Working Directory ---
+[working_directory]
+shell = { program = "/opt/homebrew/bin/nu" }
+
+# --- Shell Integration ---
+# Alacritty supports OSC sequences but doesn't have explicit "shell-integration"
+# It will automatically respond to various OSC sequences
+
+# --- Colors ---
+# Colors will be imported from active-theme.toml (matches Ghostty/Kitty theming)
+# The following is a fallback - this will be overridden by active-theme.toml
+
+[colors]
+# Default fallback theme (Catppuccin Mocha)
+# These will be replaced by the active-theme.toml import
+
+[[colors.indexed_colors]]
+index = 16
+color = "#F5A97F"
+
+[[colors.indexed_colors]]
+index = 17
+color = "#F38BA8"
+
+# Environment variables
+[env]
+TERM = "xterm-256color"

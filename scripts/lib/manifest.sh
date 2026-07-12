@@ -25,6 +25,7 @@ LINKS=(
   "starship/.config/starship.toml|.config/starship.toml"
 
   # ~/.config directories
+  "alacritty/.config/alacritty|.config/alacritty"
   "bat/.config/bat|.config/bat"
   "btop/.config/btop|.config/btop"
   "epr/.config/epr|.config/epr"
