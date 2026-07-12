@@ -2,9 +2,8 @@
 
 # --- General ---
 [general]
-# Use Nushell as default shell (matches your Ghostty/Kitty setup)
-shell = { program = "/opt/homebrew/bin/nu" }
-import = ["~/.config/alacritty/active-theme.toml"]
+working_directory = "/Users/dan"
+import = ["/Users/dan/.config/alacritty/active-theme.toml"]
 
 # --- Window Settings ---
 [window]
@@ -12,11 +11,7 @@ padding = { x = 0, y = 0 }
 opacity = 0.75
 dimensions = { columns = 120, lines = 40 }
 position = { x = 50, y = 50 }
-decorations = "full"
-# Enable macOS title bar integration
-title = "Alacritty"
-class.instance = "Alacritty"
-class.general = "Alacritty"
+decorations = "none"
 
 # --- Font Configuration ---
 [font]
@@ -25,8 +20,6 @@ bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 size = 16.0
-# Enable ligatures and stylistic sets
-use_thin_strokes = true
 
 # --- Scrollback ---
 [scrolling]
@@ -38,13 +31,12 @@ multiplier = 3
 # --- Bell Configuration ---
 [bell]
 # Disable all bells
-animation = "None"
 duration = 0
 
 # --- Cursor ---
 [cursor]
 style = { shape = "Beam", blinking = "On" }
-blinking_interval = 750
+blink_interval = 750
 vi_mode_style = { shape = "Block" }
 thickness = 0.15
 
@@ -107,10 +99,6 @@ bindings = [
   { key = "C", mods = "Command", action = "Copy" },
   { key = "V", mods = "Command", action = "Paste" },
 ]
-
-# --- Working Directory ---
-[working_directory]
-shell = { program = "/opt/homebrew/bin/nu" }
 
 # --- Shell Integration ---
 # Alacritty supports OSC sequences but doesn't have explicit "shell-integration"

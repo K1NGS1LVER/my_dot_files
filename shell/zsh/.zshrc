@@ -74,3 +74,4 @@ welcome-message
 
 # bun completions
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"

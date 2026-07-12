@@ -11,6 +11,7 @@ alias og = ^/usr/bin/vim
 alias nvconfig = ^nvim ~/.config/nvim/
 alias nvguide = ^nvim ~/dotfiles/docs/SETUP_GUIDE.md
 alias nvcheat = ^nvim ~/dotfiles/docs/CHEATSHEET.md
+alias notes = ^clin --vault ~/notes
 
 # --- Navigation ---
 alias home = cd ~
