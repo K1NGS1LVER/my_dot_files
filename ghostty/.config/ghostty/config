@@ -36,7 +36,7 @@ macos-titlebar-style = hidden
 
 
 # --- Shell ---
-command = /opt/homebrew/bin/nu
+command = /bin/zsh
 
 # Enable shell integration for better prompt/output handling
 shell-integration = detect
