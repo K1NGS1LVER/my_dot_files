@@ -263,6 +263,34 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+section "Local LLM (Ollama)"
+
+if command -v ollama &>/dev/null; then
+    pass "ollama on PATH"
+    if curl -s -m 2 http://127.0.0.1:11434/api/version >/dev/null 2>&1; then
+        pass "ollama server responding on 127.0.0.1:11434"
+        ollama_models="$(ollama list 2>/dev/null)"
+        if grep -q "qwen2.5-coder:3b" <<<"$ollama_models"; then
+            pass "qwen2.5-coder:3b model present"
+        else
+            fail "qwen2.5-coder:3b not found in 'ollama list'" "ollama pull qwen2.5-coder:3b"
+        fi
+    else
+        fail "ollama server not responding on 127.0.0.1:11434" "/usr/bin/open -a Ollama, or run: ollama serve"
+    fi
+else
+    warn "ollama not found on PATH"
+fi
+
+ollama_pid="$(pgrep -f 'ollama serve' | head -1)"
+if [[ -n "$ollama_pid" ]] && /bin/ps eww -p "$ollama_pid" 2>/dev/null | grep -q "OLLAMA_FLASH_ATTENTION=1"; then
+    pass "flash attention enabled on the running ollama server"
+else
+    warn "flash attention not active on the running ollama server" \
+        "launchctl setenv OLLAMA_FLASH_ATTENTION 1 && /usr/bin/open -a Ollama (quit it first if already running)"
+fi
+
+# ---------------------------------------------------------------------------
 section "LSP"
 
 mason_packages_dir="$HOME/.local/share/nvim/mason/packages"

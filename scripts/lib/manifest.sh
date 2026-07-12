@@ -21,6 +21,7 @@ LINKS=(
   "surfingkeys/.surfingkeys.js|.surfingkeys.js"
   ".prettierrc|.prettierrc"
   ".hushlogin|.hushlogin"
+  "launchd/com.dan.ollama-flash-attention.plist|Library/LaunchAgents/com.dan.ollama-flash-attention.plist"
 
   # ~/.config single files
   "starship/.config/starship.toml|.config/starship.toml"

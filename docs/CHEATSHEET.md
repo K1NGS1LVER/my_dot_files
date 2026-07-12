@@ -73,6 +73,28 @@ Site keys: `yt`, `gh`, `g`, `rd`, `x`, `li`, `hi`, `mt`, `kb`, `gf`, `cl`, `cu`,
 | `timer <seconds>` | Countdown timer with macOS notification |
 | `proj <name> [template]` | Scaffold a new project (basic/node/python) |
 
+## Local LLM
+
+| Command | Action |
+|---|---|
+| `ai` | Chat with `qwen2.5-coder:3b` via Ollama (interactive) |
+
+Ollama already runs persistently (`Ollama.app`, bound to `127.0.0.1:11434` only) and exposes an OpenAI-compatible API — no separate server to start. Point Raycast or agent scripts at it directly:
+
+```
+Base URL:  http://127.0.0.1:11434/v1
+API Key:   any placeholder value (not enforced on localhost)
+Model:     qwen2.5-coder:3b
+```
+
+```
+curl http://127.0.0.1:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"qwen2.5-coder:3b","messages":[{"role":"user","content":"say hi"}]}'
+```
+
+Python `openai` client: `OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="not-needed")`.
+
 ## Git
 
 | Command | Action |
