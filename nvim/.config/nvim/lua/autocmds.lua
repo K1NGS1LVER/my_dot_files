@@ -21,14 +21,59 @@ autocmd("InsertLeave", {
 -- manages concealcursor itself dynamically, no need to set that here.
 -- linebreak + breakindent give word-boundary prose wrapping instead of
 -- mid-word wrap at the window edge; spellcheck is standard for prose.
+--
+-- List continuation: continue the previous line's -/*/+ or 1. marker on
+-- Enter, exit the list on an empty item, otherwise behave like a plain
+-- Enter. Custom rather than a plugin (previously autolist.nvim) after
+-- that repeatedly produced wrong results in this environment (checkbox
+-- insertion from a plain bullet, missing trailing space, dropping out of
+-- insert mode mid-continuation) even after fixing a real, separate
+-- conflict with nvim-autopairs (see plugins/autopairs.lua's map_cr).
+-- Deliberately avoids <Cmd>...<CR> ex-command indirection and feedkeys
+-- queuing - pure synchronous buffer/cursor API calls only, so there's no
+-- async gap for state to be read from mid-operation.
+local function continue_markdown_list()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local line = vim.api.nvim_get_current_line()
+  local before, after = line:sub(1, col), line:sub(col + 1)
+
+  local indent, marker, rest = before:match("^(%s*)([%-%*%+])%s+(.*)$")
+  local continuation
+
+  if marker then
+    if (rest .. after):match("^%s*$") then
+      vim.api.nvim_buf_set_lines(0, row - 1, row, false, { "", "" })
+      vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+      return
+    end
+    -- continuing a checkbox item always starts the next one unchecked
+    continuation = rest:match("^%[[ xX]%]") and (indent .. marker .. " [ ] ") or (indent .. marker .. " ")
+  else
+    local oindent, num, delim, orest = before:match("^(%s*)(%d+)([%.%)])%s+(.*)$")
+    if num then
+      if (orest .. after):match("^%s*$") then
+        vim.api.nvim_buf_set_lines(0, row - 1, row, false, { "", "" })
+        vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+        return
+      end
+      continuation = oindent .. tostring(tonumber(num) + 1) .. delim .. " "
+    end
+  end
+
+  continuation = continuation or ""
+  vim.api.nvim_buf_set_lines(0, row - 1, row, false, { before, continuation .. after })
+  vim.api.nvim_win_set_cursor(0, { row + 1, #continuation })
+end
+
 autocmd("FileType", {
   pattern = "markdown",
-  callback = function()
+  callback = function(args)
     vim.opt_local.conceallevel = 2
     vim.opt_local.linebreak = true
     vim.opt_local.breakindent = true
     vim.opt_local.spell = true
     vim.opt_local.spelllang = "en_us"
+    vim.keymap.set("i", "<CR>", continue_markdown_list, { buffer = args.buf })
   end,
 })
 
