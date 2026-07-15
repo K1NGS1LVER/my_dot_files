@@ -16,8 +16,13 @@ o.timeoutlen = 300
 o.ignorecase = true
 o.smartcase = true
 
--- Better completion
-opt.completeopt = { 'menu', 'menuone', 'noselect' }
+-- Better completion. noselect (not noinsert) means the top-ranked candidate
+-- is never auto-highlighted, so cmp's <CR> confirm (select = false, see
+-- configs/cmp_custom.lua) has nothing to accept even for a strong, obvious
+-- match - Enter always just inserts a newline instead. noinsert lets a
+-- genuinely top-ranked match (e.g. "app" -> "apple") get highlighted and
+-- confirmable by Enter, without previewing/inserting text before that.
+opt.completeopt = { 'menu', 'menuone', 'noinsert' }
 
 -- Use the system clipboard for yank/paste by default
 opt.clipboard = 'unnamedplus'
