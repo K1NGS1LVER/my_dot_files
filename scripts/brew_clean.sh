@@ -1,4 +1,7 @@
 #!/bin/bash
+# Run via `update-brew --clean` rather than directly, so it always runs
+# after a fresh `brew bundle` apply.
+set -uo pipefail
 
 echo "--- Starting Homebrew Ghost Package Cleanup ---"
 

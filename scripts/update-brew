@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 # update-brew: apply the Brewfile, then show what brew bundle dump would add
 # so manually-installed packages can be captured into the manifest deliberately.
+#
+# Usage:
+#   update-brew           apply the Brewfile, offer to sync manual installs
+#   update-brew --clean   also run brew_clean.sh afterward (ghost-cask removal,
+#                          autoremove, cache prune - opt-in since it uninstalls)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES="$(cd "$SCRIPT_DIR/.." && pwd)"
 BREWFILE="$DOTFILES/Brewfile"
+
+CLEAN=0
+[[ "${1:-}" == "--clean" ]] && CLEAN=1
 
 echo "Applying Brewfile (brew bundle)..."
 brew bundle --file "$BREWFILE"
@@ -36,4 +44,9 @@ else
         rm -f "$tmp_brewfile"
         echo "Left Brewfile unchanged."
     fi
+fi
+
+if [[ "$CLEAN" -eq 1 ]]; then
+    echo
+    "$SCRIPT_DIR/brew_clean.sh"
 fi

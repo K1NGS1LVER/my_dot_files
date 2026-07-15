@@ -25,6 +25,8 @@ LINKS=(
 
   # ~/.config single files
   "starship/.config/starship.toml|.config/starship.toml"
+  "fish/config.fish|.config/fish/config.fish"
+  "qutebrowser/config.py|.config/qutebrowser/config.py"
 
   # ~/.config directories
   "alacritty/.config/alacritty|.config/alacritty"
