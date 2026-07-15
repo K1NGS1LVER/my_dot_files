@@ -25,6 +25,13 @@ return {
     init = function()
       vim.g.table_mode_syntax_check = 0
       vim.g.table_mode_corner = "|"
+      -- vim-table-mode's default Tableize map is <leader>tt, which silently
+      -- overwrites our own transparency-toggle mapping (also <leader>tt) as
+      -- soon as this ft={"markdown"} plugin lazy-loads. Move it out of our
+      -- <leader>t* namespace entirely; every other table-mode default
+      -- (tr/tdd/tdc/tiC/tic/tfa/tfe/t?/ts/tm) is left alone since none of
+      -- those collide with anything else in this config.
+      vim.g.table_mode_tableize_map = "<Leader>T"
     end,
   },
 }
