@@ -22,9 +22,14 @@ local options = {
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-k>"] = cmp.mapping.complete(), -- Fallback trigger key
     ["<C-e>"] = cmp.mapping.close(),
+    -- select = false: only confirm a completion if you actually navigated to
+    -- one (Tab/<C-n>/<C-p>). With select = true, Enter silently accepts
+    -- whatever candidate happens to be pre-highlighted - in prose-heavy
+    -- files (markdown) that means plain "press Enter for a newline" can
+    -- instead insert an unrelated buffer-word or snippet completion.
     ["<CR>"] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = false,
     },
     ["<C-l>"] = cmp.mapping(function(fallback)
       if require("copilot.suggestion").is_visible() then
