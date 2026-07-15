@@ -19,6 +19,9 @@ o.smartcase = true
 -- Better completion
 opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
+-- Use the system clipboard for yank/paste by default
+opt.clipboard = 'unnamedplus'
+
 -- Better splits
 o.splitbelow = true
 o.splitright = true
