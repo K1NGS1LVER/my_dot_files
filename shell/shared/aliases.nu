@@ -64,7 +64,7 @@ alias ai = ^ollama run qwen2.5-coder:3b
 
 # --- Display & System ---
 alias dark = toggle_dark
-alias gray = ^shortcuts run "Toggle Grayscale"
+alias gray = ^toggle-gray
 alias sepia = ^shortcuts run "Sepia Mode"
 alias theme-switch = ^/Users/dan/dotfiles/scripts/switch-theme
 alias goodnight = ^sh ~/scripts/goodnight.sh

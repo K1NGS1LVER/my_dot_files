@@ -5,6 +5,14 @@
 setopt auto_cd
 setopt interactive_comments
 
+# ─── History ──────────────────────────────────
+mkdir -p "$HOME/.cache/zsh"
+HISTFILE="$HOME/.cache/zsh/history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY INC_APPEND_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS HIST_VERIFY EXTENDED_HISTORY
+
 # ─── Completion System ────────────────────────
 # Runs before any third-party installer appends below: several bundled
 # completion scripts (e.g. bun's `_bun`) only call `compdef` if `compinit`
@@ -16,7 +24,6 @@ export ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 autoload -Uz compinit bashcompinit
 [[ -f "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-completions/zsh-completions.plugin.zsh"
-mkdir -p "$HOME/.cache/zsh"
 zcompdump="$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
 # compinit's compaudit security scan costs ~100ms every startup regardless of
 # cache validity. Only pay that cost once a day; otherwise skip straight to
@@ -53,6 +60,8 @@ source "$HOME/dotfiles/shell/zsh/functions/yazi.zsh"
 source "$HOME/dotfiles/shell/zsh/functions/system.zsh"
 source "$HOME/dotfiles/shell/zsh/functions/multiplexer.zsh"
 source "$HOME/dotfiles/shell/zsh/functions/tools.zsh"
+source "$HOME/dotfiles/shell/zsh/functions/qol.zsh"
+source "$HOME/dotfiles/shell/zsh/functions/docker.zsh"
 source "$HOME/dotfiles/shell/zsh/functions/welcome.zsh"
 
 # ─── Zsh-Specific Aliases ────────────────────

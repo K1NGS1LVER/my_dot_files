@@ -12,7 +12,7 @@ def --env --wrapped yazi [...args] {
 }
 
 def --env --wrapped y [...args] {
-    let tmp = ([$env.HOME ".yazi_cwd"] | path join)
+    let tmp = (^mktemp -t "yazi-cwd" | str trim)
 
     yazi ...$args --cwd-file $tmp
 

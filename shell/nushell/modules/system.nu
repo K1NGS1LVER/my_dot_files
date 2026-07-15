@@ -103,5 +103,16 @@ def toggle_dark [] {
 }
 
 def fetch [...args: string] {
-    ^fastfetch ...$args
+    match ($args | first | default "") {
+        "go" => { ^fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue }
+        "arch" => { ^fastfetch --logo arch }
+        "random" => {
+            let logos = ["arch" "android" "apple" "windows" "linux" "ubuntu" "fedora" "debian"]
+            let logo = ($logos | shuffle | first)
+            print $"Displaying logo: ($logo)"
+            ^fastfetch --logo $logo
+        }
+        "" => { ^fastfetch }
+        _ => { ^fastfetch ...$args }
+    }
 }

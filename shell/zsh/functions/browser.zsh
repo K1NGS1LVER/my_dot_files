@@ -46,3 +46,4 @@ _open_browser() {
 
 brave() { _open_browser "Brave Browser" "$@"; }
 fox() { _open_browser "Firefox" "$@"; }
+wolf() { _open_browser "LibreWolf" "$@"; }
