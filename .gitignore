@@ -80,6 +80,9 @@ shell/shared/active-theme.zsh
 shell/shared/active-theme.nu
 ghostty/.config/ghostty/active-theme.conf
 nvim/.config/nvim/lua/active-theme.lua
+alacritty/.config/alacritty/active-theme.toml
+yazi/.config/yazi/theme.toml
+tmux/.config/tmux/themes/current-theme.conf
 
 # claude and agent state FILES
 claude/.config/claude/state.json

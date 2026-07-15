@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# switch-theme — theme switcher for Kitty, Ghostty, Zsh, Nushell, and Neovim.
+# switch-theme — theme switcher for Kitty, Ghostty, Zsh, Nushell, Neovim, Yazi, and tmux.
 #
 # Theme identity lives in one place: shell/shared/themes/registry.tsv.
-# The 5 per-app "active theme" artifacts are runtime STATE, not config:
+# The per-app "active theme" artifacts are runtime STATE, not config:
 # they are gitignored, and are materialized from shell/shared/themes/default-theme
 # (or ~/.local/state/dotfiles/current-theme, if it already exists) by --ensure.
+# yazi.nvim shells out to the same `yazi` binary/config, so it picks up
+# whatever yazi/.config/yazi/theme.toml says with no separate wiring needed.
+# Yazi (like zsh/nu) only reads its config at launch - already-open yazi
+# panes need to be quit and reopened to pick up a new flavor.
 #
 # Usage:
 #   switch-theme [theme_name]   switch to theme_name (fzf picker if omitted)
@@ -29,6 +33,10 @@ GHOSTTY_ACTIVE="$DOTFILES/ghostty/.config/ghostty/active-theme.conf"
 ALACRITTY_THEME_DIR="$DOTFILES/alacritty/.config/alacritty/themes"
 ALACRITTY_ACTIVE="$DOTFILES/alacritty/.config/alacritty/active-theme.toml"
 NVIM_ACTIVE="$DOTFILES/nvim/.config/nvim/lua/active-theme.lua"
+YAZI_FLAVOR_DIR="$DOTFILES/yazi/.config/yazi/flavors"
+YAZI_ACTIVE="$DOTFILES/yazi/.config/yazi/theme.toml"
+TMUX_THEME_DIR="$DOTFILES/tmux/.config/tmux/themes"
+TMUX_CURRENT="$TMUX_THEME_DIR/current-theme.conf"
 
 # --- registry helpers -------------------------------------------------------
 
@@ -56,6 +64,8 @@ assets_exist() {
     [[ -f "$SHELL_THEME_DIR/themes/$t.zsh" ]] || { echo "missing zsh theme: $SHELL_THEME_DIR/themes/$t.zsh" >&2; return 1; }
     [[ -f "$SHELL_THEME_DIR/themes/$t.nu" ]] || { echo "missing nu theme: $SHELL_THEME_DIR/themes/$t.nu" >&2; return 1; }
     [[ -f "$ALACRITTY_THEME_DIR/$t.toml" ]] || { echo "missing alacritty theme: $ALACRITTY_THEME_DIR/$t.toml" >&2; return 1; }
+    [[ -f "$YAZI_FLAVOR_DIR/$t.yazi/flavor.toml" ]] || { echo "missing yazi flavor: $YAZI_FLAVOR_DIR/$t.yazi/flavor.toml" >&2; return 1; }
+    [[ -f "$TMUX_THEME_DIR/$t.conf" ]] || { echo "missing tmux theme: $TMUX_THEME_DIR/$t.conf" >&2; return 1; }
 }
 
 # --- atomic write helper -----------------------------------------------------
@@ -84,9 +94,28 @@ apply_theme() {
     ln -sfn "$t.conf" "$KITTY_CURRENT"
     ln -sfn "themes/$t.zsh" "$ZSH_ACTIVE"
     ln -sfn "themes/$t.nu" "$NU_ACTIVE"
-    write_atomic "$GHOSTTY_ACTIVE" "theme = $ghostty_name"
+
+    # Most themes reference a bundled Ghostty theme by name; a few (e.g.
+    # "none") ship an explicit repo-local palette instead, since there's no
+    # guarantee any bundled Ghostty theme matches exactly.
+    if [[ -f "$DOTFILES/ghostty/.config/ghostty/themes/$t.conf" ]]; then
+        cat "$DOTFILES/ghostty/.config/ghostty/themes/$t.conf" > "$GHOSTTY_ACTIVE"
+    else
+        write_atomic "$GHOSTTY_ACTIVE" "theme = $ghostty_name"
+    fi
+
     cat "$ALACRITTY_THEME_DIR/$t.toml" > "$ALACRITTY_ACTIVE"
-    write_atomic "$NVIM_ACTIVE" "return \"$t\""
+
+    # NvChad has no "no theme" mode, so a blank base46_name (the "none" row
+    # in registry.tsv) means: leave Neovim on whatever theme it already has.
+    if [[ -n "$base46_name" ]]; then
+        write_atomic "$NVIM_ACTIVE" "return \"$t\""
+    fi
+
+    write_atomic "$YAZI_ACTIVE" "[flavor]
+dark = \"$t\"
+light = \"$t\""
+    ln -sfn "$t.conf" "$TMUX_CURRENT"
     write_atomic "$STATE_FILE" "$t"
 }
 
@@ -102,7 +131,26 @@ current_theme() {
 
 reload_apps() {
     command -v killall &>/dev/null && killall -USR1 kitty 2>/dev/null || true
-    # Ghostty reloads its configuration automatically.
+
+    # tmux supports genuine live config reload against a running server.
+    if command -v tmux &>/dev/null && tmux list-sessions &>/dev/null; then
+        tmux source-file "$TMUX_CURRENT" 2>/dev/null || true
+    fi
+
+    # Ghostty does NOT watch its config file for changes - it only reloads when
+    # its `reload_config` keybind (cmd+shift+r, see ghostty/.config/ghostty/config)
+    # is pressed inside a running instance. Simulate that keystroke so an open
+    # Ghostty window picks up the new theme without a manual keypress or relaunch.
+    if command -v osascript &>/dev/null && pgrep -x Ghostty &>/dev/null; then
+        if ! osascript >/dev/null 2>&1 <<'APPLESCRIPT'
+tell application "Ghostty" to activate
+delay 0.1
+tell application "System Events" to keystroke "r" using {command down, shift down}
+APPLESCRIPT
+        then
+            echo "Note: could not auto-reload Ghostty (needs Accessibility permission for the app running this script: System Settings > Privacy & Security > Accessibility). Press cmd+shift+r in Ghostty manually for now." >&2
+        fi
+    fi
 }
 
 # --- subcommands -------------------------------------------------------------
@@ -119,7 +167,7 @@ cmd_ensure() {
         echo "No default theme configured (missing $DEFAULT_THEME_FILE)." >&2
         exit 1
     fi
-    if [[ -L "$KITTY_CURRENT" && -L "$ZSH_ACTIVE" && -L "$NU_ACTIVE" && -f "$GHOSTTY_ACTIVE" && -f "$ALACRITTY_ACTIVE" && -f "$NVIM_ACTIVE" ]]; then
+    if [[ -L "$KITTY_CURRENT" && -L "$ZSH_ACTIVE" && -L "$NU_ACTIVE" && -f "$GHOSTTY_ACTIVE" && -f "$ALACRITTY_ACTIVE" && -f "$NVIM_ACTIVE" && -f "$YAZI_ACTIVE" && -L "$TMUX_CURRENT" ]]; then
         exit 0
     fi
     if ! assets_exist "$t"; then
@@ -168,6 +216,7 @@ cmd_switch() {
 
     reload_apps
     echo "Theme successfully changed to $theme!"
+    echo "Note: already-open zsh/nu panes won't pick up the new palette until you run 'reload' (zsh) or restart the shell (nu)."
 }
 
 # --- entry point --------------------------------------------------------------

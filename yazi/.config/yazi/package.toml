@@ -1,7 +1,16 @@
+# Flavors are vendored directly under flavors/*.yazi rather than managed
+# live via `ya pkg` - `ya pkg add`/`install` proved unreliable in practice
+# (silent no-op deploys against the shared yazi-rs/flavors cache checkout).
+# Provenance, for future upgrades:
+#   catppuccin-macchiato - yazi-rs/flavors:catppuccin-macchiato @ 5e0e49e
+#   tokyonight-storm      - kalidyasin/yazi-flavors:tokyonight-storm @ 70fe6b4
+#   monokai-pro           - ZacharyEggert/monokai-pro-ristretto.yazi @ a2f37d5 (monokai-pro.yazi/ variant)
+#   gruvbox-dark          - poperigby/gruvbox-dark-yazi @ a251bd2, hand-migrated from its old
+#                           [manager] schema to current [mgr]/[tabs]/[pick]
+#   rose-pine             - Msouza91/rose-pine.yazi @ 4101d0d, hand-migrated same as above
+#   kanagawa-wave         - hand-authored; no maintained upstream flavor exists
+#                           (see flavors/kanagawa-wave.yazi/flavor.toml header)
+#   none                  - hand-authored plain xterm-default palette
+
 [plugin]
 deps = []
-
-[[flavor.deps]]
-use = "yazi-rs/flavors:catppuccin-macchiato"
-rev = "5e0e49e"
-hash = "9b9a8e91898a73c1211788a4ed30336"

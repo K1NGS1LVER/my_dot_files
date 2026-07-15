@@ -1,0 +1,145 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+# Migrated from Msouza91/rose-pine.yazi (old [manager] schema, mode colors
+# nested inside [status], no [pick] section) to the current yazi flavor.toml
+# schema. Mode/permission colors are relocated from their old equivalents;
+# no colors were invented.
+
+# : Manager {{{
+
+[mgr]
+cwd = { fg = "#9ccfd8" }
+
+hovered         = { fg = "#e0def4", bg = "#26233a" }
+preview_hovered = { underline = true }
+
+# Find
+find_keyword  = { fg = "#f6c177", italic = true }
+find_position = { fg = "#eb6f92", bg = "reset", italic = true }
+
+# Marker
+marker_selected = { fg = "#9ccfd8", bg = "#9ccfd8" }
+marker_copied   = { fg = "#f6c177", bg = "#f6c177" }
+marker_cut      = { fg = "#b4637a", bg = "#b4637a" }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#524f67" }
+
+# : }}}
+
+
+# : Tabs {{{
+
+[tabs]
+active   = { fg = "#e0def4", bg = "#191724" }
+inactive = { fg = "#e0def4", bg = "#2a273f" }
+
+# : }}}
+
+
+# : Mode {{{
+
+[mode]
+normal_main = { fg = "#191724", bg = "#ebbcba", bold = true }
+normal_alt  = { fg = "#e0def4", bg = "#2a273f" }
+
+select_main = { fg = "#e0def4", bg = "#9ccfd8", bold = true }
+select_alt  = { fg = "#9ccfd8", bg = "#2a273f" }
+
+unset_main = { fg = "#e0def4", bg = "#b4637a", bold = true }
+unset_alt  = { fg = "#b4637a", bg = "#2a273f" }
+
+# : }}}
+
+
+# : Status bar {{{
+
+[status]
+progress_label  = { fg = "#e0def4", bold = true }
+progress_normal = { fg = "#191724", bg = "#2a273f" }
+progress_error  = { fg = "#b4637a", bg = "#2a273f" }
+
+perm_sep   = { fg = "#524f67" }
+perm_type  = { fg = "#31748f" }
+perm_read  = { fg = "#f6c177" }
+perm_write = { fg = "#b4637a" }
+perm_exec  = { fg = "#9ccfd8" }
+
+# : }}}
+
+
+# : Pick {{{
+
+[pick]
+border   = { fg = "#524f67" }
+active   = { fg = "#eb6f92" }
+inactive = {}
+
+# : }}}
+
+
+# : Input {{{
+
+[input]
+border   = { fg = "#524f67" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+# : }}}
+
+
+# : Tasks {{{
+
+[tasks]
+border  = { fg = "#524f67" }
+title   = {}
+hovered = { underline = true }
+
+# : }}}
+
+
+# : Which {{{
+
+[which]
+mask            = { bg = "#2a273f" }
+cand            = { fg = "#9ccfd8" }
+rest            = { fg = "#6e6a86" }
+desc            = { fg = "#eb6f92" }
+separator       = "  "
+separator_style = { fg = "#524f67" }
+
+# : }}}
+
+
+# : Help {{{
+
+[help]
+on      = { fg = "#eb6f92" }
+run     = { fg = "#9ccfd8" }
+hovered = { bg = "#524f67", bold = true }
+footer  = { fg = "#2a273f", bg = "#e0def4" }
+
+# : }}}
+
+
+# : File-specific styles {{{
+
+[filetype]
+
+rules = [
+    # Images
+    { mime = "image/*", fg = "#9ccfd8" },
+
+    # Videos
+    { mime = "{audio,video}/*", fg = "#f6c177" },
+
+    # Archives
+    { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#eb6f92" },
+
+    # Fallback
+    { url = "*", fg = "#e0def4" },
+    { url = "*/", fg = "#524f67" },
+]
+
+# : }}}

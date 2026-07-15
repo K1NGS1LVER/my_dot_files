@@ -1,0 +1,120 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+# None — plain terminal, no theme/accent colors. Every color here is one of
+# the same plain xterm 16-color set used by the rest of this theme (kitty,
+# ghostty, alacritty, tmux) - no new colors invented.
+
+[mgr]
+cwd = { fg = "#0000ee" }
+
+hovered         = { reversed = true }
+preview_hovered = { underline = true }
+
+find_keyword  = { fg = "#cdcd00", bold = true, italic = true, underline = true }
+find_position = { fg = "#cd00cd", bg = "reset", bold = true, italic = true }
+
+marker_copied   = { fg = "#00cd00", bg = "#00cd00" }
+marker_cut      = { fg = "#cd0000", bg = "#cd0000" }
+marker_marked   = { fg = "#00cdcd", bg = "#00cdcd" }
+marker_selected = { fg = "#cdcd00", bg = "#cdcd00" }
+
+count_copied   = { fg = "#000000", bg = "#00cd00" }
+count_cut      = { fg = "#000000", bg = "#cd0000" }
+count_selected = { fg = "#000000", bg = "#cdcd00" }
+
+border_symbol = "│"
+border_style  = { fg = "#7f7f7f" }
+
+# : }}}
+
+
+[tabs]
+active   = { fg = "#000000", bg = "#0000ee", bold = true }
+inactive = { fg = "#0000ee", bg = "#3c3c3c" }
+
+
+[mode]
+normal_main = { fg = "#000000", bg = "#0000ee", bold = true }
+normal_alt  = { fg = "#0000ee", bg = "#3c3c3c" }
+
+select_main = { fg = "#000000", bg = "#00cdcd", bold = true }
+select_alt  = { fg = "#00cdcd", bg = "#3c3c3c" }
+
+unset_main = { fg = "#000000", bg = "#cdcd00", bold = true }
+unset_alt  = { fg = "#cdcd00", bg = "#3c3c3c" }
+
+
+[status]
+perm_sep   = { fg = "#7f7f7f" }
+perm_type  = { fg = "#0000ee" }
+perm_read  = { fg = "#cdcd00" }
+perm_write = { fg = "#cd0000" }
+perm_exec  = { fg = "#00cd00" }
+
+progress_label  = { fg = "#e5e5e5", bold = true }
+progress_normal = { fg = "#00cd00", bg = "#3c3c3c" }
+progress_error  = { fg = "#cdcd00", bg = "#cd0000" }
+
+
+[pick]
+border   = { fg = "#0000ee" }
+active   = { fg = "#cd00cd", bold = true }
+inactive = {}
+
+
+[input]
+border   = { fg = "#0000ee" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+
+[cmp]
+border = { fg = "#0000ee" }
+
+
+[tasks]
+border  = { fg = "#0000ee" }
+title   = {}
+hovered = { fg = "#cd00cd", bold = true }
+
+
+[which]
+mask            = { bg = "#3c3c3c" }
+cand            = { fg = "#00cdcd" }
+rest            = { fg = "#7f7f7f" }
+desc            = { fg = "#cd00cd" }
+separator       = "  "
+separator_style = { fg = "#3c3c3c" }
+
+
+[help]
+on      = { fg = "#00cdcd" }
+run     = { fg = "#cd00cd" }
+hovered = { reversed = true, bold = true }
+footer  = { fg = "#3c3c3c", bg = "#e5e5e5" }
+
+
+[spot]
+border   = { fg = "#0000ee" }
+title    = { fg = "#0000ee" }
+tbl_col  = { fg = "#00cdcd" }
+tbl_cell = { fg = "#cd00cd", bg = "#3c3c3c" }
+
+
+[notify]
+title_info  = { fg = "#00cd00" }
+title_warn  = { fg = "#cdcd00" }
+title_error = { fg = "#cd0000" }
+
+
+[filetype]
+
+rules = [
+    { mime = "image/*", fg = "#00cdcd" },
+    { mime = "{audio,video}/*", fg = "#cdcd00" },
+    { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#cd00cd" },
+    { mime = "application/{pdf,doc,rtf}", fg = "#00cd00" },
+    { mime = "vfs/{absent,stale}", fg = "#7f7f7f" },
+    { url = "*", fg = "#e5e5e5" },
+    { url = "*/", fg = "#0000ee" },
+]

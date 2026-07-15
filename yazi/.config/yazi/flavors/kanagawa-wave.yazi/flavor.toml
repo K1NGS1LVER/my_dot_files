@@ -1,0 +1,182 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+# Hand-authored: no maintained yazi flavor exists for Kanagawa Wave upstream
+# (the community-list repo, dangooddd/kanagawa, is deleted). Colors are
+# pulled directly from shell/shared/themes/kanagawa-wave.zsh and
+# kitty/.config/kitty/themes/kanagawa-wave.conf - the same source of truth
+# used by every other app's kanagawa-wave theme file - not invented here.
+
+# : Manager {{{
+
+[mgr]
+cwd = { fg = "#7e9cd8" }
+
+hovered         = { reversed = true }
+preview_hovered = { underline = true }
+
+# Find
+find_keyword  = { fg = "#c0a36e", bold = true, italic = true, underline = true }
+find_position = { fg = "#957fb8", bg = "reset", bold = true, italic = true }
+
+# Marker
+marker_copied   = { fg = "#76946a", bg = "#76946a" }
+marker_cut      = { fg = "#c3404b", bg = "#c3404b" }
+marker_marked   = { fg = "#6a9589", bg = "#6a9589" }
+marker_selected = { fg = "#c0a36e", bg = "#c0a36e" }
+
+# Count
+count_copied   = { fg = "#1f1f28", bg = "#76946a" }
+count_cut      = { fg = "#1f1f28", bg = "#c3404b" }
+count_selected = { fg = "#1f1f28", bg = "#c0a36e" }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#727169" }
+
+# : }}}
+
+
+# : Tabs {{{
+
+[tabs]
+active   = { fg = "#1f1f28", bg = "#7e9cd8", bold = true }
+inactive = { fg = "#7e9cd8", bg = "#2d4f67" }
+
+# : }}}
+
+
+# : Mode {{{
+
+[mode]
+normal_main = { fg = "#1f1f28", bg = "#7e9cd8", bold = true }
+normal_alt  = { fg = "#7e9cd8", bg = "#2d4f67" }
+
+select_main = { fg = "#1f1f28", bg = "#6a9589", bold = true }
+select_alt  = { fg = "#6a9589", bg = "#2d4f67" }
+
+unset_main = { fg = "#1f1f28", bg = "#c0a36e", bold = true }
+unset_alt  = { fg = "#c0a36e", bg = "#2d4f67" }
+
+# : }}}
+
+
+# : Status bar {{{
+
+[status]
+perm_sep   = { fg = "#727169" }
+perm_type  = { fg = "#7e9cd8" }
+perm_read  = { fg = "#c0a36e" }
+perm_write = { fg = "#c3404b" }
+perm_exec  = { fg = "#76946a" }
+
+progress_label  = { fg = "#dcd7ba", bold = true }
+progress_normal = { fg = "#76946a", bg = "#2d4f67" }
+progress_error  = { fg = "#c0a36e", bg = "#c3404b" }
+
+# : }}}
+
+
+# : Pick {{{
+
+[pick]
+border   = { fg = "#7e9cd8" }
+active   = { fg = "#957fb8", bold = true }
+inactive = {}
+
+# : }}}
+
+
+# : Input {{{
+
+[input]
+border   = { fg = "#7e9cd8" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+# : }}}
+
+
+# : Completion {{{
+
+[cmp]
+border = { fg = "#7e9cd8" }
+
+# : }}}
+
+
+# : Tasks {{{
+
+[tasks]
+border  = { fg = "#7e9cd8" }
+title   = {}
+hovered = { fg = "#957fb8", bold = true }
+
+# : }}}
+
+
+# : Which {{{
+
+[which]
+mask            = { bg = "#2d4f67" }
+cand            = { fg = "#6a9589" }
+rest            = { fg = "#727169" }
+desc            = { fg = "#957fb8" }
+separator       = "  "
+separator_style = { fg = "#2d4f67" }
+
+# : }}}
+
+
+# : Help {{{
+
+[help]
+on      = { fg = "#6a9589" }
+run     = { fg = "#957fb8" }
+hovered = { reversed = true, bold = true }
+footer  = { fg = "#2d4f67", bg = "#dcd7ba" }
+
+# : }}}
+
+
+# : Spotter {{{
+
+[spot]
+border   = { fg = "#7e9cd8" }
+title    = { fg = "#7e9cd8" }
+tbl_col  = { fg = "#6a9589" }
+tbl_cell = { fg = "#957fb8", bg = "#2d4f67" }
+
+# : }}}
+
+
+# : Notification {{{
+
+[notify]
+title_info  = { fg = "#76946a" }
+title_warn  = { fg = "#c0a36e" }
+title_error = { fg = "#c3404b" }
+
+# : }}}
+
+
+# : File-specific styles {{{
+
+[filetype]
+
+rules = [
+    # Image
+    { mime = "image/*", fg = "#6a9589" },
+    # Media
+    { mime = "{audio,video}/*", fg = "#c0a36e" },
+    # Archive
+    { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#957fb8" },
+    # Document
+    { mime = "application/{pdf,doc,rtf}", fg = "#76946a" },
+    # Virtual file system
+    { mime = "vfs/{absent,stale}", fg = "#727169" },
+    # Fallback
+    { url = "*", fg = "#dcd7ba" },
+    { url = "*/", fg = "#7e9cd8" },
+]
+
+# : }}}
