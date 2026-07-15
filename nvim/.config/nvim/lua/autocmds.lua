@@ -15,6 +15,23 @@ autocmd("InsertLeave", {
   end,
 })
 
+-- Markdown: conceallevel so render-markdown.nvim's inline rendering
+-- (bold/italic/links/code markers) actually hides raw syntax instead of
+-- just rendering block-level icons on top of it - render-markdown.nvim
+-- manages concealcursor itself dynamically, no need to set that here.
+-- linebreak + breakindent give word-boundary prose wrapping instead of
+-- mid-word wrap at the window edge; spellcheck is standard for prose.
+autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us"
+  end,
+})
+
 -- Show diagnostic float on cursor hold
 autocmd("CursorHold", {
   callback = function()
