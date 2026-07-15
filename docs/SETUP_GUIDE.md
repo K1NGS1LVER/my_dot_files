@@ -80,7 +80,7 @@ Each pinned layer has its own deliberate update command, so nothing drifts silen
 |---|---|
 | Nvim plugins | `update-nvim-plugins` |
 | Notebook venv | `update-notebook-env` (or `--upgrade` to bump pins) |
-| Homebrew | `update-brew` |
+| Homebrew | `update-brew` (or `--clean` to also prune ghost casks/cache via `brew_clean.sh`) |
 
 Each one verifies the result (health checks, smoke tests, or `brew bundle check`) before offering to commit.
 `update-nvim-plugins` restores the previous `lazy-lock.json` automatically if the health check fails after updating.

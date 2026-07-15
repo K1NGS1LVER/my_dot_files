@@ -21,6 +21,8 @@ Commands work in both Zsh and Nushell unless noted otherwise.
 | `y` | Open Yazi; sync shell cwd on exit |
 | `yazi` | Open Yazi directly |
 | `ntmux` | Attach to or create the default Zellij session (`dan`) |
+| `ttmux` / `t` | Attach to or create the default abduco session (`main`) |
+| `tkill <name>` / `tk` | Kill an abduco session matching `<name>` |
 | `home` | `cd ~` |
 | `..` / `...` | Go up one / two directories |
 | `vf` | Fuzzy find a file and open in `$EDITOR` |
@@ -32,6 +34,7 @@ Commands work in both Zsh and Nushell unless noted otherwise.
 ```
 brave <site> [query]    # Open or search a site in Brave
 fox <site> [query]      # Open or search a site in Firefox
+wolf <site> [query]     # Open or search a site in LibreWolf
 ```
 
 Site keys: `yt`, `gh`, `g`, `rd`, `x`, `li`, `hi`, `mt`, `kb`, `gf`, `cl`, `cu`, `net`
@@ -61,6 +64,17 @@ Site keys: `yt`, `gh`, `g`, `rd`, `x`, `li`, `hi`, `mt`, `kb`, `gf`, `cl`, `cu`,
 | `isup <url>` | Check if a site is reachable |
 | `serve [port]` | Serve cwd over HTTP (default: 8080) |
 | `cheat <query>` | Fetch cheat.sh snippet |
+| `sshf` | Fuzzy-pick a host from `~/.ssh/config` and connect |
+
+## Docker
+
+| Command | Action |
+|---|---|
+| `dps` | Running containers (name/status/ports) |
+| `dimg` | Local images (repo/tag/size) |
+| `dstop` | Stop all running containers |
+| `dclean` | Prune stopped containers + unused images |
+| `dsh` | Fuzzy-pick a running container and exec into it |
 
 ## Notes & Tools
 
@@ -72,6 +86,16 @@ Site keys: `yt`, `gh`, `g`, `rd`, `x`, `li`, `hi`, `mt`, `kb`, `gf`, `cl`, `cu`,
 | `todo` | Fuzzy-select a Todoist task to close |
 | `timer <seconds>` | Countdown timer with macOS notification |
 | `proj <name> [template]` | Scaffold a new project (basic/node/python) |
+
+## Themes
+
+| Command | Action |
+|---|---|
+| `theme-switch` | Fuzzy-pick a theme (Ghostty, Kitty, Alacritty, Zsh, Nushell, Neovim, Yazi, tmux) |
+| `theme-switch <name>` | Switch directly, e.g. `theme-switch gruvbox-dark` |
+| `theme-switch none` | Plain terminal, no theme/accent colors (Neovim keeps its last real theme - NvChad has no equivalent "no theme" mode) |
+
+Already-open Zsh/Nushell panes need `reload` (or a fresh shell) to pick up a new palette; Ghostty/Kitty/tmux update live.
 
 ## Local LLM
 
@@ -114,6 +138,13 @@ Python `openai` client: `OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="n
 | `kc` | kotlinc compiler |
 | `krun <file.kt>` | Compile, run, and clean up a Kotlin file |
 
+## Ghostty
+
+| Binding | Action |
+|---|---|
+| `cmd+shift+r` | Reload config |
+| `cmd+shift+o` | Toggle background transparency |
+
 ## Neovim
 
 | Binding | Action |
@@ -121,6 +152,9 @@ Python `openai` client: `OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="n
 | `<leader>gg` | LazyGit |
 | `<leader>xx` | Diagnostics list |
 | `<leader>z` | Zen mode |
+| `<leader>tt` | Toggle transparency |
+| `<leader>sl` | Restore last session (cwd-scoped) |
+| `<leader>sd` | Don't save session on exit |
 | `<leader>db/dc/du` | DAP basics |
 
 ## AeroSpace
