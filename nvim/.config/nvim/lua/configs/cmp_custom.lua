@@ -22,14 +22,22 @@ local options = {
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-k>"] = cmp.mapping.complete(), -- Fallback trigger key
     ["<C-e>"] = cmp.mapping.close(),
-    -- select = false: only confirm a completion if you actually navigated to
-    -- one (Tab/<C-n>/<C-p>). With select = true, Enter silently accepts
-    -- whatever candidate happens to be pre-highlighted - in prose-heavy
-    -- files (markdown) that means plain "press Enter for a newline" can
-    -- instead insert an unrelated buffer-word or snippet completion.
+    -- select = true. Tried select = false first, but window.completion below
+    -- uses cmp's custom bordered floating window, not Vim's native popup -
+    -- that view only auto-highlights an entry when the completion source
+    -- sets a protocol-level `preselect` flag on it. The buffer source (which
+    -- is what suggests previously-typed words like "apple" for "app") never
+    -- sets that flag, so with select = false nothing from it was EVER
+    -- confirmable via Enter, regardless of completeopt or how good the
+    -- fuzzy match was. select = true instead falls back to the top-ranked
+    -- entry by cmp's own sort order whenever nothing is explicitly
+    -- highlighted, which is what actually makes "type app, Enter -> apple"
+    -- work. The real fix for the original bug (Enter after a markdown list
+    -- item, or <leader>tt, inserting unrelated snippets) turned out to be
+    -- unrelated to this setting - see plugins/markdown.lua's table-mode fix.
     ["<CR>"] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = false,
+      select = true,
     },
     ["<C-l>"] = cmp.mapping(function(fallback)
       if require("copilot.suggestion").is_visible() then
