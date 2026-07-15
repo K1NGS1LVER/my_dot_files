@@ -125,7 +125,11 @@ map("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Find recent file
 
 map("n", "<leader>tt", function()
   vim.g.transparency_enabled = not vim.g.transparency_enabled
-  -- Fire ColorScheme event directly — NvChad base46 does not set vim.g.colors_name
+  -- The autocmds.lua ColorScheme listener only ever clears backgrounds for
+  -- transparency; it has no restore path. Reload the full compiled theme
+  -- first so turning transparency OFF actually gets its opaque background
+  -- back, then fire ColorScheme so that listener re-clears it if still ON.
+  require("base46").load_all_highlights()
   vim.api.nvim_exec_autocmds("ColorScheme", { modeline = false })
   vim.notify("Transparency: " .. (vim.g.transparency_enabled and "ON" or "OFF"), vim.log.levels.INFO)
 end, { desc = "Toggle Transparency" })
