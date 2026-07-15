@@ -106,6 +106,8 @@ keybind = cmd+8=goto_tab:8
 keybind = cmd+9=goto_tab:9
 # Quick access to config reload
 keybind = cmd+shift+r=reload_config
+# Toggle background transparency on/off
+keybind = cmd+shift+o=toggle_background_opacity
 # Don't let Ghostty intercept these - Zellij needs them
 keybind = ctrl+a=unbind
 keybind = ctrl+b=unbind
