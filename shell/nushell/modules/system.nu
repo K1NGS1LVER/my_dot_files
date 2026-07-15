@@ -38,6 +38,16 @@ def up [] {
     print "✅ System updated!"
 }
 
+def notes-sync [] {
+    if ($"($env.HOME)/notes" | path exists) {
+        print "📓 Syncing Obsidian notes..."
+        ^sh -c "cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py"
+        print "✅ Notes synced!"
+    } else {
+        print "⚠️  ~/notes not found"
+    }
+}
+
 def cleanup [] {
     print "🧹 Cleaning Homebrew Cache..."
     if (which brew | is-not-empty) {

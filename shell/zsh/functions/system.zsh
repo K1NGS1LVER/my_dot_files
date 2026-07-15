@@ -77,6 +77,16 @@ up() {
     echo "✅ System Updated!"
 }
 
+notes-sync() {
+    if [[ -d ~/notes ]]; then
+        echo "📓 Syncing Obsidian notes..."
+        (cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py)
+        echo "✅ Notes synced!"
+    else
+        echo "⚠️  ~/notes not found"
+    fi
+}
+
 cleanup() {
     echo "🧹 Cleaning Homebrew Cache..."
     rm -rf "$(brew --cache)"
