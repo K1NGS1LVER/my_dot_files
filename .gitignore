@@ -66,6 +66,14 @@ raycast/.config/raycast/ai/
 # --- APP STATE ---
 nchat/.config/nchat/emojis/
 
+# --- BINARY IMAGES ---
+# Never commit app-generated PNGs/preview images - they bloat git history permanently.
+# Git can't delta-compress binary blobs, so each one adds its full size with no dedup.
+*.png
+*.jpg
+*.jpeg
+*.gif
+
 # --- NVIM RUNTIME DUMPS ---
 checkhealth_*.txt
 
