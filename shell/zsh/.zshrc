@@ -65,7 +65,7 @@ source "$HOME/dotfiles/shell/zsh/functions/docker.zsh"
 source "$HOME/dotfiles/shell/zsh/functions/welcome.zsh"
 
 # ─── Zsh-Specific Aliases ────────────────────
-alias reload='source ~/.zshrc && echo "Config reloaded! ♻️"'
+alias reload='source ~/.zshrc'
 alias zsh-recompinit='rm -f "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION" && exec zsh'
 alias zsh-alt='ZDOTDIR=~/projects/bashed zsh'
 unalias read 2>/dev/null

@@ -3,73 +3,35 @@
 up() {
     echo "🚀 Starting System-wide Update..."
 
+    # Homebrew runs first, sequentially: node, pnpm, pipx and tldr are all
+    # brew-managed on this machine (see Brewfile), so `brew upgrade` can
+    # replace their binaries out from under a concurrently-running
+    # npm/pnpm/pipx/tldr update.
     if command -v brew &> /dev/null; then
         echo "🍺 Updating Homebrew..."
         brew update && brew upgrade && brew cleanup
     fi
 
-    if command -v npm &> /dev/null; then
-        echo "📦 Updating npm & global packages..."
-        npm install -g npm
-        npm update -g
-    fi
+    echo "⏳ Updating remaining tools in parallel..."
+    local tmpdir
+    tmpdir=$(mktemp -d)
 
-    if command -v pnpm &> /dev/null; then
-        echo "📦 Updating pnpm..."
-        pnpm self-update
-    fi
+    ( command -v npm  &> /dev/null && npm install -g npm && npm update -g ) &> "$tmpdir/npm.log" &
+    ( command -v pnpm &> /dev/null && pnpm self-update ) &> "$tmpdir/pnpm.log" &
+    ( command -v pipx &> /dev/null && pipx upgrade-all ) &> "$tmpdir/pipx.log" &
+    ( command -v bob  &> /dev/null && bob update --all ) &> "$tmpdir/bob.log" &
+    ( command -v tldr &> /dev/null && tldr --update ) &> "$tmpdir/tldr.log" &
+    ( [[ -d ~/.local/share/ani-cli ]] && cd ~/.local/share/ani-cli && git pull ) &> "$tmpdir/ani-cli.log" &
+    ( [[ -d ~/notes ]] && cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py ) &> "$tmpdir/obsidian.log" &
 
-    if command -v bun &> /dev/null; then
-        echo "🍞 Updating Bun..."
-        bun upgrade
-    fi
+    wait
 
-    if command -v deno &> /dev/null; then
-        echo "🦕 Updating Deno..."
-        deno upgrade
-    fi
-
-    if command -v pipx &> /dev/null; then
-        echo "🐍 Updating Pipx packages..."
-        pipx upgrade-all
-    fi
-
-    if command -v gem &> /dev/null; then
-        echo "💎 Updating System Gems..."
-        gem update --system
-        gem update
-        gem cleanup
-    fi
-
-    if command -v bob &> /dev/null; then
-        echo "💤 Updating Neovim versions..."
-        bob update --all
-    fi
-
-    if command -v tldr &> /dev/null; then
-        echo "📖 Updating tldr pages..."
-        tldr --update
-    fi
-
-    if command -v conda &> /dev/null; then
-        echo "🧪 Updating Conda..."
-        conda update -n base -c defaults conda --yes
-    fi
-
-    if [[ -d ~/.local/share/ani-cli ]]; then
-        echo "📺 Updating ani-cli..."
-        (cd ~/.local/share/ani-cli && git pull && echo "✅ ani-cli updated!")
-    fi
-
-    if [[ -d ~/notes ]]; then
-        echo "📓 Updating Obsidian MOCs..."
-        (cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py)
-    fi
-
-    if command -v mas &> /dev/null; then
-        echo "🍎 Updating Mac App Store apps..."
-        mas upgrade
-    fi
+    for logfile in "$tmpdir"/*.log(N); do
+        [[ -s "$logfile" ]] || continue
+        echo "── ${logfile:t:r} ──"
+        cat "$logfile"
+    done
+    rm -rf "$tmpdir"
 
     echo "🖥️ Checking for macOS updates..."
     softwareupdate -l

@@ -3,31 +3,45 @@
 def up [] {
     print "🚀 Starting system-wide update..."
 
+    # Homebrew runs first, sequentially: node, pnpm, pipx and tldr are all
+    # brew-managed on this machine (see Brewfile), so `brew upgrade` can
+    # replace their binaries out from under a concurrently-running
+    # npm/pnpm/pipx/tldr update.
+    if (which brew | is-not-empty) {
+        print "🍺 Updating Homebrew..."
+        try { ^brew update; ^brew upgrade; ^brew cleanup } catch { print "❌ Failed to update Homebrew" }
+    }
+
     let tools = [
         [name, check, cmds];
-        ["🍺 Homebrew",  "brew",  [["brew" "update"] ["brew" "upgrade"] ["brew" "cleanup"]]]
         ["📦 npm",       "npm",   [["npm" "install" "-g" "npm"] ["npm" "update" "-g"]]]
         ["📦 pnpm",      "pnpm",  [["pnpm" "self-update"]]]
-        ["🍞 Bun",       "bun",   [["bun" "upgrade"]]]
-        ["🦕 Deno",      "deno",  [["deno" "upgrade"]]]
-        ["💎 RubyGems",  "gem",   [["gem" "update" "--system"] ["gem" "update"] ["gem" "cleanup"]]]
-        ["🧪 Conda",     "conda", [["conda" "update" "-n" "base" "-c" "defaults" "conda" "--yes"]]]
         ["🐍 Pipx",      "pipx",  [["pipx" "upgrade-all"]]]
-        ["🍎 App Store", "mas",   [["mas" "upgrade"]]]
         ["💤 Neovim",    "bob",   [["bob" "update" "--all"]]]
         ["📖 tldr",      "tldr",  [["tldr" "--update"]]]
         ["📓 Obsidian",  "python3", [["sh" "-c" "cd ~/notes && python3 ~/dotfiles/scripts/auto_linker.py"]]]
     ]
 
-    for tool in $tools {
+    print "⏳ Updating remaining tools in parallel..."
+    let results = ($tools | par-each { |tool|
         if (which $tool.check | is-not-empty) {
-            print $"($tool.name)..."
-            for cmd in $tool.cmds {
+            let output = ($tool.cmds | each { |cmd|
                 let bin = ($cmd | first)
                 let cmd_args = ($cmd | skip 1)
-                try { ^$bin ...$cmd_args } catch { print $"❌ Failed to run ($bin)" }
-            }
+                let res = (^$bin ...$cmd_args | complete)
+                if $res.exit_code != 0 {
+                    $"❌ Failed to run ($bin)\n($res.stderr)"
+                } else {
+                    $res.stdout
+                }
+            } | str join "\n")
+            { name: $tool.name, output: $output }
         }
+    })
+
+    for r in ($results | compact) {
+        print $"── ($r.name) ──"
+        print $r.output
     }
 
     if (which softwareupdate | is-not-empty) {
