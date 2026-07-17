@@ -21,13 +21,13 @@ truncate_to_repo = true
 home_symbol = "~"
 format = "[$path]($style)[$read_only]($read_only_style) "
 read_only = " "
-style = "bold bright-black"
+style = "bold bright-blue"
 truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
 format = "[$symbol$branch]($style) "
-style = "bright-black"
+style = "bright-cyan"
 
 [git_status]
 disabled = false
@@ -47,7 +47,7 @@ deleted = "✘"
 [cmd_duration]
 min_time = 2000
 format = "[$duration]($style) "
-style = "bright-black"
+style = "bright-cyan"
 
 [character]
 success_symbol = "[❯](bold green)"
