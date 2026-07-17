@@ -21,7 +21,7 @@ font-family-italic = "JetBrainsMono Nerd Font"
 # and scripts/switch-theme. The "?" makes the include optional so a missing
 # file cannot break Ghostty; scripts/switch-theme --ensure recreates it.
 config-file = ?active-theme.conf
-background-opacity = 0.4
+background-opacity = 0.6
 background-blur-radius = 50
 
 # --- Premium Aesthetic Tweaks ---
