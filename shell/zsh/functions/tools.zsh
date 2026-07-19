@@ -118,3 +118,85 @@ fzf-universal-file-widget() {
 
 zle -N fzf-universal-file-widget
 bindkey '^F' fzf-universal-file-widget
+
+# Real-ESRGAN upscaler
+# Usage: upscale [flags] <input> [input...]
+#   --anime          anime/illustration model (realesrgan-x4plus-anime)
+#   --anime-video    fast anime video model (realesr-animevideov3)
+#   --photo          general photo model (realesrgan-x4plus, default)
+#   --2x / --3x / --4x   scale factor (default: 4x)
+#   -o <path>        output path (file or directory)
+#   -f <fmt>         output format: png/jpg/webp (default: png)
+#   -t <size>        tile size (0=auto, lower = less VRAM)
+#   -v               verbose
+upscale() {
+    local ESRGAN_DIR="$HOME/projects/pythonVishal/Real-ESRGAN-0.3.0"
+    local BIN="$ESRGAN_DIR/realesrgan-ncnn-vulkan"
+    local MODELS="$ESRGAN_DIR/models"
+
+    if [[ ! -x "$BIN" ]]; then
+        echo "upscale: binary not found at $BIN" >&2
+        return 1
+    fi
+
+    local model="realesrgan-x4plus"
+    local scale="" output="" format="" tile="" verbose=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --anime)        model="realesrgan-x4plus-anime"; shift ;;
+            --anime-video)  model="realesr-animevideov3"; shift ;;
+            --photo)        model="realesrgan-x4plus"; shift ;;
+            --2x)           scale=2; shift ;;
+            --3x)           scale=3; shift ;;
+            --4x)           scale=4; shift ;;
+            -o)             output="$2"; shift 2 ;;
+            -f)             format="$2"; shift 2 ;;
+            -t)             tile="$2"; shift 2 ;;
+            -v)             verbose="-v"; shift ;;
+            --)             shift; break ;;
+            -*)             echo "upscale: unknown flag $1" >&2; return 1 ;;
+            *)              break ;;
+        esac
+    done
+
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: upscale [flags] <input> [input...]" >&2
+        echo "" >&2
+        echo "Models:" >&2
+        echo "  --photo          general photos (default)" >&2
+        echo "  --anime          anime / illustrations" >&2
+        echo "  --anime-video    fast anime video" >&2
+        echo "" >&2
+        echo "Scale:  --2x  --3x  --4x (default: 4x)" >&2
+        echo "Output: -o <path>  -f <format>  -t <tile>  -v" >&2
+        return 1
+    fi
+
+    local sfx="_${scale:-4}x"
+
+    for input in "$@"; do
+        local auto_out=""
+        if [[ -z "$output" ]]; then
+            if [[ -d "$input" ]]; then
+                auto_out="${input%/}_upscaled"
+            else
+                local dir="$(dirname "$input")"
+                local base="$(basename "$input")"
+                local name="${base%.*}"
+                local ext="${base##*.}"
+                [[ "$base" == *.* ]] && auto_out="$dir/${name}${sfx}.$ext" || auto_out="$input${sfx}"
+            fi
+        fi
+
+        echo "upscale [$model] $input -> ${auto_out:-$output}"
+        command "$BIN" \
+            -m "$MODELS" -n "$model" \
+            ${scale:+-s "$scale"} \
+            -o "${auto_out:-$output}" \
+            ${format:+-f "$format"} \
+            ${tile:+-t "$tile"} \
+            $verbose \
+            -i "$input"
+    done
+}

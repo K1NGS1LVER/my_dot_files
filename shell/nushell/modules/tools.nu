@@ -64,18 +64,59 @@ def nvim-mini [] {
 }
 
 # Upscale (Real-ESRGAN)
-def upscale [...args: string] {
+def upscale [
+    --anime (-a)          # anime/illustration model
+    --anime-video (-av)   # fast anime video model
+    --photo (-p)          # general photo model (default)
+    --two-x               # 2x scale
+    --three-x             # 3x scale
+    --four-x              # 4x scale (default)
+    --output (-o): string # output path
+    --format (-f): string # output format: png/jpg/webp
+    --tile (-t): string   # tile size (0=auto)
+    --verbose (-v)        # verbose output
+    ...args: string       # input file(s) or directory
+] {
     let upscale_dir = ([$env.HOME "projects" "pythonVishal" "Real-ESRGAN-0.3.0"] | path join)
     let bin = ([$upscale_dir "realesrgan-ncnn-vulkan"] | path join)
     let models = ([$upscale_dir "models"] | path join)
-    ^$bin -m $models -n realesrgan-x4plus ...$args
-}
 
-def upscale-anime [...args: string] {
-    let upscale_dir = ([$env.HOME "projects" "pythonVishal" "Real-ESRGAN-0.3.0"] | path join)
-    let bin = ([$upscale_dir "realesrgan-ncnn-vulkan"] | path join)
-    let models = ([$upscale_dir "models"] | path join)
-    ^$bin -m $models -n realesrgan-x4plus-anime ...$args
+    if not ($bin | path exists) {
+        print $"(ansi red)upscale: binary not found at ($bin)(ansi reset)"
+        return
+    }
+
+    let model = if $anime { "realesrgan-x4plus-anime" }
+        else if $anime_video { "realesr-animevideov3" }
+        else { "realesrgan-x4plus" }
+
+    let scale = if $two_x { "2" } else if $three_x { "3" } else if $four_x { "4" } else { null }
+    let sfx = $"_($scale | default '4')x"
+
+    for input in $args {
+        let auto_out = if ($output | is-not-empty) { $output }
+            else if ($input | path exists) and ($input | path type) == "dir" { $"($input)_upscaled" }
+            else {
+                let parsed = ($input | path parse)
+                let ext = if ($parsed.extension | is-not-empty) { $parsed.extension } else { "png" }
+                $"($parsed.dir)/($parsed.stem)($sfx).($ext)"
+            }
+
+        print $"upscale [($model)] ($input) -> ($auto_out)"
+        let cmd_args = [
+            "-m" $models
+            "-n" $model
+            "-i" $input
+            "-o" $auto_out
+        ]
+
+        let cmd_args = if $scale != null { $cmd_args | append ["-s" $scale] } else { $cmd_args }
+        let cmd_args = if ($format | is-not-empty) { $cmd_args | append ["-f" $format] } else { $cmd_args }
+        let cmd_args = if ($tile | is-not-empty) { $cmd_args | append ["-t" $tile] } else { $cmd_args }
+        let cmd_args = if $verbose { $cmd_args | append "-v" } else { $cmd_args }
+
+        ^$bin ...$cmd_args
+    }
 }
 
 # File association dispatcher (overrides Nushell's open)
