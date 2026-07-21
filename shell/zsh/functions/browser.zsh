@@ -5,7 +5,7 @@ _open_browser() {
     local browser="$1"; shift
 
     if [[ -z "$1" ]]; then
-        open -a "$browser"
+        /usr/bin/open -a "$browser"
         return
     fi
 
@@ -19,18 +19,18 @@ _open_browser() {
 
         if [[ "|${aliases}|" == *"|${keyword}|"* ]]; then
             if [[ -z "$@" ]]; then
-                open -a "$browser" "$base"
+                /usr/bin/open -a "$browser" "$base"
             else
                 local query=$(printf "%s+" "$@")
                 query=${query%+}
                 if [[ -n "$search_path" && "$search_path" != "$base" ]]; then
                     if [[ "$search_path" == /* ]]; then
-                        open -a "$browser" "${base%/}${search_path}${query}"
+                        /usr/bin/open -a "$browser" "${base%/}${search_path}${query}"
                     else
-                        open -a "$browser" "${search_path}${query}"
+                        /usr/bin/open -a "$browser" "${search_path}${query}"
                     fi
                 else
-                    open -a "$browser" "${base}${query}"
+                    /usr/bin/open -a "$browser" "${base}${query}"
                 fi
             fi
             return
@@ -38,9 +38,9 @@ _open_browser() {
     done
 
     if [[ "$keyword" != http* ]]; then
-        open -a "$browser" "https://$keyword"
+        /usr/bin/open -a "$browser" "https://$keyword"
     else
-        open -a "$browser" "$keyword"
+        /usr/bin/open -a "$browser" "$keyword"
     fi
 }
 
