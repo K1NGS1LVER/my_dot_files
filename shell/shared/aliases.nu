@@ -32,6 +32,7 @@ alias els = ^eza --icons
 alias cat = ^bat
 alias help = ^tldr
 alias sed = ^sd
+alias les = ^less -R
 # du and ps are Nushell built-ins — not aliased. Use ^dust / ^procs explicitly.
 
 # --- Git ---

@@ -66,7 +66,7 @@ def nvim-mini [] {
 # Upscale (Real-ESRGAN)
 def upscale [
     --anime (-a)          # anime/illustration model
-    --anime-video (-av)   # fast anime video model
+    --anime-video (-V)    # fast anime video model
     --photo (-p)          # general photo model (default)
     --two-x               # 2x scale
     --three-x             # 3x scale
@@ -94,13 +94,11 @@ def upscale [
     let sfx = $"_($scale | default '4')x"
 
     for input in $args {
+        let parsed = ($input | path parse)
+        let ext = if ($parsed.extension | is-not-empty) { $parsed.extension } else { "png" }
         let auto_out = if ($output | is-not-empty) { $output }
             else if ($input | path exists) and ($input | path type) == "dir" { $"($input)_upscaled" }
-            else {
-                let parsed = ($input | path parse)
-                let ext = if ($parsed.extension | is-not-empty) { $parsed.extension } else { "png" }
-                $"($parsed.dir)/($parsed.stem)($sfx).($ext)"
-            }
+            else { $"($parsed.parent)/($parsed.stem)($sfx).($ext)" }
 
         print $"upscale [($model)] ($input) -> ($auto_out)"
         let cmd_args = [

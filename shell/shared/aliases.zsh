@@ -31,6 +31,7 @@ alias els='eza --icons'
 # --- Modern CLI Replacements ---
 alias cat='bat'
 alias help='tldr'
+alias les='less -R'
 alias sed='sd'
 alias du='dust'
 alias ps='procs'
