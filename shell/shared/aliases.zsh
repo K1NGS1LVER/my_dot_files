@@ -62,7 +62,7 @@ alias anim-res='ani-cli -q 1080'
 alias anim-dl='ani-cli -d'
 
 # --- AI ---
-alias ai='ollama run qwen2.5-coder:3b'
+alias ai='cd ~/models && llama-cli -hf Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M --n-gpu-layers 99 --no-mmap --mlock -c 8192 -p "You are a helpful assistant."'
 
 # --- Display & System ---
 alias gray='toggle-gray'

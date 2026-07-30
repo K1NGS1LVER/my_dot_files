@@ -101,23 +101,9 @@ Already-open Zsh/Nushell panes need `reload` (or a fresh shell) to pick up a new
 
 | Command | Action |
 |---|---|
-| `ai` | Chat with `qwen2.5-coder:3b` via Ollama (interactive) |
+| `ai` | Chat with `Qwen2.5-Coder-7B-Instruct` (Q4_K_M) via llama-cli (interactive) |
 
-Ollama already runs persistently (`Ollama.app`, bound to `127.0.0.1:11434` only) and exposes an OpenAI-compatible API — no separate server to start. Point Raycast or agent scripts at it directly:
-
-```
-Base URL:  http://127.0.0.1:11434/v1
-API Key:   any placeholder value (not enforced on localhost)
-Model:     qwen2.5-coder:3b
-```
-
-```
-curl http://127.0.0.1:11434/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"qwen2.5-coder:3b","messages":[{"role":"user","content":"say hi"}]}'
-```
-
-Python `openai` client: `OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="not-needed")`.
+Runs `llama-cli` with the Qwen2.5-Coder GGUF quantized model from `~/models`, 99 GPU layers, 8192 context length, and a system prompt. Requires `llama-cli` binary in PATH and the model GGUF file present at `~/models`.
 
 ## Git
 
