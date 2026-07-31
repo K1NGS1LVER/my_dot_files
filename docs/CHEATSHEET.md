@@ -124,20 +124,14 @@ brew tap 1jehuang/jcode
 brew install jcode
 ```
 
-Connect to the local model via Ollama (recommended over llama-server for jcode compatibility):
+Connect to the local model via Ollama:
 
 ```
 jcode login --provider ollama
 jcode --provider ollama --model qwen2.5-coder:7b run 'hello'
 ```
 
-Or use the OpenAI-compatible endpoint directly:
-
-```
-jcode provider add llama-server --base-url http://127.0.0.1:8080/v1 --model Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M --no-api-key --set-default
-```
-
-Note: llama-server may return a grammar parse error with jcode's structured output requests. If so, use the Ollama provider instead.
+Note: jcode has a grammar compatibility issue with llama-server's OpenAI-compatible endpoint, so Ollama is the recommended provider for jcode. The model needs to be pulled into Ollama once (`ollama pull qwen2.5-coder:7b`). The `ai` alias uses `llama-cli` for interactive chat; Ollama serves the same model for API clients.
 
 ## Git
 
