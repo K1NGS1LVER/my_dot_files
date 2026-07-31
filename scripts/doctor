@@ -348,14 +348,15 @@ fi
 section "LSP"
 
 mason_packages_dir="$HOME/.local/share/nvim/mason/packages"
-declare -A mason_needed=(
-    [html-lsp]=1 [css-lsp]=1 [clangd]=1 [pyright]=1 [ruff]=1
-    [lua-language-server]=1 [kotlin-language-server]=1 [jdtls]=1
-    [bash-language-server]=1 [json-lsp]=1 [typescript-language-server]=1
-    [eslint-lsp]=1
+# NB: indexed array, not an associative one — macOS /bin/bash is 3.2, which
+# lacks `declare -A`. A plain list works on bash 3.2 and 5.x alike.
+mason_needed=(
+    html-lsp css-lsp clangd pyright ruff
+    lua-language-server kotlin-language-server jdtls
+    bash-language-server json-lsp typescript-language-server eslint-lsp
 )
 missing_mason=()
-for pkg in "${!mason_needed[@]}"; do
+for pkg in "${mason_needed[@]}"; do
     [[ -d "$mason_packages_dir/$pkg" ]] || missing_mason+=("$pkg")
 done
 if [[ "${#missing_mason[@]}" -eq 0 ]]; then

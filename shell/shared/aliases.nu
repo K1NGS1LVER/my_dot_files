@@ -62,7 +62,7 @@ alias anim-res = ^ani-cli -q 1080
 alias anim-dl = ^ani-cli -d
 
 # --- AI ---
-def ai [] { cd ~/models; llama-cli -hf Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M --n-gpu-layers 99 --no-mmap --mlock -c 8192 -p "You are a helpful assistant." }
+def ai [] { cd ~/models; /Users/dan/.local/bin/llama-cli -hf Qwen/Qwen3-8B-GGUF:Q4_K_M --flash-attn on --n-gpu-layers 99 --no-mmap --mlock -c 8192 -p "You are a helpful assistant." }
 
 # --- Display & System ---
 alias dark = toggle_dark
