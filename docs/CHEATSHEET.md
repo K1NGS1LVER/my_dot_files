@@ -116,6 +116,29 @@ launchctl list | grep llama-server        # check status
 
 The server exposes an OpenAI-compatible API at `http://127.0.0.1:8080/v1`. `OPENAI_BASE_URL` is set in the shell env to point to this endpoint, so OpenCode and Pi Code will route to llama-server automatically. Pi Code config: `~/.pi/agent/models.json` (provider `llama-server`). The `ai` alias uses `llama-cli` for interactive chat; `llama-server` serves the same model for API clients. Both use the same flags: 99 GPU layers, 8192 context, no mmap, mlock.
 
+### jcode
+[jcode](https://github.com/1jehuang/jcode) is a Rust-based coding agent harness. Install via Homebrew:
+
+```
+brew tap 1jehuang/jcode
+brew install jcode
+```
+
+Connect to the local model via Ollama (recommended over llama-server for jcode compatibility):
+
+```
+jcode login --provider ollama
+jcode --provider ollama --model qwen2.5-coder:7b run 'hello'
+```
+
+Or use the OpenAI-compatible endpoint directly:
+
+```
+jcode provider add llama-server --base-url http://127.0.0.1:8080/v1 --model Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M --no-api-key --set-default
+```
+
+Note: llama-server may return a grammar parse error with jcode's structured output requests. If so, use the Ollama provider instead.
+
 ## Git
 
 | Command | Action |
