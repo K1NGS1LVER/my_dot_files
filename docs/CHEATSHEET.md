@@ -110,11 +110,11 @@ For agent harnesses that need an HTTP API endpoint, `llama-server` runs as a Lau
 
 ```
 launchctl start com.dan.llama-server    # start
-launchctl stop com.dan.llama-server     # stop
-launchctl list | grep llama-server      # check status
+launchctl stop com.dan.llama-server      # stop
+launchctl list | grep llama-server        # check status
 ```
 
-The server exposes an OpenAI-compatible API at `http://127.0.0.1:8080/v1`. `OPENAI_BASE_URL` is set in the shell env to point to this endpoint, so OpenCode and Pi Code will route to llama-server automatically. Pi Code config: `~/.pi/agent/models.json` (provider `llama-server`). The `ai` alias uses `llama-cli` for interactive chat; `llama-server` serves the same model for API clients.
+The server exposes an OpenAI-compatible API at `http://127.0.0.1:8080/v1`. `OPENAI_BASE_URL` is set in the shell env to point to this endpoint, so OpenCode and Pi Code will route to llama-server automatically. Pi Code config: `~/.pi/agent/models.json` (provider `llama-server`). The `ai` alias uses `llama-cli` for interactive chat; `llama-server` serves the same model for API clients. Both use the same flags: 99 GPU layers, 8192 context, no mmap, mlock.
 
 ## Git
 
