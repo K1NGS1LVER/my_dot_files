@@ -8,3 +8,6 @@
 # Shared source of truth
 source "$HOME/dotfiles/shell/shared/paths.zsh"
 source "$HOME/dotfiles/shell/shared/env.zsh"
+
+# Local secrets (gitignored, machine-specific — never committed)
+[[ -f "$HOME/dotfiles/shell/zsh/.env.local" ]] && source "$HOME/dotfiles/shell/zsh/.env.local"

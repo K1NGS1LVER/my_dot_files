@@ -92,6 +92,7 @@ bindkey "^T" transpose-chars
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
 command -v fzf &>/dev/null && source <(fzf --zsh)
 [[ "$TERM" != "dumb" ]] && command -v starship &>/dev/null && eval "$(starship init zsh)"
+command -v omni &>/dev/null && eval "$(omni hook init zsh)"
 
 # ─── Startup ─────────────────────────────────
 welcome-message
