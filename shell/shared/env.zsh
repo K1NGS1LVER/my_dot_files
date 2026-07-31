@@ -8,6 +8,7 @@ export LYNX_LSS="$HOME/.lynx.lss"
 export PNPM_HOME="$HOME/Library/pnpm"
 export YAZI_TRT="5000"
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+export OPENAI_BASE_URL="http://127.0.0.1:8080/v1"
 
 # JAVA_HOME — guarded: skip silently if java is not installed
 if command -v /usr/libexec/java_home &>/dev/null; then

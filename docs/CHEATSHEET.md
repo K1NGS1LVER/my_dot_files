@@ -105,6 +105,17 @@ Already-open Zsh/Nushell panes need `reload` (or a fresh shell) to pick up a new
 
 Runs `llama-cli` with the Qwen2.5-Coder GGUF quantized model from `~/models`, 99 GPU layers, 8192 context length, and a system prompt. Requires `llama-cli` binary in PATH and the model GGUF file present at `~/models`.
 
+### llama-server
+For agent harnesses that need an HTTP API endpoint, start the llama-server:
+
+```
+llama-server -hf Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M \
+  --n-gpu-layers 99 --no-mmap --mlock -c 8192 \
+  --port 8080
+```
+
+The server exposes an OpenAI-compatible API at `http://127.0.0.1:8080/v1`. `OPENAI_BASE_URL` is set in the shell env to point to this endpoint, so OpenCode and Pi Code will route to llama-server automatically. Pi Code config: `~/.pi/agent/models.json` (provider `llama-server`). The `ai` alias uses `llama-cli` for interactive chat; `llama-server` serves the same model for API clients.
+
 ## Git
 
 | Command | Action |
