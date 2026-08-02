@@ -62,8 +62,7 @@ alias anim-res='ani-cli -q 1080'
 alias anim-dl='ani-cli -d'
 
 # --- AI ---
-alias ai='cd ~/models && /Users/dan/.local/bin/llama-cli -hf Qwen/Qwen3-8B-GGUF:Q4_K_M --flash-attn on --n-gpu-layers 99 --no-mmap --mlock -c 8192 -p "You are a helpful assistant."'
-
+alias ai='cd ~/models && /Users/dan/.local/bin/llama-cli -hf Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M --flash-attn on --n-gpu-layers 99 --no-mmap --mlock -c 8192 -p "Offline reference assistant. Answer directly, no greetings or filler. If unsure, say so instead of guessing. Be concise; expand only if the question needs depth."'
 # --- Display & System ---
 alias gray='toggle-gray'
 alias sepia='shortcuts run "Sepia Mode"'
