@@ -4,6 +4,8 @@
 # ─── Shell Options ────────────────────────────
 setopt auto_cd
 setopt interactive_comments
+setopt nocaseglob
+setopt nocasematch
 
 # ─── History ──────────────────────────────────
 mkdir -p "$HOME/.cache/zsh"
@@ -77,6 +79,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers --line-range=:500 $realpath'
 zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # ─── Keybindings ──────────────────────────────
 bindkey "^W" kill-word
@@ -96,3 +99,4 @@ command -v omni &>/dev/null && eval "$(omni hook init zsh)"
 
 # ─── Startup ─────────────────────────────────
 welcome-message
+export PATH="$HOME/development/flutter/bin:$PATH"
