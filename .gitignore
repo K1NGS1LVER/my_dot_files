@@ -92,8 +92,23 @@ alacritty/.config/alacritty/active-theme.toml
 yazi/.config/yazi/theme.toml
 tmux/.config/tmux/themes/current-theme.conf
 
-# claude and agent state FILES
-claude/.config/claude/state.json
+# claude and agent state
+.claude/
 agent/.config/agent/state.json
-CLAUDE.md 
+CLAUDE.md
+
+# --- AI HARNESS ---
+.kilo/
+goose/.config/goose/
+.hermes/
+.gemini/
+.ollama/
+opencode
+.aider*
+.cursor/
+.windsurf/
+.codex/
+.continue/
+.cline/
+.agents/
 
