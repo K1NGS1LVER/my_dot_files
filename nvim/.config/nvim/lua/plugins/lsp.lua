@@ -15,20 +15,14 @@ return {
     require("mason").setup()
     require("mason-tool-installer").setup {
       ensure_installed = {
-        "html-lsp",
-        "css-lsp",
-        "clangd",
         "pyright",
         "ruff",
         "lua-language-server",
-        "kotlin-language-server",
-        "jdtls",
         "bash-language-server",
         "json-lsp",
         "typescript-language-server",
-        "eslint-lsp",
       },
-      run_on_start = true,
+      run_on_start = false,
     }
     require("configs.lspconfig")
   end,

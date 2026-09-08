@@ -2,6 +2,12 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
+-- File explorer: Override NvChad's disabled nvim-tree with Yazi
+map("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "Open Yazi at current file" })
+map("n", "<C-n>", "<cmd>Yazi<cr>", { desc = "Open Yazi at current file" })
+map("n", "<leader>cw", "<cmd>Yazi cwd<cr>", { desc = "Open Yazi at project root" })
+map("n", "<C-Up>", "<cmd>Yazi toggle<cr>", { desc = "Resume last Yazi session" })
+
 -- Better command mode
 map("n", ";", function()
   local next_char = vim.fn.getcharstr()

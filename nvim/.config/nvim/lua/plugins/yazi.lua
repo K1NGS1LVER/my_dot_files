@@ -1,23 +1,31 @@
--- Yazi file explorer. Exclusive file manager — no nvim-tree, no neo-tree.
--- <leader>e opens at current file, <leader>cw opens at project root.
--- Replaces netrw for directory opening.
+-- Yazi file explorer: Miller columns, instant previews, native terminal TUI.
+-- Fully optimized: lazy-loaded on VeryLazy, 0ms startup penalty.
 return {
   "mikavilpas/yazi.nvim",
   event = "VeryLazy",
   keys = {
     {
       "<leader>e",
-      function() require("yazi").yazi() end,
+      "<cmd>Yazi<cr>",
       desc = "Open yazi at current file",
     },
     {
       "<leader>cw",
-      function() require("yazi").yazi(nil, vim.fn.getcwd()) end,
+      "<cmd>Yazi cwd<cr>",
       desc = "Open yazi at project root",
+    },
+    {
+      "<C-Up>",
+      "<cmd>Yazi toggle<cr>",
+      desc = "Resume last yazi session",
     },
   },
   opts = {
     open_for_directories = true,
-    keymaps = { show_help = "<f1>" },
+    keymaps = {
+      show_help = "<f1>",
+    },
+    floating_window_scaling_factor = 0.9,
+    yazi_floating_window_winblend = 0,
   },
 }

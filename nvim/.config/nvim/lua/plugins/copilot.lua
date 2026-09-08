@@ -7,14 +7,12 @@ return {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
-    -- copilot.lua only stops its LSP child via a VimLeavePre autocmd, which
-    -- never fires when nvim dies non-gracefully (pane/terminal killed,
-    -- crash). The orphaned `language-server.js` then survives forever,
-    -- reparented to pid 1. `init` runs at startup even though this plugin
-    -- is lazy-loaded, so every new nvim session reaps prior orphans.
-    -- ppid==1 can never be a live LSP connection (its parent nvim is
-    -- already gone), so this is always safe to kill.
-    init = function()
+    config = function()
+      -- copilot.lua only stops its LSP child via a VimLeavePre autocmd, which
+      -- never fires when nvim dies non-gracefully (pane/terminal killed,
+      -- crash). The orphaned `language-server.js` then survives forever,
+      -- reparented to pid 1. Reaping orphans in `config` runs lazily when
+      -- copilot is actually loaded, preventing /bin/ps spawning during startup.
       vim.schedule(function()
         local ok, lines = pcall(vim.fn.systemlist, { "/bin/ps", "-eo", "pid,ppid,args" })
         if not ok or vim.v.shell_error ~= 0 then
@@ -27,8 +25,7 @@ return {
           end
         end
       end)
-    end,
-    config = function()
+
       require("copilot").setup({
         suggestion = {
           enabled = true,
@@ -57,6 +54,21 @@ return {
       { "nvim-lua/plenary.nvim" },
     },
     build = "make tiktoken",
+    cmd = {
+      "CopilotChat",
+      "CopilotChatOpen",
+      "CopilotChatClose",
+      "CopilotChatToggle",
+      "CopilotChatStop",
+      "CopilotChatReset",
+      "CopilotChatExplain",
+      "CopilotChatReview",
+      "CopilotChatFix",
+      "CopilotChatOptimize",
+      "CopilotChatDocs",
+      "CopilotChatTests",
+      "CopilotChatCommit",
+    },
     opts = { debug = false },
     keys = {
       { "<leader>cc",  "<cmd>CopilotChatToggle<cr>",   desc = "Copilot Chat Toggle" },

@@ -1,61 +1,47 @@
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- Mason's setup() handles PATH prepend automatically
-
-
--- 2. Base Config
-local base_config = {
+-- 1. Base config applied to all LSP servers (Neovim 0.11/0.12 native API)
+vim.lsp.config("*", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
-}
+})
 
--- 3. List of Servers (Manage this list to enable/disable)
+-- 2. Server-specific configurations
+vim.lsp.config("pyright", {
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "off",
+      },
+    },
+  },
+})
+
+vim.lsp.config("ruff", {
+  on_attach = function(client, bufnr)
+    client.server_capabilities.hoverProvider = false
+    nvlsp.on_attach(client, bufnr)
+  end,
+})
+
+-- 3. Lean server list
 local servers = {
-  "html",
-  "cssls",
-  "clangd",
+  "lua_ls",
   "pyright",
   "ruff",
   "gopls",
   "rust_analyzer",
-  "lua_ls",
-  "kotlin_language_server",
-  "jdtls",
   "bashls",
   "jsonls",
   "ts_ls",
-  "eslint",
 }
 
--- 4. Enable Servers (The Neovim 0.11 Way)
-for _, name in ipairs(servers) do
-  local opts = vim.tbl_deep_extend("force", {}, base_config)
+-- 4. Enable servers
+vim.lsp.enable(servers)
 
-  -- Specific Server Tweaks
-  if name == "pyright" then
-    opts.settings = { python = { analysis = { typeCheckingMode = "off" } } }
-  end
-
-  if name == "ruff" then
-    opts.on_attach = function(client, bufnr)
-      client.server_capabilities.hoverProvider = false
-      nvlsp.on_attach(client, bufnr)
-    end
-  end
-
-  -- This is the native Neovim 0.11 API
-  -- It's more stable than setup_handlers
-  vim.lsp.config[name] = opts
-  vim.lsp.enable(name)
-end
-
--- Diagnostic Styling
+-- 5. Diagnostic Styling
 vim.diagnostic.config {
-  -- virtual_text = {
-  --   prefix = '●', -- Or '■', '▎', 'x'
-  --   spacing = 4,
-  -- },
   virtual_text = false,
   signs = true,
   underline = true,
@@ -65,7 +51,7 @@ vim.diagnostic.config {
     border = "rounded",
     wrap = true,
     max_width = 80,
-    source = true, -- Show the source (e.g., Pyright, ESLint)
+    source = true,
     header = "",
     prefix = "",
   },
