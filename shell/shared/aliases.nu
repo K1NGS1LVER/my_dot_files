@@ -52,7 +52,8 @@ alias doctor = ^/Users/dan/dotfiles/scripts/doctor
 alias dotfiles-deploy = ^/Users/dan/dotfiles/scripts/deploy
 alias dotfiles-doctor = ^/Users/dan/dotfiles/scripts/doctor
 alias update-brew = ^/Users/dan/dotfiles/scripts/update-brew
-alias tmux-sessionizer = ^/Users/dan/dotfiles/scripts/tmux-sessionizer
+alias ts = ^/Users/dan/dotfiles/scripts/tmux-sessionizer
+alias tms = ^/Users/dan/dotfiles/scripts/tmux-sessionizer
 alias explain = ^/Users/dan/dotfiles/scripts/explain_tree.py
 
 # --- Clipboard ---

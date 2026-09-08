@@ -36,6 +36,8 @@ if status is-interactive
     alias dark='toggle_dark'
     alias reload='source ~/.config/fish/config.fish; and echo "Config reloaded! ♻️"'
     alias explain='/Users/dan/dotfiles/scripts/explain_tree.py'
+    alias ts='/Users/dan/dotfiles/scripts/tmux-sessionizer'
+    alias tms='/Users/dan/dotfiles/scripts/tmux-sessionizer'
     alias deploy='/Users/dan/dotfiles/scripts/deploy'
     alias doctor='/Users/dan/dotfiles/scripts/doctor'
 
