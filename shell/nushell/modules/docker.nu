@@ -2,7 +2,14 @@
 
 def dps [] { ^docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" }
 def dimg [] { ^docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" }
-def dstop [] { ^docker stop (^docker ps -q | lines) }
+def dstop [] {
+    let ids = (^docker ps -q | lines)
+    if ($ids | is-not-empty) {
+        ^docker stop ...$ids
+    } else {
+        "No running containers to stop."
+    }
+}
 def dclean [] { ^docker system prune -af }
 
 # Interactive container selector

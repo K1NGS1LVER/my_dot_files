@@ -1,12 +1,4 @@
-# tools.zsh — cap, vf, krun, pdf, open override, todo
-
-# Capture output of a command to a timestamped file
-cap() {
-    local timestamp=$(date +%Y%m%d_%H%M%S)
-    local logfile="capture_${timestamp}.txt"
-    echo "Saving output to $logfile ..."
-    "$@" |& tee "$logfile"
-}
+# tools.zsh — vf, pdf, open override, todo
 
 # Fuzzy find & edit
 vf() {
@@ -15,19 +7,6 @@ vf() {
     if [[ -n $file ]]; then
         $EDITOR "$file"
     fi
-}
-
-# Kotlin compile, run, cleanup
-krun() {
-    if [[ -z "$1" ]]; then
-        echo "Usage: krun <file.kt>"
-        return 1
-    fi
-    local file="$1"
-    local name="${file%.*}"
-    kotlinc "$file" -include-runtime -d "${name}.temp.jar" && \
-    java -jar "${name}.temp.jar" && \
-    rm "${name}.temp.jar"
 }
 
 # Open PDF in Sioyek (new window)
@@ -56,6 +35,12 @@ fuck() {
 open() {
     if [[ $# -eq 0 ]]; then
         /usr/bin/open .
+        return
+    fi
+
+    # Pass flags through directly to system open (fixes open -a, open -R, etc.)
+    if [[ "$1" == -* ]]; then
+        /usr/bin/open "$@"
         return
     fi
 

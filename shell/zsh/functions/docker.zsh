@@ -9,7 +9,13 @@ dimg() {
 }
 
 dstop() {
-    docker stop $(docker ps -q)
+    local ids
+    ids=$(docker ps -q)
+    if [[ -n "$ids" ]]; then
+        docker stop $ids
+    else
+        echo "No running containers to stop."
+    fi
 }
 
 dclean() {

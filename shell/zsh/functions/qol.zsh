@@ -12,13 +12,13 @@ timer() {
 }
 
 copy-file-contents() {
-    cat "$1" | pbcopy
-    echo "📋 Copied contents of $1"
-}
-
-copy-path() {
-    printf '%s' "$PWD" | pbcopy
-    echo "📋 Copied: $PWD"
+    if [[ -f "$1" ]]; then
+        pbcopy < "$1"
+        echo "📋 Copied contents of $1"
+    else
+        echo "copy-file-contents: file not found: $1" >&2
+        return 1
+    fi
 }
 
 myip() {
