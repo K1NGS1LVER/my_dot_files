@@ -49,14 +49,17 @@ gh/.config/gh/config.yml
 
 # --- BACKUPS ---
 **/*~
-**/*.bak 
+**/*.bak
+**/*.bak.*
 *.bak
 **/*.BACKUPS
+**/*.mdb
 goose/.config/goose/config.yaml.bak*
 karabiner/.config/karabiner/automatic_backups/
 yazi/.config/yazi/yazi.toml-*
 zed/.config/zed/prompts/
 zed/.config/zed/settings_backup.json
+.config/simple-update-notifier/
 
 
 # --- RAYCAST ---
@@ -104,6 +107,7 @@ goose/.config/goose/
 .gemini/
 .ollama/
 opencode
+.opencode/
 .aider*
 .cursor/
 .windsurf/
