@@ -1,187 +1,146 @@
-# Cheatsheet
+# Dotfiles Cheatsheet
 
-Commands work in both Zsh and Nushell unless noted otherwise.
+> **One-Liner**: *High-frequency reference card for daily terminal shortcuts, project switching, editor navigation, and system diagnostics.*
 
-## Shell
+All commands are synchronized across **Zsh**, **Nushell**, **Bash**, and **Fish** via `shell/shared/` unless explicitly annotated.
 
-| Command | Action |
-|---|---|
-| `reload` | Reload shell config (Zsh: `source ~/.zshrc`, Nu: `exec nu`) |
-| `nvconfig` | Open Neovim config |
-| `nvguide` | Open setup guide in Neovim |
-| `nvcheat` | Open this cheatsheet in Neovim |
-| `up` | Update all package managers (brew, npm, pipx, gem, bob, …) |
-| `cleanup` | Purge brew cache, Docker pruning, npm cache |
-| `nu-regen-cache` | Regenerate Nushell tool init caches (run after upgrading carapace/fzf/starship/zoxide) |
+---
 
-## Navigation
+## 1. Directory Navigation
 
-| Command | Action |
-|---|---|
-| `y` | Open Yazi; sync shell cwd on exit |
-| `yazi` | Open Yazi directly |
-| `ntmux` | Attach to or create the default Zellij session (`dan`) |
-| `ttmux` / `t` | Attach to or create the default abduco session (`main`) |
-| `tkill <name>` / `tk` | Kill an abduco session matching `<name>` |
-| `home` | `cd ~` |
-| `..` / `...` | Go up one / two directories |
-| `vf` | Fuzzy find a file and open in `$EDITOR` |
-| `Ctrl+F` | Fuzzy find any file under `~` and insert path at cursor |
-| `Ctrl+T` | Fuzzy find files in current directory (fzf default) |
+> **One-Liner**: *Effortless, keystroke-efficient directory hopping using universal relative dot shortcuts and home-row ergonomics.*
 
-## Browser Shortcuts
+| Command | Action | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `..` | `cd ..` | Traverse up 1 directory level. |
+| `...` | `cd ../..` | Traverse up 2 directory levels. |
+| `....` | `cd ../../..` | Traverse up 3 directory levels. |
+| `home` | `cd ~` | Jump straight to `$HOME` directory. |
+| `c` | `clear` | Fast terminal buffer clear. |
+| `y` | Yazi (Sync CWD) | Opens Yazi file manager. Upon quitting with `q`, your shell automatically `cd`s to the folder you were viewing. |
+| `vf` | Fuzzy Edit | Interactive `fzf` file picker with syntax-highlighted `bat` preview; opens selected file directly in Neovim. |
 
-```
-brave <site> [query]    # Open or search a site in Brave
-fox <site> [query]      # Open or search a site in Firefox
-wolf <site> [query]     # Open or search a site in LibreWolf
-```
+---
 
-Site keys: `yt`, `gh`, `g`, `rd`, `x`, `li`, `hi`, `mt`, `kb`, `gf`, `cl`, `cu`, `net`
+## 2. Project Switching (`ts`)
 
-## File Operations
+> **One-Liner**: *2-letter fuzzy sessionizer that discovers projects and attaches or switches isolated tmux sessions on the fly.*
 
-| Command | Action |
-|---|---|
-| `pdf <file>` | Open PDF in Sioyek (new window) |
-| `open <file>` | Dispatch by extension: code → nvim, pdf → sioyek, video → IINA |
-| `cap <cmd>` | Save stdout+stderr to a timestamped file |
-| `rec` | Record full terminal session with `script` (Zsh only) |
-| `bak <file>` | Backup a file with a timestamp suffix |
-| `extract <file>` | Unpack zip/tar/7z/rar by extension |
-| `C` | Pipe output to clipboard (`echo hello C`) |
+- **Command**: `ts` (or `tms`)
+- **Keybinding inside tmux**: `<prefix> f` (Ctrl+A f)
+- **In-Depth**: Searches `~/projects` (up to 2 levels deep) and `~/dotfiles` using `fd`. Selecting an entry via `fzf`:
+  - Sanitizes the directory name into a valid tmux session name (replacing spaces and dots with underscores).
+  - Checks if the session exists; if not, creates it detached in the project directory.
+  - If running outside tmux, attaches to it (`exec tmux attach-session`).
+  - If running inside tmux, cleanly switches the active client (`tmux switch-client -t <name>`).
+  - Directly passing a path (`ts ~/projects/my-app`) skips the picker and attaches immediately.
 
-## System Info & Utilities
+---
 
-| Command | Action |
-|---|---|
-| `fetch` | fastfetch system summary |
-| `sysinfo` | Nushell-native system summary |
-| `duf` | Disk usage (duf or df -h fallback) |
-| `big-files [n]` | Top N largest files in cwd |
-| `ports` | List listening TCP ports |
-| `myip` | Public + local IP address |
-| `isup <url>` | Check if a site is reachable |
-| `serve [port]` | Serve cwd over HTTP (default: 8080) |
-| `cheat <query>` | Fetch cheat.sh snippet |
-| `sshf` | Fuzzy-pick a host from `~/.ssh/config` and connect |
+## 3. Editor & Notes
 
-## Docker
+> **One-Liner**: *Lightning-fast 35ms Neovim 0.12 workflow backed by native LSP, insert-triggered Copilot, and quick vault access.*
 
-| Command | Action |
-|---|---|
-| `dps` | Running containers (name/status/ports) |
-| `dimg` | Local images (repo/tag/size) |
-| `dstop` | Stop all running containers |
-| `dclean` | Prune stopped containers + unused images |
-| `dsh` | Fuzzy-pick a running container and exec into it |
+| Command | Action | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `v` | `nvim` | 1-letter ultra-fast invocation for Neovim. |
+| `vim` | `nvim` | Standard muscle-memory fallback. |
+| `nvconfig` | `nvim ~/.config/nvim/` | Direct jump into your Neovim configuration root. |
+| `notes` | `clin --vault ~/notes` | Quick-search and write inside your personal Obsidian notes vault. |
+| `mini` | `NVIM_APPNAME=mini nvim` | Vanilla Neovim profile (no heavy plugins, used for pure editing and diagnostics). |
 
-## Notes & Tools
+### Essential Neovim Keybindings
+- `<leader>e` → Open Yazi file tree inside Neovim (`<leader>cw` opens cwd, `<leader>y` toggles).
+- `<leader>gg` → Open LazyGit TUI overlay.
+- `gc` / `gcc` → Native Neovim 0.10+ commenting on visual selection or current line.
+- `<leader>cc` → Toggle GitHub Copilot Chat (lazy-loaded on demand).
+- `gd` / `gr` / `K` → Native LSP Go to Definition, References, and Hover Documentation.
+- `<leader>th` → Open theme selector inside Neovim.
 
-| Command | Action |
-|---|---|
-| `note add <text>` | Append a timestamped note to `~/.notes.md` |
-| `note show` | Print all notes |
-| `note edit` | Open notes in nvim |
-| `todo` | Fuzzy-select a Todoist task to close |
-| `timer <seconds>` | Countdown timer with macOS notification |
-| `proj <name> [template]` | Scaffold a new project (basic/node/python) |
+---
 
-## Themes
+## 4. Modern File Listing & CLI Replacements
 
-| Command | Action |
-|---|---|
-| `theme-switch` | Fuzzy-pick a theme (Ghostty, Kitty, Alacritty, Zsh, Nushell, Neovim, Yazi, tmux) |
-| `theme-switch <name>` | Switch directly, e.g. `theme-switch gruvbox-dark` |
-| `theme-switch none` | Plain terminal, no theme/accent colors (Neovim keeps its last real theme - NvChad has no equivalent "no theme" mode) |
+> **One-Liner**: *Modern Rust-powered CLI utilities replacing legacy POSIX tools with icons, syntax highlighting, and Git indicators.*
 
-Already-open Zsh/Nushell panes need `reload` (or a fresh shell) to pick up a new palette; Ghostty/Kitty/tmux update live.
+| Command | Native Tool | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `ls` | `eza --icons` | Directory listing with filetype icons and color-coded file extensions. |
+| `ll` | `eza -lah --icons --git` | Full long-format listing displaying exact permissions, size, and inline Git status flags. |
+| `la` | `eza -A --icons` | List almost all files (including dotfiles). |
+| `cat <file>` | `bat` | File viewer with automatic syntax highlighting, line numbers, and Git gutter modifications. |
+| `help <cmd>` | `tldr` | Practical, community-driven cheatsheets and usage examples instead of dense manpages. |
+| `C` | `pbcopy` | Pipe directly to macOS clipboard (e.g. `pwd \| C` or `cat script.py \| C`). |
 
-## Local LLM
+---
 
-| Command | Action |
-|---|---|
-| `ai` | Chat with `Qwen2.5-Coder-7B-Instruct` (Q4_K_M) via llama-cli (interactive) |
+## 5. Smart File Opener (`open`)
 
-Runs `llama-cli` with the Qwen2.5-Coder GGUF quantized model from `~/models`, 99 GPU layers, 8192 context length, and a system prompt. Requires `llama-cli` binary in PATH and the model GGUF file present at `~/models`.
+> **One-Liner**: *Context-aware shell opener routing files to dedicated native apps by file extension with full macOS flag support.*
 
-### llama-server
-For agent harnesses that need an HTTP API endpoint, `llama-server` runs as a LaunchAgent (`com.dan.llama-server`) on port 8080. Manage it with:
+- **Command**: `open <target>`
+- **In-Depth Routing Table**:
+  - Code/Configs (`.py`, `.ts`, `.lua`, `.rs`, `.json`, `.md`, `.toml`, `.yaml`, `.sh`) → Opens in **Neovim**.
+  - Documents (`.pdf`) → Opens in **Sioyek** PDF reader (new window).
+  - Media (`.mp4`, `.mkv`, `.avi`, `.mp3`, `.wav`, `.flac`) → Opens in **IINA** media player.
+  - Web & Books (`.epub`, `.html`) → Opens in Apple Books / Browser.
+  - Flag Passthrough (`open -a AppName`, `open -R file`, `open -h`) → Passes straight to `/usr/bin/open "$@"`.
 
-```
-launchctl start com.dan.llama-server    # start
-launchctl stop com.dan.llama-server      # stop
-launchctl list | grep llama-server        # check status
-```
+---
 
-The server exposes an OpenAI-compatible API at `http://127.0.0.1:8080/v1`. `OPENAI_BASE_URL` is set in the shell env to point to this endpoint, so OpenCode and Pi Code will route to llama-server automatically. Pi Code config: `~/.pi/agent/models.json` (provider `llama-server`). The `ai` alias uses `llama-cli` for interactive chat; `llama-server` serves the same model for API clients. Both use the same flags: 99 GPU layers, 8192 context, no mmap, mlock.
+## 6. Git Shortcuts
 
-### jcode
-[jcode](https://github.com/1jehuang/jcode) is a Rust-based coding agent harness. Install via Homebrew:
+> **One-Liner**: *Single-character Git aliases covering 95% of daily commit, branch, and inspection workflows.*
 
-```
-brew tap 1jehuang/jcode
-brew install jcode
-```
+| Alias | Command | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `lg` | `lazygit` | Terminal TUI for visual staging, interactive rebasing, and merge resolution. |
+| `g` | `git` | Base git command. |
+| `gs` | `git status` | Clean status overview of modified, staged, and untracked files. |
+| `gd` | `git diff` | Diff of unstaged working tree changes. |
+| `gc` | `git commit` | Commit staged changes. |
+| `gp` | `git push` | Push committed changes to tracking remote. |
 
-Connect to the local model via Ollama:
+---
 
-```
-jcode login --provider ollama
-jcode --provider ollama --model qwen2.5-coder:7b run 'hello'
-```
+## 7. Docker Containers & Images
 
-Note: jcode has a grammar compatibility issue with llama-server's OpenAI-compatible endpoint, so Ollama is the recommended provider for jcode. The model needs to be pulled into Ollama once (`ollama pull qwen2.5-coder:7b`). The `ai` alias uses `llama-cli` for interactive chat; Ollama serves the same model for API clients.
+> **One-Liner**: *High-speed Docker management shortcuts with fuzzy container execution and guarded cleanup.*
 
-## Git
+| Command | Action | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `dps` | Docker Process List | Tabular overview of running containers (`Name`, `Status`, `Ports`). |
+| `dimg` | Docker Images | Formatted list of local images (`Repository`, `Tag`, `Size`). |
+| `dsh` | Interactive Shell | Fuzzy-selects a running container via `fzf` and drops you into an interactive `/bin/sh` session. |
+| `dstop` | Safe Container Stop | Stops all running containers; safely guards against errors if no containers are running. |
+| `dclean` | System Prune | Prunes stopped containers, dangling build caches, and unused images (`docker system prune -af`). |
 
-| Command | Action |
-|---|---|
-| `lg` | LazyGit |
-| `g` | git |
-| `gs` | git status |
-| `gd` | git diff |
-| `gc` | git commit |
-| `gp` | git push |
+---
 
-## Kotlin
+## 8. Themes & System Utilities
 
-| Command | Action |
-|---|---|
-| `k` | kotlin REPL |
-| `kc` | kotlinc compiler |
-| `krun <file.kt>` | Compile, run, and clean up a Kotlin file |
+> **One-Liner**: *Coordinated system maintenance, color palette switching, and offline AI assistance.*
 
-## Ghostty
+| Command | Action | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `theme-switch` | Theme Picker | Launches an interactive `fzf` selector to switch themes simultaneously across Ghostty, Kitty, Neovim, Yazi, Tmux, Zsh, and Nushell. |
+| `theme-switch <name>`| Direct Switch | Switches directly to `<name>` (e.g. `theme-switch monokai-pro`). |
+| `dark` | Toggle Dark Mode | Toggles macOS system appearance between light and dark. |
+| `gray` | Toggle Grayscale | Toggles macOS screen filter to high-focus black-and-white. |
+| `ai` | Offline LLM | Runs `llama-cli` with Qwen 2.5 Coder 7B (GGUF Q4_K_M) utilizing Apple Silicon Metal GPU offload (99 layers). |
+| `anim` | Anime Streaming | Launches `ani-cli` terminal client for searching and streaming anime episodes. |
+| `timer <sec>` | Countdown Timer | Visual terminal countdown; triggers a native macOS banner alert upon completion. |
+| `goodnight` | Nightly Maintenance | Reaps zombie language server processes, cleans caches, and runs machine maintenance. |
 
-| Binding | Action |
-|---|---|
-| `cmd+shift+r` | Reload config |
-| `cmd+shift+o` | Toggle background transparency |
+---
 
-## Neovim
+## 9. Diagnostics & Repository Deployment
 
-| Binding | Action |
-|---|---|
-| `<leader>gg` | LazyGit |
-| `<leader>xx` | Diagnostics list |
-| `<leader>z` | Zen mode |
-| `<leader>tt` | Toggle transparency |
-| `<leader>sl` | Restore last session (cwd-scoped) |
-| `<leader>sd` | Don't save session on exit |
-| `<leader>db/dc/du` | DAP basics |
+> **One-Liner**: *Self-healing deployment and single-pass automated validation for the entire environment.*
 
-## AeroSpace
-
-| Binding | Action |
-|---|---|
-| `alt-1..9` | Switch workspace |
-| `alt-shift-1..9` | Move focused window to workspace |
-| `alt-tab` | Jump to previous workspace |
-| `alt-space` | Toggle floating/tiling |
-
-## Rules
-
-- The repo is the source of truth. Edit repo targets, not symlink destinations.
-- Runtime state stays out of git.
-- After editing shared modules (`shell/shared/`), update both the `.zsh` and `.nu` file.
+| Command | Script Path | In-Depth Behavior |
+| :--- | :--- | :--- |
+| `doctor` | `scripts/doctor` | Comprehensive 28-point automated diagnostic suite checking symlink resolution, shell syntax, Neovim checkhealth, active Mason LSP servers, AeroSpace dry-run, and theme registry agreement. |
+| `deploy` | `scripts/deploy` | Idempotently materializes all 37 symlinks from `scripts/lib/manifest.sh`, backs up replaced files to `~/.dotfiles-backup/`, and cleans obsolete links. |
+| `reload` | Shell Builtin | Re-sources your active shell configuration (`source ~/.zshrc` in Zsh; `exec nu` in Nushell; `source ~/.config/fish/config.fish` in Fish). |
+| `update-brew`| `scripts/update-brew` | Runs `brew update`, `brew upgrade`, and purges orphaned ghost GUI casks. |
