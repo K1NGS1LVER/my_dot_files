@@ -1,83 +1,71 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+    # --- NAVIGATION ---
+    alias ..='cd ..'
+    alias ...='cd ../..'
+    alias ....='cd ../../..'
+    alias home='cd ~'
+    alias c='clear'
 
-    # --- ALIASES ---
+    # --- FILE LISTING (eza) ---
     alias ls='eza --icons'
     alias ll='eza -lah --icons --git'
     alias la='eza -A --icons'
-    alias c='clear'
-    alias home='cd ~'
-    
-    # Git
+
+    # --- MODERN CLI REPLACEMENTS ---
+    alias cat='bat'
+    alias help='tldr'
+
+    # --- GIT ---
+    alias g='git'
     alias gs='git status'
-    alias ga='git add'
+    alias gd='git diff'
     alias gc='git commit'
     alias gp='git push'
+    alias lg='lazygit'
 
-    # Editor
-    alias vim='nvim'
-    alias vi='nvim'
+    # --- EDITOR & NOTES ---
     alias v='nvim'
+    alias vim='nvim'
+    alias nvconfig='nvim ~/.config/nvim/'
+    alias notes='clin --vault ~/notes'
+    alias mini='NVIM_APPNAME=mini nvim'
 
-    # --- KOTLIN ---
-    alias k='kotlin'
-    alias kc='kotlinc'
-    
-    function krun
-        if test (count $argv) -eq 0
-            echo "Usage: krun <file.kt>"
-            return 1
-        end
-        set -l file $argv[1]
-        set -l name (string replace -r '\.kt$' '' $file)
-        kotlinc $file -include-runtime -d "$name.temp.jar"
-        and java -jar "$name.temp.jar"
-        and rm "$name.temp.jar"
-    end
+    # --- MEDIA & SYSTEM ---
+    alias anim='ani-cli'
+    alias gray='toggle-gray'
+    alias dark='toggle_dark'
+    alias reload='source ~/.config/fish/config.fish; and echo "Config reloaded! ♻️"'
+    alias explain='/Users/dan/dotfiles/scripts/explain_tree.py'
+    alias deploy='/Users/dan/dotfiles/scripts/deploy'
+    alias doctor='/Users/dan/dotfiles/scripts/doctor'
 
     # --- ENV VARS ---
-    set -gx JAVA_HOME (/usr/libexec/java_home)
     set -gx EDITOR nvim
+    if test -x /usr/libexec/java_home
+        set -gx JAVA_HOME (/usr/libexec/java_home 2>/dev/null)
+    end
 
-    # --- ALIASES ---
-    alias reload='source ~/.config/fish/config.fish; and echo "Config reloaded! ♻️"'
-    alias meow='echo'
-    
-    # NvChad / Dev
-    alias og='/usr/bin/vim'
-    alias lg='lazygit'
-    alias nv='nvim'
-    alias nvconfig='nvim ~/.config/nvim/'
-    alias nvguide='nvim ~/dotfiles/docs/SETUP_GUIDE.md'
-    alias nvcheat='nvim ~/dotfiles/docs/CHEATSHEET.md'
-    
-    # Recording
-    alias rec='script recording_(date +%Y%m%d_%H%M%S).txt'
+    # Fix PATH
+    fish_add_path $HOME/dotfiles/scripts
+    fish_add_path $HOME/.local/bin
+    fish_add_path $HOME/.cargo/bin
+    fish_add_path /opt/homebrew/bin
 
-    # --- FUNCTIONS ---
-    
-    # PDF (Sioyek)
+    # --- TOOLS ---
+    type -q zoxide; and zoxide init fish | source
+    type -q fzf; and fzf --fish | source
+    type -q starship; and starship init fish | source
+
+    # --- PDF (Sioyek) ---
     function pdf
         /Applications/sioyek.app/Contents/MacOS/sioyek --new-window $argv > /dev/null 2>&1 &
         disown
     end
 
-    # Yazi wrappers
-    function __run_yazi
-        if test -n "$ZELLIJ"
-            env TERM=xterm-kitty YAZI_CONFIG_HOME="$HOME/.config/yazi/zellij" command yazi $argv
-        else
-            command yazi $argv
-        end
-    end
-
-    function yazi
-        __run_yazi $argv
-    end
-
+    # --- YAZI WRAPPER ---
     function y
         set tmp (mktemp -t "yazi-cwd.XXXXXX")
-        __run_yazi $argv --cwd-file="$tmp"
+        command yazi $argv --cwd-file="$tmp"
         if test -f "$tmp"
             set cwd (cat "$tmp")
             if test -n "$cwd" -a "$cwd" != "$PWD" -a -d "$cwd"
@@ -87,167 +75,21 @@ if status is-interactive
         end
     end
 
-    # Brave Browser Smart Search
-    function brave
-        if test (count $argv) -eq 0
-            open -a "Brave Browser"
-            return
-        end
-
-        set -l sites \
-            "youtube|yt;https://www.youtube.com;/results?search_query=" \
-            "github|gh;https://github.com;/search?q=" \
-            "linkedin|li;https://www.linkedin.com;/search/results/all/?keywords=" \
-            "christ|cu;https://christuniversity.in;" \
-            "hianime|hi;https://hianimez.is/home;https://hianimez.is/search?keyword=" \
-            "monkeytype|mt;https://monkeytype.com;" \
-            "keybr|kb;https://www.keybr.com;" \
-            "greasyfork|gf;https://greasyfork.org;/scripts/search?q=" \
-            "openjs;https://openuserjs.org;/?q=" \
-            "classroom|cl;https://classroom.google.com;" \
-            "reddit|rd;https://www.reddit.com;/search/?q=" \
-            "x|twitter;https://x.com;/search?q=" \
-            "google|g;https://www.google.com;/search?q=" \
-            "net;http://192.168.100.100:8090/;"
-
-        set -l keyword $argv[1]
-        set -l query_args $argv[2..-1]
-        
-        for site in $sites
-            set -l parts (string split ";" $site)
-            set -l aliases (string split "|" $parts[1])
-            set -l base $parts[2]
-            set -l search_path $parts[3]
-
-            if contains -- $keyword $aliases
-                if test (count $query_args) -eq 0
-                    open -a "Brave Browser" "$base"
-                else
-                    set -l query (string join "+" $query_args)
-                    
-                    if test -n "$search_path" -a "$search_path" != "$base"
-                        if string match -q "/*" "$search_path"
-                             open -a "Brave Browser" "$base$search_path$query"
-                        else
-                             open -a "Brave Browser" "$search_path$query"
-                        end
-                    else
-                        open -a "Brave Browser" "$base$query"
-                    end
-                end
-                return
-            end
-        end
-
-        # Default
-        if string match -q "http*" $keyword
-             open -a "Brave Browser" "$keyword"
-        else
-             open -a "Brave Browser" "https://$keyword"
-        end
-    end
-
-    # --- Zellij Auto-Rename ---
+    # --- ZELLIJ AUTO-RENAME ---
     if test -n "$ZELLIJ"
         function zellij_rename --on-event fish_prompt
             command nohup zellij action rename-tab (prompt_pwd) >/dev/null 2>&1
         end
     end
 
-    # --- COLORS (Catppuccin Macchiato) ---
-    set -g fish_color_normal cad3f5
-    set -g fish_color_command 8aadf4
-    set -g fish_color_param f0c1ce
-    set -g fish_color_keyword c6a0f6
-    set -g fish_color_quote a6da95
-    set -g fish_color_redirection f5bde6
-    set -g fish_color_end f5a97f
-    set -g fish_color_error ed8796
-    set -g fish_color_gray 6e738d
-    set -g fish_color_selection --background=363a4f
-    set -g fish_color_search_match --background=363a4f
-    set -g fish_color_operator 8bd5ca
-    set -g fish_color_escape ee99a0
-    set -g fish_color_autosuggestion 6e738d
-
-    # --- TOOLS ---
-    # Initialize Zoxide (smarter cd)
-    zoxide init fish | source
-
-    # Initialize FZF
-    if type -q fzf
-        fzf --fish | source
-    end
-
-
-    # --- TODO TOOL ---
-    # Using your new Go binary
-    alias todo="todo-go list '(today | overdue | #Inbox | recurring)' | fzf --delimiter='\t' --with-nth=2 --header 'Inbox, Today & Recurring: Select to complete (ESC cancel)' --height 40% --reverse | awk '{print \$1}' | xargs todo-go close"
-
-    # Fix PATH to include local bin and cargo
-    fish_add_path $HOME/.local/bin
-    fish_add_path $HOME/.cargo/bin
-    fish_add_path /opt/homebrew/bin
-
-    # The Fuck (Lazy Load)
-    function fuck
-        functions --erase fuck
-        thefuck --alias | source
-        fuck $argv
-    end
-
+    # --- ZELLIJ ATTACH HELPER ---
     function ntmux
         if count $argv > /dev/null
             zellij $argv
         else
-            set -l roll (random 1 10)
-            if test $roll -eq 1
-                echo "🎲 Lucky roll! Generating random name..."
-                zellij
-            else
-                zellij attach -c "dan"
-            end
+            zellij attach -c "dan" 2>/dev/null; or zellij
         end
     end
-
-    # --- FASTFETCH WRAPPER ---
-    function fetch
-        if test (count $argv) -eq 0
-            fastfetch
-            return
-        end
-
-        switch $argv[1]
-            case "go"
-                fastfetch --logo ~/.config/fastfetch/logos/go.txt --logo-type file --logo-color-1 blue
-            case "arch"
-                fastfetch --logo arch
-            case "random"
-                set -l logos arch android apple windows linux ubuntu fedora debian
-                set -l random_logo (random choice $logos)
-                echo "Displaying logo: $random_logo"
-                fastfetch --logo $random_logo
-            case "*"
-                fastfetch --logo $argv[1]
-        end
-    end
-
-    # Neovim Playground Alias
-    alias nv-play="NVIM_APPNAME=nvim-playground nvim"
-
-    # Neovim Kickstart Alias
-    alias nv-kick="NVIM_APPNAME=nvim-kickstart nvim"
-
-    # Neovim Mini Alias
-    alias mini="NVIM_APPNAME=mini nvim"
-
-    # Cisco Packet Tracer
-    alias packettracer='open "/Applications/Cisco Packet Tracer 9.0.0/Cisco Packet Tracer 9.0.app"'
-
-    alias explain="$HOME/scripts/explain_tree.py"
-
-    # Starship Prompt
-    starship init fish | source
 
     # --- FILE ASSOCIATIONS ---
     function fish_command_not_found
@@ -255,11 +97,11 @@ if status is-interactive
         if test -f "$cmd"
             set -l ext (string split -r -m1 . $cmd)[2]
             switch (string lower "$ext")
-                case py js ts java cpp c go rs html css sh
+                case py js ts java cpp c go rs html css sh toml yaml yml json md lua
                     nvim $cmd
                 case pdf
                     pdf $cmd
-                case mp4 mov avi mkv mp3 wav ogg
+                case mp4 mov avi mkv mp3 wav ogg flac
                     open -a IINA $cmd
                 case '*'
                     open $cmd
@@ -268,18 +110,6 @@ if status is-interactive
             __fish_default_command_not_found_handler $argv
         end
     end
-
-    # --- UNIVERSAL HOME DIRECTORY FUZZY FINDER ---
-    function fzf_universal_file
-        set -l cmd "fd --type f --hidden --follow --exclude .git --exclude Library --exclude .cache --exclude node_modules --exclude .cargo --exclude .npm . ~"
-        set -l file (eval $cmd | fzf --reverse --preview "bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {} 2>/dev/null")
-        if test -n "$file"
-            commandline -i -- $file
-        end
-        commandline -f repaint
-    end
-
-    bind \cf fzf_universal_file
 end
 
 # Airflow Assignment Environment Configuration

@@ -18,30 +18,10 @@ command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 export EDITOR="nvim"
 export JAVA_HOME=$(/usr/libexec/java_home 2>/dev/null)
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export BAT_THEME="Catppuccin Macchiato"
 
 # --- ALIASES ---
 alias reload='source ~/.bashrc && echo "Config reloaded! ♻️"'
-alias c='clear'
-alias home='cd ~'
-alias n='nvim'
-alias v='nvim'
-alias vi='nvim'
-alias vim='nvim'
-alias nv='nvim'
-alias lg='lazygit'
-
-# Better ls with colors (using eza)
-alias ls='eza --icons'
-alias ll='eza -lah --icons --git'
-alias la='eza -A --icons'
-
-# Modern CLI Replacements
-alias cat='bat'
-alias du='dust'
-alias ps='procs'
-alias sed='sd'
-alias help='tldr'
+[[ -f "$HOME/dotfiles/shell/shared/aliases.zsh" ]] && source "$HOME/dotfiles/shell/shared/aliases.zsh"
 
 # --- FUNCTIONS ---
 y() {
