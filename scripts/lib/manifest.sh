@@ -36,7 +36,6 @@ LINKS=(
   "gh/.config/gh|.config/gh"
   "ghostty/.config/ghostty|.config/ghostty"
   "goose/.config/goose|.config/goose"
-  "gtk-3.0/.config/gtk-3.0|.config/gtk-3.0"
   "iterm2/.config/iterm2|.config/iterm2"
   "karabiner/.config/karabiner|.config/karabiner"
   "kitty/.config/kitty|.config/kitty"
@@ -47,11 +46,11 @@ LINKS=(
   "nvim/.config/nvim|.config/nvim"
   "qBittorrent/.config/qBittorrent|.config/qBittorrent"
   "raycast/.config/raycast|.config/raycast"
-  "simple-update-notifier/.config/simple-update-notifier|.config/simple-update-notifier"
   "sioyek/.config/sioyek|.config/sioyek"
   "tmux/.config/tmux|.config/tmux"
   "yazi/.config/yazi|.config/yazi"
   "zed/.config/zed|.config/zed"
+  "zellij/.config/zellij|.config/zellij"
 )
 
 # Home-relative paths that must NOT exist as symlinks anymore.
@@ -59,4 +58,6 @@ LINKS=(
 OBSOLETE_LINKS=(
   ".p10k.zsh"       # p10k retired; starship owns the prompt, nothing sources it
   ".config/atuin"   # atuin removed from the stack; repo package no longer exists
+  ".config/gtk-3.0" # empty dummy directory removed
+  ".config/simple-update-notifier" # npm cache artifact removed
 )

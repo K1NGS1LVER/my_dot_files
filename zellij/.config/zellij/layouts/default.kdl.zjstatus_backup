@@ -1,0 +1,53 @@
+layout {
+    pane split_direction="vertical" {
+        pane
+    }
+
+    pane size=1 borderless=true {
+        plugin location="file:/Users/dan/.config/zellij/plugins/zjstatus.wasm" {
+            // Modern ZJStatus Config with Templates
+            // Active Purple: #6B5C8F
+
+            format_left   "#[fg=#363a4f] {mode} #[fg=#363a4f]│ {tabs}"
+            format_right  "#[fg=#6e738d,bg=#24273a]{datetime}"
+            format_space  "#[bg=#24273a]"
+
+            border_enabled  "false"
+            border_char     "─"
+            border_format   "#[fg=#6C7086]{char}"
+            border_position "top"
+
+            // Limit tab length to prevent UI breaking
+            tab_max_length "25"
+
+            // Mode Colors - DEFINED ALL MODES TO PREVENT CRASHES
+            mode_normal       "#[fg=#8087a2]normal"
+            mode_locked       "#[fg=#ed8796]locked"
+            mode_resize       "#[fg=#eed49f]resize"
+            mode_pane         "#[fg=#8aadf4]pane"
+            mode_tab          "#[fg=#6B5C8F]tab"
+            mode_scroll       "#[fg=#eed49f]scroll"
+            mode_enter_search "#[fg=#eed49f]ent-search"
+            mode_search       "#[fg=#eed49f]search"
+            mode_rename_tab   "#[fg=#eed49f]ren-tab"
+            mode_rename_pane  "#[fg=#eed49f]ren-pane"
+            mode_session      "#[fg=#eed49f]session"
+            mode_move         "#[fg=#eed49f]move"
+            mode_prompt       "#[fg=#eed49f]prompt"
+            mode_tmux         "#[fg=#f5a97f]tmux"
+
+            // Tab Templates
+            tab_normal              "#[fg=#494d64] {index}. {name} "
+            tab_active              "#[fg=#6B5C8F,bold] {index}. {name} "
+            
+            // Indicators
+            tab_sync_indicator       "<> "
+            tab_fullscreen_indicator "[] "
+            tab_floating_indicator   "⬚ "
+
+            datetime        "#[fg=#6e738d] {format}"
+            datetime_format "%H:%M │ %a %d %b"
+            datetime_timezone "Asia/Kolkata"
+        }
+    }
+}

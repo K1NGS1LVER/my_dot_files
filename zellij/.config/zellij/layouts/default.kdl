@@ -1,0 +1,54 @@
+layout {
+    pane split_direction="vertical" {
+        pane
+    }
+
+    pane size=1 borderless=true {
+        plugin location="file:/Users/dan/.config/zellij/plugins/zjstatus.wasm" {
+            // Aggressively Optimized ZJStatus
+            
+            // 1. Removed {session} to save space
+            // 2. Shortened Mode names
+            format_left   "#[fg=#363a4f] {mode} #[fg=#363a4f]│ {tabs}"
+            
+            // 3. Shortened Date/Time (Just Time)
+            format_right  "#[fg=#6e738d,bg=#24273a] {datetime}"
+            format_space  "#[bg=#24273a]"
+
+            border_enabled  "false"
+            border_char     "─"
+            border_format   "#[fg=#6C7086]{char}"
+            border_position "top"
+
+            // 4. Aggressive Tab Truncation
+            tab_max_length "18"
+
+            // Mode Colors
+            mode_normal       "#[fg=#8087a2] N "
+            mode_locked       "#[fg=#ed8796] L "
+            mode_resize       "#[fg=#eed49f] R "
+            mode_pane         "#[fg=#8aadf4] P "
+            mode_tab          "#[fg=#6B5C8F] T "
+            mode_scroll       "#[fg=#eed49f] S "
+            mode_session      "#[fg=#eed49f] SES "
+            mode_move         "#[fg=#eed49f] M "
+            mode_prompt       "#[fg=#eed49f] ? "
+            mode_tmux         "#[fg=#f5a97f] TM "
+            mode_default_to_mode "pane"
+
+            // Tab Templates (Removed unnecessary spaces)
+            tab_normal              "#[fg=#494d64] {index}.{name} "
+            tab_active              "#[fg=#6B5C8F,bold] {index}.{name} "
+            
+            // Indicators
+            tab_sync_indicator       "<> "
+            tab_fullscreen_indicator "[] "
+            tab_floating_indicator   "⬚ "
+
+            // Minimal Time + Date
+            datetime        "#[fg=#6e738d] {format}"
+            datetime_format "%H:%M %d/%m" 
+            datetime_timezone "Asia/Kolkata"
+        }
+    }
+}
