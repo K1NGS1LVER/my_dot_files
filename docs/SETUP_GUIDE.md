@@ -1,116 +1,120 @@
-# Setup Guide
+# Setup & Bootstrap Guide
 
-Bootstrap and recovery reference.
-Run these on a fresh machine or after a repo clone.
+> **One-Liner**: *Deterministic 4-step bootstrap sequence for cloning, installing, linking, and verifying this entire dotfiles setup on a fresh Apple Silicon machine.*
 
-## 1. Install Packages
+Follow this guide when onboarding a new Mac or recovering your environment from scratch.
 
+---
+
+## 1. Package Installation (Homebrew)
+
+> **One-Liner**: *Installs all GUI casks, CLI binaries, fonts, and compiler toolchains declared in the single declarative Brewfile.*
+
+Run the bundle installer from your repository root:
 ```zsh
 brew bundle --file ~/dotfiles/Brewfile
 ```
 
-If this fails on an untrusted tap, trust the taps already listed in the Brewfile:
+### In-Depth Details
+- **Untrusted Taps**: If Homebrew reports `Refusing to load formula/cask from untrusted tap` (due to `HOMEBREW_REQUIRE_TAP_TRUST`), explicitly trust the required taps:
+  ```zsh
+  brew trust d99kris/nchat
+  brew trust mongodb/brew
+  brew trust steipete/tap
+  ```
+- **Formula vs Casks**: All core developer binaries (like `eza`, `bat`, `fzf`, `starship`, `yazi`, `zellij`, `sd`, `dust`, `procs`) and GUI applications (`Ghostty`, `AeroSpace`, `Firefox`, `Sioyek`, `IINA`) are versioned declaratively in [Brewfile](file:///Users/dan/dotfiles/Brewfile).
 
-```zsh
-brew trust <tap-name>
-```
+---
 
-## 2. Deploy Symlinks
+## 2. Symlink Deployment (`scripts/deploy`)
 
+> **One-Liner**: *Idempotent link engine that maps all repository folders into `$HOME` based on `scripts/lib/manifest.sh`.*
+
+Deploy all configurations:
 ```zsh
 ~/dotfiles/scripts/deploy
 ```
 
-This reads the link manifest in `scripts/lib/manifest.sh` and creates or repairs every symlink from the repo into `$HOME`.
-It is idempotent: running it again with nothing to do reports zero pending actions.
-Anything it replaces is backed up to `~/.dotfiles-backup/<timestamp>/` first.
-Use `scripts/deploy --dry-run` to preview changes without applying them.
+### In-Depth Details
+- **Dry-Run Mode**: Preview exact planned filesystem changes before touching disk:
+  ```zsh
+  ~/dotfiles/scripts/deploy --dry-run
+  ```
+- **Automated Backups**: If a destination file already exists as a non-symlink, `deploy` moves it safely into `~/.dotfiles-backup/<timestamp>/` before creating the symlink.
+- **Zellij & Dotfiles Tracking**: `zellij/.config/zellij` is symlinked directly into `~/.config/zellij`.
+- **Nushell Architecture Invariant**: Unlike other tools, `~/.config/nushell` remains a **real directory** on disk because Nushell writes runtime session history (`history.sqlite3*`) next to its config. Only `config.nu` and `env.nu` inside it are symlinked to the repo.
+- **Obsolete Cleanup**: Links marked in `OBSOLETE_LINKS` (like `.config/gtk-3.0` and `.config/simple-update-notifier`) are automatically retired.
+- **Theme State Materialization**: `deploy` calls `scripts/switch-theme --ensure` to bootstrap the active palette from [default-theme](file:///Users/dan/dotfiles/shell/shared/themes/default-theme) if missing.
 
-It also bootstraps the active theme state (`scripts/switch-theme --ensure`) if it is missing.
+---
 
-### Nushell is a special case
+## 3. Nushell Init Caching
 
-`~/.config/nushell` must be a real directory, not a symlink, because Nushell writes runtime history (`history.sqlite3*`) next to its config.
-Only `config.nu` and `env.nu` inside it are symlinked into the repo; the rest is local state.
+> **One-Liner**: *Generates pre-compiled shell initialization files to guarantee instant sub-20ms Nushell startup.*
 
-## 3. Generate Nushell Init Caches
-
-Nushell sources pre-generated init files for carapace, fzf, starship, and zoxide.
-`shell/nushell/env.nu` regenerates any that are missing automatically on shell startup, so this step is usually unnecessary.
-To force a refresh after upgrading any of those four tools, run from inside Nushell:
+Nushell loads pre-generated cache scripts for external tools (`carapace`, `fzf`, `starship`, `zoxide`) located in `~/.cache/<tool>/init.nu`. While [env.nu](file:///Users/dan/dotfiles/shell/nushell/env.nu) self-heals any missing caches on shell launch, you can force a fresh regeneration at any time from inside Nushell:
 
 ```nu
 nu-regen-cache
 ```
 
-## 4. Set Up the Notebook Environment
+---
 
-The Neovim notebook stack (molten, jupytext, quarto) runs on a dedicated, pinned Python venv, not the system python3.
+## 4. System Validation (`scripts/doctor`)
 
+> **One-Liner**: *Single-command automated test suite running 28 comprehensive validation checks across your entire machine.*
+
+Run the health check:
 ```zsh
-~/dotfiles/scripts/setup-notebook-env
+doctor  # or ~/dotfiles/scripts/doctor
 ```
 
-This creates `~/.venvs/nvim` from the versioned `python@3.13` Homebrew formula, installs the pinned packages in `nvim/.config/nvim/python-requirements.txt`, registers a Jupyter kernel named `nvim-venv`, and runs a smoke test.
+### In-Depth Details
+`scripts/doctor` executes with `set -uo pipefail` and validates:
+1. **Symlinks**: Every single manifest link resolves cleanly to an existing repository path, with zero broken symlinks under `~` or `~/.config`.
+2. **Nushell**: Init caches exist, `nu -l` boots cleanly, and `nu-check` syntax passes for all 14 `.nu` files.
+3. **Zsh**: Syntax passes for `.zshrc`, `.zprofile`, and all functions, and asserts that nothing is appended after `welcome-message` (preserving zoxide prompt hook integrity).
+4. **Neovim**: Verifies clean headless launch (0 errors), mini profile health, `checkhealth lazy vim.provider`, treesitter main branch tracking, and markdown parse correctness.
+5. **Theme Consistency**: Verifies all 7 theme artifacts (Ghostty, Kitty, Neovim, Yazi, Tmux, Zsh, Nushell) match the active theme in `registry.tsv`.
+6. **LSP Servers**: Verifies the 6 daily Mason servers (`pyright`, `ruff`, `lua_ls`, `bashls`, `jsonls`, `ts_ls`) are installed, along with system `gopls` and `rust-analyzer`.
+7. **AeroSpace**: Validates window manager syntax via `aerospace reload-config --dry-run`.
+8. **Git**: Asserts working tree cleanliness.
 
-## 5. Verify Everything
+---
 
-```zsh
-~/dotfiles/scripts/doctor
-```
+## 5. Post-Edit Reload Commands
 
-Runs every check in one pass: symlinks, Nushell startup, Zsh syntax, Neovim startup and health, the notebook venv, theme consistency, Homebrew, LSP servers, AeroSpace, and repo cleanliness.
-Each failure prints the exact command to fix it.
+> **One-Liner**: *Quick reload triggers to apply configuration edits live without restarting terminal windows.*
 
-## 6. Reload After Editing
+| Layer | Reload Trigger |
+| :--- | :--- |
+| **Zsh** | `reload` (or `source ~/.zshrc`) |
+| **Nushell** | `reload` (or `exec nu`) |
+| **Fish** | `reload` (or `source ~/.config/fish/config.fish`) |
+| **Bash** | `reload` (or `source ~/.bashrc`) |
+| **AeroSpace** | `aerospace reload-config` |
+| **Tmux** | `<prefix> R` (or `tmux source-file ~/.tmux.conf`) |
+| **Starship** | Automatic on next prompt press |
 
-| Shell | Command |
-|---|---|
-| Zsh | `exec zsh` or `reload` |
-| Nushell | `exec nu` or `reload` |
-| AeroSpace | `aerospace reload-config` |
-| tmux | `tmux source-file ~/.tmux.conf` |
-| Starship | Automatic on next prompt |
+---
 
-## Keeping Things Updated
+## 6. Keeping Things Updated
 
-Each pinned layer has its own deliberate update command, so nothing drifts silently:
+> **One-Liner**: *Declarative update commands to keep Homebrew, plugins, and CLI tools synchronized.*
 
-| Layer | Command |
-|---|---|
-| Nvim plugins | `update-nvim-plugins` |
-| Notebook venv | `update-notebook-env` (or `--upgrade` to bump pins) |
-| Homebrew | `update-brew` (or `--clean` to also prune ghost casks/cache via `brew_clean.sh`) |
+| Target | Command | In-Depth Behavior |
+| :--- | :--- | :--- |
+| **Homebrew** | `update-brew` | Updates formulas/casks and removes ghost casks whose `.app` bundles were manually deleted. |
+| **Full System** | `up` | Updates Homebrew sequentially, followed by parallel asynchronous updates of npm, pnpm, pipx, bob, tldr, and notes sync. |
+| **Neovim Plugins** | `:Lazy sync` | Synchronizes plugins inside Neovim; updates `lazy-lock.json`. |
 
-Each one verifies the result (health checks, smoke tests, or `brew bundle check`) before offering to commit.
-`update-nvim-plugins` restores the previous `lazy-lock.json` automatically if the health check fails after updating.
+---
 
-## Shell Architecture Reference
+## 7. Hard Invariants & Rules
 
-All shell config is under `~/dotfiles/shell/`.
-The shared modules are the single source of truth:
+> **One-Liner**: *Core architectural guardrails protecting stability and git cleanliness.*
 
-- `shared/paths.{zsh,nu}` - identical path order, edit both together
-- `shared/env.{zsh,nu}` - identical env vars, edit both together
-- `shared/aliases.{zsh,nu}` - unified alias map, edit both together
-- `shared/themes/` - one `.zsh` + `.nu` file per theme, plus `registry.tsv` and `default-theme`
-
-Root configs (`shell/zsh/.zshrc`, `shell/nushell/config.nu`) are lean entry points that source the modules.
-
-## Theme Switching
-
-```zsh
-theme-switch          # fzf picker with live preview
-theme-switch <name>   # switch directly, e.g. theme-switch gruvbox-dark
-```
-
-The active theme is runtime state, not config: `shell/shared/themes/registry.tsv` is the single source of truth for theme names across Kitty, Ghostty, and Neovim.
-The 5 per-app "active theme" files it writes are gitignored, so switching themes never dirties the repo.
-`scripts/switch-theme --ensure` bootstraps them from `shell/shared/themes/default-theme` if they are ever missing.
-
-## Rules
-
-- Edit the repo target, never the symlink destination.
-- Do not commit: history databases (`*.sqlite3`), init caches (`~/.cache/*/init.nu`), backup files (`*.bak`), theme state files, or plugin download bundles.
-- Keep the `shell/shared/` pairs in sync - if you change `paths.zsh`, change `paths.nu` too.
-- To add a new theme, add one row to `registry.tsv` plus the per-app asset files; never hand-edit a name map elsewhere.
+1. **Source of Truth**: Always edit files inside `~/dotfiles/`. Never edit the symlinks in `$HOME`.
+2. **Symmetry Rule**: When modifying aliases or environment variables, update the shared definitions in `shell/shared/` so Zsh, Nushell, Bash, and Fish remain synchronized.
+3. **Zero Committed Bloat**: Never commit `*.sqlite3`, `*.bak`, `*.mdb`, or temporary cache files. Git is your version control.
+4. **Safe Deletions**: Move deprecated files to `~/.Trash` instead of running destructive `rm` commands.
