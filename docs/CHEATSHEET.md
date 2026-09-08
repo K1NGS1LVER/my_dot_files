@@ -1,6 +1,6 @@
 # Dotfiles Cheatsheet
 
-> **One-Liner**: *High-frequency reference card for daily terminal shortcuts, project switching, editor navigation, and system diagnostics.*
+> _Comprehensive quick-reference guide for daily terminal shortcuts, window management, multiplexing, editor navigation, and system diagnostics._
 
 All commands are synchronized across **Zsh**, **Nushell**, **Bash**, and **Fish** via `shell/shared/` unless explicitly annotated.
 
@@ -8,139 +8,249 @@ All commands are synchronized across **Zsh**, **Nushell**, **Bash**, and **Fish*
 
 ## 1. Directory Navigation
 
-> **One-Liner**: *Effortless, keystroke-efficient directory hopping using universal relative dot shortcuts and home-row ergonomics.*
+> _Effortless, keystroke-efficient directory traversal using universal dot shortcuts, fuzzy pickers, and terminal file managers._
 
-| Command | Action | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `..` | `cd ..` | Traverse up 1 directory level. |
-| `...` | `cd ../..` | Traverse up 2 directory levels. |
-| `....` | `cd ../../..` | Traverse up 3 directory levels. |
-| `home` | `cd ~` | Jump straight to `$HOME` directory. |
-| `c` | `clear` | Fast terminal buffer clear. |
-| `y` | Yazi (Sync CWD) | Opens Yazi file manager. Upon quitting with `q`, your shell automatically `cd`s to the folder you were viewing. |
-| `vf` | Fuzzy Edit | Interactive `fzf` file picker with syntax-highlighted `bat` preview; opens selected file directly in Neovim. |
+| Command | Action          | Behavior & Details                                                                                                                                    |
+| :------ | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `..`    | `cd ..`         | Traverse up 1 directory level.                                                                                                                        |
+| `...`   | `cd ../..`      | Traverse up 2 directory levels.                                                                                                                       |
+| `....`  | `cd ../../..`   | Traverse up 3 directory levels.                                                                                                                       |
+| `home`  | `cd ~`          | Jump straight to the `$HOME` user directory.                                                                                                          |
+| `c`     | `clear`         | Fast terminal screen buffer clear.                                                                                                                    |
+| `y`     | Yazi (Sync CWD) | Launches Yazi terminal file manager. Exiting with `q` automatically changes your shell's current working directory to the directory you were viewing. |
+| `vf`    | Fuzzy Edit      | Interactive `fzf` file picker with syntax-highlighted `bat` preview; opens the selected file directly in Neovim.                                      |
 
 ---
 
-## 2. Project Switching (`ts`)
+## 2. Project Session Switching (`ts`)
 
-> **One-Liner**: *2-letter fuzzy sessionizer that discovers projects and attaches or switches isolated tmux sessions on the fly.*
+> _Two-letter fuzzy sessionizer discovering projects across `~/projects` and attaching or switching isolated multiplexer sessions._
 
-- **Command**: `ts` (or `tms`)
+- **Commands**: `ts` (or `tms`)
 - **Keybinding inside tmux**: `<prefix> f` (Ctrl+A f)
-- **In-Depth**: Searches `~/projects` (up to 2 levels deep) and `~/dotfiles` using `fd`. Selecting an entry via `fzf`:
-  - Sanitizes the directory name into a valid tmux session name (replacing spaces and dots with underscores).
-  - Checks if the session exists; if not, creates it detached in the project directory.
-  - If running outside tmux, attaches to it (`exec tmux attach-session`).
-  - If running inside tmux, cleanly switches the active client (`tmux switch-client -t <name>`).
-  - Directly passing a path (`ts ~/projects/my-app`) skips the picker and attaches immediately.
+
+### Behavior
+
+- Searches `~/projects` (up to 2 levels deep) and `~/dotfiles` using `fd`.
+- Selecting an entry via `fzf`:
+    - Sanitizes the directory name into a valid session name (replacing spaces and dots with underscores).
+    - Checks if the session exists; if not, creates it detached in the project directory.
+    - If running outside a multiplexer, attaches immediately (`exec tmux attach-session`).
+    - If running inside tmux, cleanly switches the active client (`tmux switch-client -t <name>`).
+    - Passing a directory path directly (`ts ~/projects/backend`) bypasses the interactive picker and attaches immediately.
 
 ---
 
-## 3. Editor & Notes
+## 3. AeroSpace Tiling Window Manager
 
-> **One-Liner**: *Lightning-fast 35ms Neovim 0.12 workflow backed by native LSP, insert-triggered Copilot, and quick vault access.*
+> _Modal, keyboard-driven window management dividing workflows across numbered and alphabetical workspaces._
 
-| Command | Action | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `v` | `nvim` | 1-letter ultra-fast invocation for Neovim. |
-| `vim` | `nvim` | Standard muscle-memory fallback. |
-| `nvconfig` | `nvim ~/.config/nvim/` | Direct jump into your Neovim configuration root. |
-| `notes` | `clin --vault ~/notes` | Quick-search and write inside your personal Obsidian notes vault. |
-| `mini` | `NVIM_APPNAME=mini nvim` | Vanilla Neovim profile (no heavy plugins, used for pure editing and diagnostics). |
+### Focus & Window Movement
 
-### Essential Neovim Keybindings
-- `<leader>e` → Open Yazi file tree inside Neovim (`<leader>cw` opens cwd, `<leader>y` toggles).
-- `<leader>gg` → Open LazyGit TUI overlay.
-- `gc` / `gcc` → Native Neovim 0.10+ commenting on visual selection or current line.
-- `<leader>cc` → Toggle GitHub Copilot Chat (lazy-loaded on demand).
-- `gd` / `gr` / `K` → Native LSP Go to Definition, References, and Hover Documentation.
-- `<leader>th` → Open theme selector inside Neovim.
+| Shortcut      | Action      | Scope / Context                           |
+| :------------ | :---------- | :---------------------------------------- |
+| `alt-h`       | Focus Left  | Focus adjacent window to the left         |
+| `alt-j`       | Focus Down  | Focus adjacent window below               |
+| `alt-k`       | Focus Up    | Focus adjacent window above               |
+| `alt-l`       | Focus Right | Focus adjacent window to the right        |
+| `alt-shift-h` | Move Left   | Swap active window with pane to the left  |
+| `alt-shift-j` | Move Down   | Swap active window with pane below        |
+| `alt-shift-k` | Move Up     | Swap active window with pane above        |
+| `alt-shift-l` | Move Right  | Swap active window with pane to the right |
+
+### Layout & Sizing
+
+| Shortcut      | Action           | Scope / Context                                       |
+| :------------ | :--------------- | :---------------------------------------------------- |
+| `alt-/`       | Toggle Tiles     | Toggle horizontal and vertical tiling layouts         |
+| `alt-,`       | Toggle Accordion | Toggle accordion horizontal and vertical layouts      |
+| `alt-space`   | Toggle Float     | Switch active window between floating and tiling mode |
+| `alt-shift-f` | Fullscreen       | Toggle fullscreen mode for the active window          |
+| `alt-minus`   | Resize Smaller   | Decrease active window dimensions by 50px             |
+| `alt-equal`   | Resize Larger    | Increase active window dimensions by 50px             |
+
+### Workspace Navigation
+
+| Shortcut             | Action            | Scope / Context                                                 |
+| :------------------- | :---------------- | :-------------------------------------------------------------- |
+| `alt-1` .. `alt-9`   | Switch Workspace  | Jump to numbered workspace 1 through 9                          |
+| `alt-a` .. `alt-z`   | Switch Workspace  | Jump to alphabetical workspace (e.g. `alt-m`, `alt-d`, `alt-o`) |
+| `alt-tab`            | Back & Forth      | Toggle between the current and previous workspace               |
+| `alt-shift-tab`      | Move Workspace    | Move current workspace to next monitor                          |
+| `alt-shift-1` .. `9` | Move to Workspace | Send focused window to numbered workspace                       |
+| `alt-shift-a` .. `z` | Move to Workspace | Send focused window to alphabetical workspace                   |
+
+### Application Shortcuts
+
+| Shortcut          | Target Application | Command Executed                                 |
+| :---------------- | :----------------- | :----------------------------------------------- |
+| `alt-b`           | Firefox            | `open -a "Firefox"`                              |
+| `alt-c`           | Calculator         | `open -a "Calculator"` (auto-floated)            |
+| `alt-f`           | Finder             | `open -a "Finder"` (auto-floated)                |
+| `alt-g` / `alt-t` | Ghostty            | `open -a "Ghostty"`                              |
+| `alt-w`           | WhatsApp           | `open -a "WhatsApp"`                             |
+| `alt-shift-0`     | Close Window       | Closes focused window (quits app if last window) |
 
 ---
 
-## 4. Modern File Listing & CLI Replacements
+## 4. Terminal Multiplexing (Zellij & Tmux)
 
-> **One-Liner**: *Modern Rust-powered CLI utilities replacing legacy POSIX tools with icons, syntax highlighting, and Git indicators.*
+> _Persistent workspace managers for multi-pane terminal workflows and detached session persistence._
 
-| Command | Native Tool | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `ls` | `eza --icons` | Directory listing with filetype icons and color-coded file extensions. |
-| `ll` | `eza -lah --icons --git` | Full long-format listing displaying exact permissions, size, and inline Git status flags. |
-| `la` | `eza -A --icons` | List almost all files (including dotfiles). |
-| `cat <file>` | `bat` | File viewer with automatic syntax highlighting, line numbers, and Git gutter modifications. |
-| `help <cmd>` | `tldr` | Practical, community-driven cheatsheets and usage examples instead of dense manpages. |
-| `C` | `pbcopy` | Pipe directly to macOS clipboard (e.g. `pwd \| C` or `cat script.py \| C`). |
+### Zellij (Primary Multiplexer)
+
+| Keybinding              | Mode / Action   | Behavior                                                         |
+| :---------------------- | :-------------- | :--------------------------------------------------------------- |
+| `Ctrl-a`                | Pane Mode       | Enter pane management mode                                       |
+| &nbsp;&nbsp;↳ `n`       | New Pane        | Split pane automatically                                         |
+| &nbsp;&nbsp;↳ `d`       | New Pane Down   | Split active pane vertically (below)                             |
+| &nbsp;&nbsp;↳ `x`       | Close Pane      | Terminate the active pane                                        |
+| &nbsp;&nbsp;↳ `z`       | Zoom Pane       | Toggle active pane fullscreen                                    |
+| &nbsp;&nbsp;↳ `w`       | Float Pane      | Toggle floating pane overlay                                     |
+| &nbsp;&nbsp;↳ `r`       | Rename Pane     | Input new name for focused pane                                  |
+| `Ctrl-t`                | Tab Mode        | Enter tab management mode                                        |
+| &nbsp;&nbsp;↳ `n`       | New Tab         | Create a new tab                                                 |
+| &nbsp;&nbsp;↳ `x`       | Close Tab       | Close active tab                                                 |
+| &nbsp;&nbsp;↳ `h` / `l` | Previous / Next | Navigate between tabs                                            |
+| &nbsp;&nbsp;↳ `r`       | Rename Tab      | Rename active tab                                                |
+| `Ctrl-n`                | Resize Mode     | Resize active pane using `h`, `j`, `k`, `l`, `+`, `-`            |
+| `Ctrl-s`                | Search Mode     | Scrollback search and pattern matching                           |
+| `Ctrl-g`                | Locked Mode     | Lock Zellij keybindings to pass all keys to nested terminal apps |
+
+### Tmux (Fallback Multiplexer)
+
+- **Prefix Key**: `Ctrl-a` (rebound from `Ctrl-b`)
+
+| Keybinding         | Action           | Behavior                                    |
+| :----------------- | :--------------- | :------------------------------------------ |
+| `<prefix> c`       | New Window       | Create a new tmux window                    |
+| `<prefix> \|`      | Split Horizontal | Split pane side-by-side                     |
+| `<prefix> -`       | Split Vertical   | Split pane stacked                          |
+| `<prefix> h/j/k/l` | Select Pane      | Navigate between panes in Vim directions    |
+| `<prefix> z`       | Zoom Pane        | Toggle pane zoom (fullscreen within window) |
+| `<prefix> f`       | Sessionizer      | Launch `tmux-sessionizer` project picker    |
+| `<prefix> d`       | Detach           | Detach client session safely                |
+| `<prefix> x`       | Kill Pane        | Terminate active pane                       |
 
 ---
 
-## 5. Smart File Opener (`open`)
+## 5. Modern CLI Replacements & Utilities
 
-> **One-Liner**: *Context-aware shell opener routing files to dedicated native apps by file extension with full macOS flag support.*
+> _High-performance command-line tools replacing legacy POSIX utilities with icons, syntax highlighting, and Git indicators._
+
+| Command | Native Tool              | Details                                                                                                                       |
+| :------ | :----------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| `ls`    | `eza --icons`            | Modern file listing with Nerd Font icons                                                                                      |
+| `ll`    | `eza -lah --icons --git` | Detailed file listing showing permissions, human sizes, and Git status                                                        |
+| `la`    | `eza -A --icons`         | List all files including hidden dotfiles                                                                                      |
+| `cat`   | `bat`                    | File display with syntax highlighting, line numbers, and Git modification markers                                             |
+| `help`  | `tldr`                   | Practical, community-driven example sheets instead of dense man pages                                                         |
+| `anim`  | `ani-cli`                | Terminal anime streaming launcher                                                                                             |
+| `C`     | Global Clipboard Pipe    | Appending `C` to any command (e.g. `cat file.json C`) tees output to screen and copies directly to macOS clipboard (`pbcopy`) |
+
+---
+
+## 6. Smart File Opener (`open`)
+
+> _Context-aware shell opener routing files to dedicated native applications by extension with native macOS flag passthrough._
 
 - **Command**: `open <target>`
-- **In-Depth Routing Table**:
-  - Code/Configs (`.py`, `.ts`, `.lua`, `.rs`, `.json`, `.md`, `.toml`, `.yaml`, `.sh`) → Opens in **Neovim**.
-  - Documents (`.pdf`) → Opens in **Sioyek** PDF reader (new window).
-  - Media (`.mp4`, `.mkv`, `.avi`, `.mp3`, `.wav`, `.flac`) → Opens in **IINA** media player.
-  - Web & Books (`.epub`, `.html`) → Opens in Apple Books / Browser.
-  - Flag Passthrough (`open -a AppName`, `open -R file`, `open -h`) → Passes straight to `/usr/bin/open "$@"`.
+
+### Routing Rules
+
+- **macOS Flag Passthrough**: Any flag (`open -a AppName`, `open -R /path`, `open -h`) passes directly to `/usr/bin/open`.
+- **Code & Text**: `.py`, `.ts`, `.lua`, `.rs`, `.json`, `.md`, `.toml`, `.yaml`, `.sh`, `.zsh` → opens in Neovim (`nvim`).
+- **PDF Documents**: `.pdf` → opens in Sioyek in a new window.
+- **Media Files**: `.mp4`, `.mkv`, `.mp3`, `.wav`, `.mov` → opens in IINA media player.
+- **Directories**: Opens target directory in Finder.
+- **Fallback**: Any unrecognized extension is passed to default system application via `/usr/bin/open`.
 
 ---
 
-## 6. Git Shortcuts
+## 7. Editor & Code Navigation (Neovim 0.12)
 
-> **One-Liner**: *Single-character Git aliases covering 95% of daily commit, branch, and inspection workflows.*
+> _Sub-37ms editor workflow backed by Neovim 0.12 native LSP client APIs, on-demand Mason tools, and lazy Copilot._
 
-| Alias | Command | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `lg` | `lazygit` | Terminal TUI for visual staging, interactive rebasing, and merge resolution. |
-| `g` | `git` | Base git command. |
-| `gs` | `git status` | Clean status overview of modified, staged, and untracked files. |
-| `gd` | `git diff` | Diff of unstaged working tree changes. |
-| `gc` | `git commit` | Commit staged changes. |
-| `gp` | `git push` | Push committed changes to tracking remote. |
+### General & Buffer Management
+
+| Keybinding   | Action           | Details                                             |
+| :----------- | :--------------- | :-------------------------------------------------- |
+| `v` / `vim`  | Open Neovim      | Launches `nvim`                                     |
+| `nvconfig`   | Config Directory | Opens `~/.config/nvim/` directly                    |
+| `mini`       | Minimal Profile  | Launches isolated `NVIM_APPNAME=mini` configuration |
+| `<leader>ff` | Find Files       | Interactive file picker via Telescope               |
+| `<leader>fw` | Live Grep        | Project-wide string search via ripgrep              |
+| `<leader>fb` | Find Buffers     | Switch between open editor buffers                  |
+| `<leader>th` | Theme Switcher   | NvChad interactive theme picker                     |
+| `<tab>`      | Next Buffer      | Navigate to next open buffer tab                    |
+| `<S-tab>`    | Previous Buffer  | Navigate to previous open buffer tab                |
+| `<leader>x`  | Close Buffer     | Close active buffer without disrupting window split |
+
+### Neovim 0.12 Native LSP Actions
+
+| Keybinding   | Action              | Details                                                              |
+| :----------- | :------------------ | :------------------------------------------------------------------- |
+| `gd`         | Go to Definition    | Jump to symbol declaration/definition                                |
+| `gr`         | References          | List all references across project in quickfix                       |
+| `gi`         | Implementation      | Jump to interface implementation                                     |
+| `K`          | Hover Documentation | Show LSP type signature and documentation popup                      |
+| `<leader>ra` | Rename Symbol       | Project-wide symbol rename via LSP                                   |
+| `<leader>ca` | Code Action         | Open available code actions and quickfixes                           |
+| `<leader>fm` | Format Code         | Format current buffer using active LSP formatter (e.g. ruff, lua_ls) |
+| `[d`         | Previous Diagnostic | Jump to previous diagnostic warning/error                            |
+| `]d`         | Next Diagnostic     | Jump to next diagnostic warning/error                                |
+
+### Native Commenting & AI
+
+| Keybinding    | Action                   | Details                                                     |
+| :------------ | :----------------------- | :---------------------------------------------------------- |
+| `gcc`         | Toggle Line Comment      | Comment/uncomment current line (native 0.12 comment engine) |
+| `gc`          | Toggle Selection Comment | In visual mode, comments/uncomments highlighted block       |
+| `<leader>cc`  | CopilotChat              | Toggles Copilot chat split (lazy loaded on demand)          |
+| `<leader>cce` | Copilot Explain          | Asks Copilot to explain selected code                       |
+| `<leader>ccf` | Copilot Fix              | Asks Copilot to diagnose and fix selected code              |
 
 ---
 
-## 7. Docker Containers & Images
+## 8. Git & Version Control
 
-> **One-Liner**: *High-speed Docker management shortcuts with fuzzy container execution and guarded cleanup.*
+> _Single-character Git aliases covering 95% of daily commit, branch, and inspection workflows._
 
-| Command | Action | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `dps` | Docker Process List | Tabular overview of running containers (`Name`, `Status`, `Ports`). |
-| `dimg` | Docker Images | Formatted list of local images (`Repository`, `Tag`, `Size`). |
-| `dsh` | Interactive Shell | Fuzzy-selects a running container via `fzf` and drops you into an interactive `/bin/sh` session. |
-| `dstop` | Safe Container Stop | Stops all running containers; safely guards against errors if no containers are running. |
-| `dclean` | System Prune | Prunes stopped containers, dangling build caches, and unused images (`docker system prune -af`). |
-
----
-
-## 8. Themes & System Utilities
-
-> **One-Liner**: *Coordinated system maintenance, color palette switching, and offline AI assistance.*
-
-| Command | Action | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `theme-switch` | Theme Picker | Launches an interactive `fzf` selector to switch themes simultaneously across Ghostty, Kitty, Neovim, Yazi, Tmux, Zsh, and Nushell. |
-| `theme-switch <name>`| Direct Switch | Switches directly to `<name>` (e.g. `theme-switch monokai-pro`). |
-| `dark` | Toggle Dark Mode | Toggles macOS system appearance between light and dark. |
-| `gray` | Toggle Grayscale | Toggles macOS screen filter to high-focus black-and-white. |
-| `ai` | Offline LLM | Runs `llama-cli` with Qwen 2.5 Coder 7B (GGUF Q4_K_M) utilizing Apple Silicon Metal GPU offload (99 layers). |
-| `anim` | Anime Streaming | Launches `ani-cli` terminal client for searching and streaming anime episodes. |
-| `timer <sec>` | Countdown Timer | Visual terminal countdown; triggers a native macOS banner alert upon completion. |
-| `goodnight` | Nightly Maintenance | Reaps zombie language server processes, cleans caches, and runs machine maintenance. |
+| Alias | Command      | Details                                                                   |
+| :---- | :----------- | :------------------------------------------------------------------------ |
+| `g`   | `git`        | Root Git command wrapper                                                  |
+| `gs`  | `git status` | Show working directory status                                             |
+| `gd`  | `git diff`   | Show unstaged file diffs                                                  |
+| `gc`  | `git commit` | Trigger commit editor                                                     |
+| `gp`  | `git push`   | Push committed changes to tracking remote                                 |
+| `lg`  | `lazygit`    | Terminal UI for visual staging, interactive rebase, and branch inspection |
 
 ---
 
-## 9. Diagnostics & Repository Deployment
+## 9. Guarded Docker Workflows
 
-> **One-Liner**: *Self-healing deployment and single-pass automated validation for the entire environment.*
+> _High-speed Docker management shortcuts with fuzzy container execution and guarded cleanup._
 
-| Command | Script Path | In-Depth Behavior |
-| :--- | :--- | :--- |
-| `doctor` | `scripts/doctor` | Comprehensive 28-point automated diagnostic suite checking symlink resolution, shell syntax, Neovim checkhealth, active Mason LSP servers, AeroSpace dry-run, and theme registry agreement. |
-| `deploy` | `scripts/deploy` | Idempotently materializes all 37 symlinks from `scripts/lib/manifest.sh`, backs up replaced files to `~/.dotfiles-backup/`, and cleans obsolete links. |
-| `reload` | Shell Builtin | Re-sources your active shell configuration (`source ~/.zshrc` in Zsh; `exec nu` in Nushell; `source ~/.config/fish/config.fish` in Fish). |
-| `update-brew`| `scripts/update-brew` | Runs `brew update`, `brew upgrade`, and purges orphaned ghost GUI casks. |
+| Command  | Action               | Details                                                                                    |
+| :------- | :------------------- | :----------------------------------------------------------------------------------------- |
+| `dexec`  | Fuzzy Container Exec | Selects a running container via `fzf` and attaches an interactive `sh` or `bash` shell     |
+| `dstop`  | Stop All Containers  | Checks for running containers; cleanly terminates them or informs if already idle          |
+| `dclean` | Safe Prune           | Prunes stopped containers, dangling images, and build cache without destroying volumes     |
+| `dprune` | Hard Reset           | Prompts for confirmation; resets stopped containers, unused networks, and dangling volumes |
+| `dstats` | Container Monitor    | Live terminal monitor of memory and CPU utilization per container                          |
+
+---
+
+## 10. Display, Theme & System Diagnostics
+
+> _Coordinated system maintenance, color palette switching, and offline AI assistance._
+
+| Command               | Action             | Details                                                                                |
+| :-------------------- | :----------------- | :------------------------------------------------------------------------------------- |
+| `theme-switch <name>` | Theme Switcher     | Coordinates color changes across Ghostty, Neovim, Yazi, Zellij, Tmux, Zsh, and Nushell |
+| `gray`                | Grayscale Toggle   | Toggles macOS system display grayscale filter for focus                                |
+| `dark`                | Dark Mode Toggle   | Toggles macOS system appearance between Light and Dark mode                            |
+| `goodnight`           | Sleep Routine      | Runs nightly system hygiene and process reaping                                        |
+| `ai`                  | Local Llama / Qwen | Launches local offline 7B coder LLM via `llama-cli` with GPU acceleration              |
+| `doctor`              | System Diagnostic  | Runs 28 automated checks verifying symlinks, shell syntax, LSP, and themes             |
+| `deploy`              | Link Deployment    | Idempotently synchronizes symlinks from repository manifest into `$HOME`               |
