@@ -26,7 +26,8 @@ return {
       vim.g.molten_virt_text_output = true
     end,
     keys = {
-      { "<leader>mi", "<cmd>MoltenInit<cr>", desc = "Molten: Initialize Kernel" },
+      { "<leader>mi", "<cmd>MoltenInit pythonvishal<cr>", desc = "Molten: Initialize pythonVishal Kernel" },
+      { "<leader>mI", "<cmd>MoltenInit<cr>", desc = "Molten: Select Kernel Prompt" },
       { "<leader>mc", "<cmd>MoltenReevaluateCell<cr>", desc = "Molten: Run Cell" },
       { "<leader>ml", "<cmd>MoltenEvaluateLine<cr>", desc = "Molten: Run Line" },
       { "<leader>mv", "<cmd>MoltenEvaluateVisual<cr>", mode = "v", desc = "Molten: Run Selection" },
