@@ -159,3 +159,12 @@ map({ "n", "t" }, "<leader>v", function()
   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
 end, { desc = "Toggle Vertical Terminal" })
 
+-- Open current notebook in browser
+map("n", "<leader>ob", function()
+  local file = vim.fn.expand("%:p")
+  local target = file:gsub("%.py$", ".ipynb")
+  vim.fn.jobstart({ "jupyter-notebook", target }, { detach = true })
+  vim.notify("Launching notebook in browser...", vim.log.levels.INFO, { title = "Jupyter" })
+end, { desc = "Open Notebook in Browser" })
+
+
