@@ -42,7 +42,6 @@ bashcompinit
 # zoxide's "init must be last" requirement. Keep such appends here, above
 # Plugins/Shared Modules, so External Tool Init below stays genuinely last.
 export AIRFLOW_HOME="/Users/dan/projects/data_eng_assignments/data_eng_27_june/airflow_home"
-export PATH="/Users/dan/.antigravity-ide/antigravity-ide/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 export PATH="$HOME/development/flutter/bin:$PATH"
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
