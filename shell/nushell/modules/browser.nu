@@ -69,3 +69,7 @@ def wolf [keyword?: string, ...query: string] {
     let browser = if ($nu.os-info.name == "macos") { "LibreWolf" } else { "librewolf" }
     browse $browser $keyword ...$query
 }
+def safari [keyword?: string, ...query: string] {
+    let browser = if ($nu.os-info.name == "macos") { "Safari" } else { "safari" }
+    browse $browser $keyword ...$query
+}
