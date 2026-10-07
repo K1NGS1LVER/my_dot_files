@@ -56,7 +56,7 @@ graph TD
 | **Editor**         | **Neovim**            | NvChad baseline modernized to Neovim 0.12 native LSP APIs (`vim.lsp.config`, `vim.lsp.enable`), on-demand Mason tool installation, InsertEnter Copilot loading, and a sub-37ms cold startup.        |
 | **File Manager**   | **Yazi**              | Asynchronous terminal file manager with directory previews, Kitty protocol image rendering, and bidirectional current working directory synchronization via `y`.                                    |
 | **Window Manager** | **AeroSpace**         | i3-like tiling window manager for macOS with deterministic workspace assignment (`1..9`, `A..Z`), smart gaps, and application floating rules.                                                       |
-| **Status Bar**     | **SketchyBar**          | Repo-managed translucent glass bar with AeroSpace workspaces, frontmost app, CPU/memory, battery, and clock modules. |
+| **Status Bar**     | **SketchyBar**          | Repo-managed monochrome Josean-style bar with AeroSpace workspaces, app icons, CPU, battery, volume, and clock modules. |
 | **Prompt**         | **Starship**          | Fast cross-shell prompt with unified configuration (`.config/starship.toml`) shared across Zsh, Nushell, Bash, and Fish.                                                                            |
 
 ---

@@ -69,15 +69,20 @@ brew trust steipete/tap
 
 ### Execute Bundle Installation
 
-Install all CLI binaries, fonts (`font-jetbrains-mono-nerd-font`), and GUI applications (`Ghostty`, `AeroSpace`, `SketchyBar`, `Firefox`, `Sioyek`, `IINA`):
+Install all CLI binaries, fonts (`font-jetbrains-mono-nerd-font`, `font-sf-pro`,
+`font-sketchybar-app-font`, and `sf-symbols`), and GUI applications (`Ghostty`,
+`AeroSpace`, `SketchyBar`, `Firefox`, `Sioyek`, `IINA`):
 
 ```zsh
 brew bundle --file ~/dotfiles/Brewfile
 ```
 
-SketchyBar uses the repo-managed Lua configuration under
-`sketchybar/.config/sketchybar`; its Lua runtime, audio helper, media helper,
-and application icon font are included in the Brewfile.
+SketchyBar uses the repo-managed shell configuration under
+`sketchybar/.config/sketchybar`, based on Josean Dev's menu-bar setup. It uses
+SF Pro, the SketchyBar application icon font, and the monochrome palette in
+`colors.sh`. AeroSpace workspace changes trigger the shell plugins, and
+workspace, front-app, calendar, volume, battery, and CPU items are deployed
+from the repository.
 
 To maintain and clean stale dependencies later, run the repository maintenance script:
 
