@@ -1,0 +1,5 @@
+Source: https://github.com/Aejkatappaja/dotfiles/tree/main/sketchybar
+
+This directory is vendored into the dotfiles repository. The workspace module
+is adapted for AeroSpace instead of Yabai; the remaining Lua layout and helper
+structure follows the upstream configuration.

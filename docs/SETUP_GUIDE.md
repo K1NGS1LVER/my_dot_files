@@ -69,11 +69,15 @@ brew trust steipete/tap
 
 ### Execute Bundle Installation
 
-Install all CLI binaries, fonts (`font-jetbrains-mono-nerd-font`), and GUI applications (`Ghostty`, `AeroSpace`, `Firefox`, `Sioyek`, `IINA`):
+Install all CLI binaries, fonts (`font-jetbrains-mono-nerd-font`), and GUI applications (`Ghostty`, `AeroSpace`, `SketchyBar`, `Firefox`, `Sioyek`, `IINA`):
 
 ```zsh
 brew bundle --file ~/dotfiles/Brewfile
 ```
+
+SketchyBar uses the repo-managed Lua configuration under
+`sketchybar/.config/sketchybar`; its Lua runtime, audio helper, media helper,
+and application icon font are included in the Brewfile.
 
 To maintain and clean stale dependencies later, run the repository maintenance script:
 
@@ -99,7 +103,7 @@ Every configuration in this repository is symlinked directly from `~/dotfiles` i
 ~/dotfiles/scripts/deploy
 ```
 
-### Complete Symlink Manifest (37 Entries)
+### Complete Symlink Manifest (38 Entries)
 
 The deployment script reads [scripts/lib/manifest.sh](../scripts/lib/manifest.sh) and creates the following links:
 
@@ -118,6 +122,7 @@ The deployment script reads [scripts/lib/manifest.sh](../scripts/lib/manifest.sh
 |                  | `.hushlogin`                                   | `~/.hushlogin`                                                | File Symlink      |
 |                  | `launchd/com.dan.ollama-flash-attention.plist` | `~/Library/LaunchAgents/com.dan.ollama-flash-attention.plist` | File Symlink      |
 | **Config Files** | `starship/.config/starship.toml`               | `~/.config/starship.toml`                                     | File Symlink      |
+|                  | `sketchybar/.config/sketchybar`                | `~/.config/sketchybar`                                       | Directory Symlink |
 |                  | `fish/config.fish`                             | `~/.config/fish/config.fish`                                  | File Symlink      |
 |                  | `qutebrowser/config.py`                        | `~/.config/qutebrowser/config.py`                             | File Symlink      |
 | **Config Dirs**  | `alacritty/.config/alacritty`                  | `~/.config/alacritty`                                         | Directory Symlink |

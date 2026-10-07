@@ -50,12 +50,13 @@ graph TD
 
 | Layer              | Primary Tool          | Architecture & Configuration Rationale                                                                                                                                                              |
 | :----------------- | :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Terminal**       | **Ghostty**           | Hardware-accelerated terminal with native macOS rendering, Kitty graphics protocol support, 75% opacity, 50-radius background blur, hidden titlebar, and JetBrainsMono Nerd Font.                   |
+| **Terminal**       | **Ghostty**           | Hardware-accelerated terminal with native macOS rendering, Kitty graphics protocol support, `none` theme at 35% opacity with 50-radius background blur, hidden titlebar, and JetBrainsMono Nerd Font. |
 | **Multiplexer**    | **Zellij**            | Modern terminal workspace manager with declarative layouts (`zellij/.config/zellij/config.kdl`), Nushell default shell, and modal keybindings. (Tmux preserved as a secondary compatibility layer). |
 | **Shells**         | **Zsh** + **Nushell** | Symmetric primary environments: Zsh for standard POSIX/scripting compatibility; Nushell for structured, tabular data pipelines. Backed by synchronized Bash and Fish configurations.                |
 | **Editor**         | **Neovim**            | NvChad baseline modernized to Neovim 0.12 native LSP APIs (`vim.lsp.config`, `vim.lsp.enable`), on-demand Mason tool installation, InsertEnter Copilot loading, and a sub-37ms cold startup.        |
 | **File Manager**   | **Yazi**              | Asynchronous terminal file manager with directory previews, Kitty protocol image rendering, and bidirectional current working directory synchronization via `y`.                                    |
 | **Window Manager** | **AeroSpace**         | i3-like tiling window manager for macOS with deterministic workspace assignment (`1..9`, `A..Z`), smart gaps, and application floating rules.                                                       |
+| **Status Bar**     | **SketchyBar**          | Repo-managed translucent glass bar with AeroSpace workspaces, frontmost app, CPU/memory, battery, and clock modules. |
 | **Prompt**         | **Starship**          | Fast cross-shell prompt with unified configuration (`.config/starship.toml`) shared across Zsh, Nushell, Bash, and Fish.                                                                            |
 
 ---
@@ -197,7 +198,7 @@ AeroSpace operates with zero animation overhead and strict tiling rules configur
 The theme switcher coordinates system-wide palette updates across Ghostty, Neovim, Yazi, Zellij, Tmux, Zsh, and Nushell without config drift:
 
 - **Theme Registry**: [shell/shared/themes/registry.tsv](shell/shared/themes/registry.tsv) acts as the single source of truth mapping theme identifiers to app-specific theme names.
-- **Supported Themes**: `monokai-pro`, `catppuccin-macchiato`, `tokyonight-storm`, `rose-pine`, `gruvbox-dark`, `kanagawa-wave`.
+- **Supported Themes**: `none`, `monokai-pro`, `catppuccin-macchiato`, `tokyonight-storm`, `rose-pine`, `gruvbox-dark`, `kanagawa-wave`.
 - **Atomic Switch Execution**:
     ```zsh
     theme-switch monokai-pro

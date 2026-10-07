@@ -95,6 +95,9 @@ alacritty/.config/alacritty/active-theme.toml
 yazi/.config/yazi/theme.toml
 tmux/.config/tmux/themes/current-theme.conf
 
+# --- SKETCHYBAR BUILD ARTIFACTS ---
+sketchybar/.config/sketchybar/**/bin/
+
 # claude and agent state
 .claude/
 agent/.config/agent/state.json
@@ -115,4 +118,3 @@ opencode
 .continue/
 .cline/
 .agents/
-
