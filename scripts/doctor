@@ -354,6 +354,16 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+section "Repo hygiene"
+
+tracked_blobs="$(git -C "$DOTFILES" ls-files | grep -iE 'node_modules/|\.js\.map$|\.sqlite$|\.db$|\.DS_Store$' || true)"
+if [[ -n "$tracked_blobs" ]]; then
+    fail "tracked runtime blobs found (should be gitignored):\n$tracked_blobs" "git rm --cached"
+else
+    pass "no tracked runtime blobs (node_modules, .js.map, sqlite/db, .DS_Store)"
+fi
+
+# ---------------------------------------------------------------------------
 section "Git"
 
 cd "$DOTFILES"
