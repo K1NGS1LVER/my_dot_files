@@ -26,3 +26,21 @@ prepend_keymap = [
     # Custom Behavior
     { on = "<Space>", run = [ "toggle", "arrow next" ], desc = "Toggle selection" },
 ]
+
+[confirm]
+prepend_keymap = [
+    { on = "<Esc>", run = "close", desc = "Cancel" },
+    { on = "y", run = "close --submit", desc = "Confirm" },
+    { on = "n", run = "close", desc = "Cancel" },
+]
+
+[input]
+prepend_keymap = [
+    { on = "<C-c>", run = "close", desc = "Cancel" },
+    { on = "<Enter>", run = "close --submit", desc = "Submit" },
+    { on = "<Esc>", run = "escape", desc = "Escape" },
+    { on = "<Backspace>", run = "backspace", desc = "Backspace" },
+    { on = "<Delete>", run = "backspace --under", desc = "Delete" },
+    { on = "<Left>", run = "move -1", desc = "Move left" },
+    { on = "<Right>", run = "move 1", desc = "Move right" },
+]
