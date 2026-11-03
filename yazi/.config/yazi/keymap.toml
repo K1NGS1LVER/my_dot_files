@@ -28,19 +28,24 @@ prepend_keymap = [
 ]
 
 [confirm]
-prepend_keymap = [
-    { on = "<Esc>", run = "close", desc = "Cancel" },
-    { on = "y", run = "close --submit", desc = "Confirm" },
-    { on = "n", run = "close", desc = "Cancel" },
+keymap = [
+    { on = "<Esc>", run = "close", desc = "Cancel the confirm" },
+    { on = "<C-[>", run = "close", desc = "Cancel the confirm" },
+    { on = "<C-c>", run = "close", desc = "Cancel the confirm" },
+    { on = "<Enter>", run = "close --submit", desc = "Submit the confirm" },
+    { on = "n", run = "close", desc = "Cancel the confirm" },
+    { on = "y", run = "close --submit", desc = "Submit the confirm" },
 ]
 
 [input]
-prepend_keymap = [
-    { on = "<C-c>", run = "close", desc = "Cancel" },
-    { on = "<Enter>", run = "close --submit", desc = "Submit" },
-    { on = "<Esc>", run = "escape", desc = "Escape" },
-    { on = "<Backspace>", run = "backspace", desc = "Backspace" },
-    { on = "<Delete>", run = "backspace --under", desc = "Delete" },
-    { on = "<Left>", run = "move -1", desc = "Move left" },
-    { on = "<Right>", run = "move 1", desc = "Move right" },
+keymap = [
+    { on = "<C-c>", run = "close", desc = "Cancel input" },
+    { on = "<Enter>", run = "close --submit", desc = "Submit input" },
+    { on = "<Esc>", run = "escape", desc = "Go back the normal mode" },
+    { on = "<Backspace>", run = "backspace", desc = "Delete the char before cursor" },
+    { on = "<Delete>", run = "backspace --under", desc = "Delete the char under cursor" },
+    { on = "<Left>", run = "move -1", desc = "Move cursor left" },
+    { on = "<Right>", run = "move 1", desc = "Move cursor right" },
+    { on = "<C-a>", run = "move bol", desc = "Move to start of line" },
+    { on = "<C-e>", run = "move eol", desc = "Move to end of line" },
 ]
