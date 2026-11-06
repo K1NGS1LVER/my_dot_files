@@ -49,8 +49,10 @@ LINKS=(
   "raycast/.config/raycast|.config/raycast"
   "sioyek/.config/sioyek|.config/sioyek"
   "tmux/.config/tmux|.config/tmux"
+  "vis/.config/vis|.config/vis"
   "yazi/.config/yazi|.config/yazi"
   "zed/.config/zed|.config/zed"
+  "omniwm/.config/omniwm|.config/omniwm"
   "zellij/.config/zellij|.config/zellij"
 )
 
