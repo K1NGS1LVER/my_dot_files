@@ -45,6 +45,7 @@ LINKS=(
   "mpv/.config/mpv|.config/mpv"
   "nchat/.config/nchat|.config/nchat"
   "nvim/.config/nvim|.config/nvim"
+  "nehir/.config/nehir|.config/nehir"
   "qBittorrent/.config/qBittorrent|.config/qBittorrent"
   "raycast/.config/raycast|.config/raycast"
   "sioyek/.config/sioyek|.config/sioyek"
