@@ -1,0 +1,5 @@
+id = "4B4F084F-CB2F-5A2C-AD40-772C1004FF0B"
+order = 0
+
+[match]
+bundleId = "org.mozilla.firefox"

@@ -13,7 +13,7 @@ green = 0.7762464284896851
 red = 0.7008675336837769
 
 [focus]
-followsMouse = true
+followsMouse = false
 followsWindowToMonitor = false
 moveMouseToFocusedWindow = true
 
@@ -36,7 +36,7 @@ preventSleepEnabled = false
 fingerCount = 3
 invertDirection = true
 mouseResizeModifierKey = "option"
-scrollEnabled = false
+scrollEnabled = true
 scrollModifierKey = "optionShift"
 scrollSensitivity = 5.0
 
@@ -47,20 +47,21 @@ monitorOrder = []
 
 [niri]
 balancedColumnCount = 2
-columnWidthPresets = [0.35, 0.5, 0.65, 0.95]
+columnWidthPresets = [0.5, 0.9, 0.95]
+defaultColumnWidth = 0.9
 infiniteLoop = true
 revealPartial = "default"
 
 [statusBar]
 showAppNames = false
-showWorkspaceName = false
+showWorkspaceName = true
 useWorkspaceId = false
 
 [workspaceBar]
-backgroundOpacity = 0.1
+backgroundOpacity = 0.05
 deduplicateAppIcons = true
 enabled = false
-height = 24.0
+height = 20.0
 hideEmptyWorkspaces = true
 labelFontSize = 12.0
 notchAware = true
@@ -69,6 +70,6 @@ reserveLayoutSpace = false
 showFloatingWindows = false
 showLabels = false
 showTraceButton = false
-windowLevel = "popup"
-xOffset = 0.0
+windowLevel = "status"
+xOffset = 90.0
 yOffset = 0.0
