@@ -48,6 +48,7 @@ gh/.config/gh/config.yml
 **/cache/
 
 # --- BACKUPS ---
+**/*.pre-v5
 **/*~
 **/*.bak
 **/*.bak.*
@@ -68,6 +69,10 @@ raycast/.config/raycast/ai/
 
 # --- APP STATE ---
 nchat/.config/nchat/emojis/
+# OmniWM installs its default shell scripts + luau type defs here; app-owned, re-created on update.
+omniwm/.config/omniwm/shell/
+# Vendored vis plugin clone (vis-editorconfig-options) — has its own .git, re-clone instead.
+vis/
 
 # --- BINARY IMAGES ---
 # Never commit app-generated PNGs/preview images - they bloat git history permanently.
@@ -118,3 +123,5 @@ opencode
 .continue/
 .cline/
 .agents/
+# commandcode agent tool state
+.commandcode/
