@@ -1,13 +1,34 @@
 {
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+    "anthropic_retention": false
+  },
+  "session": {
+    "trust_all_worktrees": true
+  },
   "agent_servers": {
+    "github-copilot-cli": {
+      "type": "registry"
+    },
     "gemini": {
       "type": "registry"
     }
   },
+  "auto_install_extensions": {
+    "toml": true,
+    "markdown": true,
+    "env": true,
+    "dockerfile": true,
+    "git-firefly": true,
+    "svg": true,
+    "yaml": true,
+    "xml": true
+  },
   "edit_predictions": {
     "provider": "copilot"
   },
-  "theme": "Rosé Pine",
+  "theme": "One Dark",
   "vim_mode": true,
   "base_keymap": "VSCode",
   "ui_font_size": 18,
