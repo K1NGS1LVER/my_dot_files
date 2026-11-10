@@ -46,6 +46,9 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 export PATH="$HOME/development/flutter/bin:$PATH"
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
 
+# Agent browser (chrome-devtools-axi drives Chromium, not Chrome)
+export CHROME_DEVTOOLS_AXI_EXECUTABLE_PATH="/Applications/Chromium.app/Contents/MacOS/Chromium"
+
 # Plugins — guarded, sourced directly (OMZ framework not used)
 [[ -f "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [[ -f "$ZSH_CUSTOM/plugins/fzf-tab/fzf-tab.plugin.zsh" ]] && source "$ZSH_CUSTOM/plugins/fzf-tab/fzf-tab.plugin.zsh"

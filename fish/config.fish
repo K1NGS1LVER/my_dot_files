@@ -43,6 +43,7 @@ if status is-interactive
 
     # --- ENV VARS ---
     set -gx EDITOR nvim
+    set -gx CHROME_DEVTOOLS_AXI_EXECUTABLE_PATH /Applications/Chromium.app/Contents/MacOS/Chromium
     if test -x /usr/libexec/java_home
         set -gx JAVA_HOME (/usr/libexec/java_home 2>/dev/null)
     end
