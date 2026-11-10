@@ -1,5 +1,5 @@
 # Sudo-none — same plain xterm-16 mapping as none.nu, with the base slots
-# anchored to sudo-none's darker base (#141821) to match the terminal bg.
+# anchored to sudo-none's darker base (#141414) to match the terminal bg.
 # Identical mapping intent to none.zsh — do not add a real accent palette to
 # one without discussing the other.
 
@@ -18,18 +18,18 @@ const catppuccin = {
     sapphire:  "#88c0d0"
     blue:      "#81a1c1"
     lavender:  "#9bbbd8"
-    text:      "#d8dee9"
-    subtext1:  "#d8dee9"
-    subtext0:  "#4c566a"
-    overlay2:  "#4c566a"
-    overlay1:  "#4c566a"
-    overlay0:  "#4c566a"
-    surface2:  "#4c566a"
-    surface1:  "#2e3440"
-    surface0:  "#2e3440"
-    base:      "#141821"
-    mantle:    "#141821"
-    crust:     "#141821"
+    text:      "#e6e6e6"
+    subtext1:  "#e6e6e6"
+    subtext0:  "#4d4d4d"
+    overlay2:  "#4d4d4d"
+    overlay1:  "#4d4d4d"
+    overlay0:  "#4d4d4d"
+    surface2:  "#4d4d4d"
+    surface1:  "#2e2e2e"
+    surface0:  "#2e2e2e"
+    base:      "#141414"
+    mantle:    "#141414"
+    crust:     "#141414"
 }
 
 $env.BAT_THEME = "ansi"

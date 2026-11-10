@@ -2,35 +2,35 @@
 # Mirror of ghostty/.config/ghostty/themes/sudo-none.conf — keep the two in sync.
 
 [colors.primary]
-background = "#141821"
-foreground = "#e4e9f1"
-dim_foreground = "#565e70"
-bright_foreground = "#f2f5fa"
+background = "#141414"
+foreground = "#e6e6e6"
+dim_foreground = "#5c5c5c"
+bright_foreground = "#f2f2f2"
 
 [colors.cursor]
-text = "#141821"
-cursor = "#e4e9f1"
+text = "#141414"
+cursor = "#e6e6e6"
 
 [colors.selection]
-text = "#141821"
-background = "#3a4150"
+text = "#141414"
+background = "#3d3d3d"
 
 [colors.normal]
-black = "#2e3440"
+black = "#2e2e2e"
 red = "#d08770"
 green = "#a3be8c"
 yellow = "#ebcb8b"
 blue = "#81a1c1"
 magenta = "#b48ead"
 cyan = "#88c0d0"
-white = "#e4e9f1"
+white = "#e6e6e6"
 
 [colors.bright]
-black = "#4c566a"
+black = "#4d4d4d"
 red = "#e69a83"
 green = "#b8d99f"
 yellow = "#f2dca4"
 blue = "#9bbbd8"
 magenta = "#c6a5c2"
 cyan = "#9dd6e3"
-white = "#f2f5fa"
+white = "#f2f2f2"
