@@ -17,4 +17,6 @@ _BROWSER_SITES=(
     "x|twitter;https://x.com;/search?q="
     "google|g;https://www.google.com;/search?q="
     "net;http://192.168.100.100:8090/;"
+  "books|bk;https://www.hackerbooks.org;"
+  "tube|tb;https://hackertube.org;"
 )
