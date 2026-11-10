@@ -18,6 +18,7 @@ LINKS=(
   "git/.gitconfig|.gitconfig"
   "tmux/.tmux.conf|.tmux.conf"
   "aerospace/.aerospace.toml|.aerospace.toml"
+  "rift/config.toml|.config/rift/config.toml"
   "surfingkeys/.surfingkeys.js|.surfingkeys.js"
   ".prettierrc|.prettierrc"
   ".hushlogin|.hushlogin"

@@ -1,0 +1,163 @@
+# rift config — ported from aerospace/.aerospace.toml
+# Docs: https://acsandmann.github.io/rift-docs/reference/configuration/
+# Hot reloads on save (rift watches this file).
+
+[settings]
+# AeroSpace manages every Space by default; match that instead of rift's
+# opt-in-per-Space behavior (which would otherwise keep Alt+Z free).
+default_disable = false
+animate = true
+animation_duration = 0.2
+
+[settings.layout]
+# i3/sway-like containers, same as AeroSpace's 'tiles'
+mode = "scrolling"
+
+[settings.layout.scrolling]
+column_width_ratio = 0.8
+preserve_window_sizes = false
+max_column_width_ratio = 1.0
+
+[settings.layout.gaps.outer]
+top = 0
+left = 0
+bottom = 0
+right = 0
+
+[settings.layout.gaps.inner]
+horizontal = 4
+vertical = 4
+
+[settings.ui.menu_bar]
+enabled = true
+show_binding_mode = true
+display_style = "label"
+
+[settings.ui.mission_control]
+enabled = true
+fade_enabled = false
+
+[virtual_workspaces]
+# AeroSpace parity: 9 numbered + 22 letter workspaces (no H/J/K/L — those are focus keys)
+enabled = true
+default_workspace_count = 31
+auto_assign_windows = true
+# AeroSpace's alt-tab = workspace-back-and-forth
+workspace_auto_back_and_forth = true
+workspace_names = [
+  "1", "2", "3", "4", "5", "6", "7", "8", "9",
+  "A", "B", "C", "D", "E", "F", "G", "I", "M",
+  "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+  "W", "X", "Y", "Z",
+]
+
+# Float rules ported from AeroSpace on-window-detected
+app_rules = [
+  { app_id = "com.apple.calculator", floating = true },
+  { app_id = "com.apple.systempreferences", floating = true },
+  { app_id = "com.apple.ActivityMonitor", floating = true },
+  { app_id = "com.apple.iCal", floating = true },
+  { app_id = "com.apple.finder", floating = true },
+  { app_id = "ru.starmel.OpenSuperWhisper", floating = true },
+  # Orion Link Preview windows disrupt tiling; quarantine to workspace "3"
+  { app_id = "com.kagi.kagimacOS", title_regex = "Orion Preview", workspace = "3" },
+]
+
+[modifier_combinations]
+comb1 = "Alt + Shift"
+
+[keys]
+# Focus
+"Alt + H" = { move_focus = "left" }
+"Alt + J" = { move_focus = "down" }
+"Alt + K" = { move_focus = "up" }
+"Alt + L" = { move_focus = "right" }
+
+# Move
+"comb1 + H" = { move_node = "left" }
+"comb1 + J" = { move_node = "down" }
+"comb1 + K" = { move_node = "up" }
+"comb1 + L" = { move_node = "right" }
+
+# Resize (AeroSpace alt-minus/equal = smart resize)
+"Alt + Minus" = { resize_window_shrink = "smart" }
+"Alt + Equal" = { resize_window_grow = "smart" }
+
+# Layout (AeroSpace parity, closest rift commands)
+"Alt + Slash" = "toggle_orientation"      # was: layout tiles horizontal vertical
+"Alt + Comma" = "toggle_stack"            # was: layout accordion
+"Alt + Space" = "toggle_window_floating"  # per-window; AeroSpace toggled whole workspace
+"Alt + Shift + F" = "toggle_fullscreen"
+
+# Join (AeroSpace service-mode join-with)
+"Alt + Shift + Left" = { join_window = "left" }
+"Alt + Shift + Right" = { join_window = "right" }
+"Alt + Shift + Up" = { join_window = "up" }
+"Alt + Shift + Down" = { join_window = "down" }
+
+# Workspace navigation (indices are 0-based)
+"Alt + Tab" = "switch_to_last_workspace"
+"Alt + 1" = { switch_to_workspace = 0 }
+"Alt + 2" = { switch_to_workspace = 1 }
+"Alt + 3" = { switch_to_workspace = 2 }
+"Alt + 4" = { switch_to_workspace = 3 }
+"Alt + 5" = { switch_to_workspace = 4 }
+"Alt + 6" = { switch_to_workspace = 5 }
+"Alt + 7" = { switch_to_workspace = 6 }
+"Alt + 8" = { switch_to_workspace = 7 }
+"Alt + 9" = { switch_to_workspace = 8 }
+"Alt + A" = { switch_to_workspace = 9 }
+"Alt + D" = { switch_to_workspace = 12 }
+"Alt + E" = { switch_to_workspace = 13 }
+"Alt + M" = { switch_to_workspace = 17 }
+"Alt + N" = { switch_to_workspace = 18 }
+"Alt + O" = { switch_to_workspace = 19 }
+"Alt + P" = { switch_to_workspace = 20 }
+"Alt + Q" = { switch_to_workspace = 21 }
+"Alt + R" = { switch_to_workspace = 22 }
+"Alt + S" = { switch_to_workspace = 23 }
+"Alt + U" = { switch_to_workspace = 25 }
+"Alt + V" = { switch_to_workspace = 26 }
+"Alt + X" = { switch_to_workspace = 28 }
+"Alt + Y" = { switch_to_workspace = 29 }
+"Alt + Z" = { switch_to_workspace = 30 }
+
+# Application shortcuts
+"Alt + B" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a Firefox"] }
+"Alt + C" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a Calculator"] }
+"Alt + F" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a Finder"] }
+"Alt + G" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a Ghostty"] }
+"Alt + T" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a Ghostty"] }
+"Alt + W" = { exec = ["/bin/bash", "-c", "/usr/bin/open -a WhatsApp"] }
+
+# Move window to workspace
+"comb1 + 1" = { move_window_to_workspace = 0 }
+"comb1 + 2" = { move_window_to_workspace = 1 }
+"comb1 + 3" = { move_window_to_workspace = 2 }
+"comb1 + 4" = { move_window_to_workspace = 3 }
+"comb1 + 5" = { move_window_to_workspace = 4 }
+"comb1 + 6" = { move_window_to_workspace = 5 }
+"comb1 + 7" = { move_window_to_workspace = 6 }
+"comb1 + 8" = { move_window_to_workspace = 7 }
+"comb1 + 9" = { move_window_to_workspace = 8 }
+"comb1 + B" = { move_window_to_workspace = 10 }
+"comb1 + C" = { move_window_to_workspace = 11 }
+"comb1 + D" = { move_window_to_workspace = 12 }
+"comb1 + E" = { move_window_to_workspace = 13 }
+"comb1 + G" = { move_window_to_workspace = 15 }
+"comb1 + M" = { move_window_to_workspace = 17 }
+"comb1 + N" = { move_window_to_workspace = 18 }
+"comb1 + O" = { move_window_to_workspace = 19 }
+"comb1 + P" = { move_window_to_workspace = 20 }
+"comb1 + Q" = { move_window_to_workspace = 21 }
+"comb1 + S" = { move_window_to_workspace = 23 }
+"comb1 + T" = { move_window_to_workspace = 24 }
+"comb1 + U" = { move_window_to_workspace = 25 }
+"comb1 + V" = { move_window_to_workspace = 26 }
+"comb1 + W" = { move_window_to_workspace = 27 }
+"comb1 + X" = { move_window_to_workspace = 28 }
+"comb1 + Y" = { move_window_to_workspace = 29 }
+"comb1 + Z" = { move_window_to_workspace = 30 }
+
+# Window management
+"comb1 + 0" = "close_window"
