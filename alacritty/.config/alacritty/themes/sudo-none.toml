@@ -1,0 +1,36 @@
+# Sudo-none — none's plain xterm-16 palette, anchored darker for light wallpapers.
+# Mirror of ghostty/.config/ghostty/themes/sudo-none.conf — keep the two in sync.
+
+[colors.primary]
+background = "#141821"
+foreground = "#e4e9f1"
+dim_foreground = "#565e70"
+bright_foreground = "#f2f5fa"
+
+[colors.cursor]
+text = "#141821"
+cursor = "#e4e9f1"
+
+[colors.selection]
+text = "#141821"
+background = "#3a4150"
+
+[colors.normal]
+black = "#2e3440"
+red = "#d08770"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#88c0d0"
+white = "#e4e9f1"
+
+[colors.bright]
+black = "#4c566a"
+red = "#e69a83"
+green = "#b8d99f"
+yellow = "#f2dca4"
+blue = "#9bbbd8"
+magenta = "#c6a5c2"
+cyan = "#9dd6e3"
+white = "#f2f5fa"
