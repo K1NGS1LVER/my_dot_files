@@ -1,35 +1,35 @@
 # None — plain terminal, no theme/accent colors (standard xterm 16-color palette)
 
 [colors.primary]
-background = "#1f2430"
-foreground = "#d8dee9"
-dim_foreground = "#4c566a"
-bright_foreground = "#eceff4"
+background = "#1e1e1e"
+foreground = "#dcdcdc"
+dim_foreground = "#4d4d4d"
+bright_foreground = "#ededed"
 
 [colors.cursor]
-text = "#1f2430"
-cursor = "#d8dee9"
+text = "#1e1e1e"
+cursor = "#dcdcdc"
 
 [colors.selection]
-text = "#1f2430"
-background = "#4c566a"
+text = "#1e1e1e"
+background = "#4d4d4d"
 
 [colors.normal]
-black = "#2e3440"
+black = "#2e2e2e"
 red = "#d08770"
 green = "#a3be8c"
 yellow = "#ebcb8b"
 blue = "#81a1c1"
 magenta = "#b48ead"
 cyan = "#88c0d0"
-white = "#d8dee9"
+white = "#dcdcdc"
 
 [colors.bright]
-black = "#4c566a"
+black = "#4d4d4d"
 red = "#e69a83"
 green = "#b8d99f"
 yellow = "#f2dca4"
 blue = "#9bbbd8"
 magenta = "#c6a5c2"
 cyan = "#9dd6e3"
-white = "#eceff4"
+white = "#ededed"
