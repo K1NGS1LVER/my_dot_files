@@ -1,0 +1,16 @@
+# Minimal kind cluster for the small colima VM (docker/.kind.md notes the rationale).
+# One control-plane node. kubelet reserves memory for the system + daemon so
+# pods get evicted early instead of the whole VM OOMing.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        system-reserved: "memory=200Mi,cpu=100m"
+        kube-reserved: "memory=200Mi,cpu=100m"
+        eviction-hard: "memory.available<150Mi,nodefs.available<10%"
+        max-pods: "20"

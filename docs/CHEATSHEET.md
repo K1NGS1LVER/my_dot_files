@@ -239,6 +239,22 @@ All commands are synchronized across **Zsh**, **Nushell**, **Bash**, and **Fish*
 | `dprune` | Hard Reset           | Prompts for confirmation; resets stopped containers, unused networks, and dangling volumes |
 | `dstats` | Container Monitor    | Live terminal monitor of memory and CPU utilization per container                          |
 
+### 9.1 Lightweight Docker + kind (low-memory dev stack)
+
+> Docker runs in a minimal on-demand colima VM (2 CPU / 2 GB / 15 GB disk) instead of Docker Desktop.
+> All VM memory is freed whenever it is stopped — a stopped colima costs zero.
+
+| Command        | Action                    | Details                                                                |
+| :------------- | :------------------------ | :--------------------------------------------------------------------- |
+| `dkup [mem]`   | Start the Docker VM       | Starts colima with 2 CPU, `mem` GB RAM (default 2), 15 GB lazy disk    |
+| `dkdown`       | Stop the Docker VM        | Frees all VM memory; kind cluster data stays until deleted             |
+| `kcreate`      | Create kind cluster       | Uses `~/.config/kind/config.yaml` (repo: `docker/kind-config.yaml`)    |
+| `kdelete`      | Delete kind cluster       | Removes the cluster VM and frees its share of RAM                      |
+
+Conventions learned the hard way: cap containers at landing (`docker run --memory 256m --cpus 0.5`),
+the kind kubelet reserves ~400 Mi for system daemons and evicts pods below 150 Mi free, and a bigger
+VM day can be had with `dkup 4` (colima reuses the existing instance config from then on).
+
 ---
 
 ## 10. Display, Theme & System Diagnostics

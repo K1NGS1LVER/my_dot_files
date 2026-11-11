@@ -16,6 +16,7 @@ LINKS=(
 
   # Home dotfiles
   "git/.gitconfig|.gitconfig"
+  "docker/kind-config.yaml|.config/kind/config.yaml"
   "tmux/.tmux.conf|.tmux.conf"
   "aerospace/.aerospace.toml|.aerospace.toml"
   "rift/config.toml|.config/rift/config.toml"

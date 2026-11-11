@@ -28,3 +28,21 @@ dsh() {
     container=$(docker ps --format "{{.Names}}" | fzf --header 'Select container' --height 40% --reverse)
     [[ -n "$container" ]] && docker exec -it "$container" /bin/sh
 }
+
+# Light low-memory Docker VM (colima). Replace mem-arg to raise, e.g. `dkup 4`
+dkup() {
+    colima start --cpu 2 --memory "${1:-2}" --disk 15
+}
+
+# Free all VM memory when done working
+dkdown() {
+    colima stop
+}
+
+kcreate() {
+    kind create cluster --config ~/.config/kind/config.yaml
+}
+
+kdelete() {
+    kind delete cluster
+}

@@ -19,3 +19,13 @@ def dsh [] {
         ^docker exec -it $container /bin/sh
     }
 }
+
+# Light low-memory Docker VM (colima). Replace mem-arg to raise, e.g. `dkup 4`
+def dkup [mem: int = 2] { ^colima start --cpu 2 --memory $mem --disk 15 }
+
+# Free all VM memory when done working
+def dkdown [] { ^colima stop }
+
+def kcreate [] { ^kind create cluster --config ~/.config/kind/config.yaml }
+
+def kdelete [] { ^kind delete cluster }
