@@ -90,6 +90,14 @@ To maintain and clean stale dependencies later, run the repository maintenance s
 ~/dotfiles/scripts/update-brew
 ```
 
+### Pre-commit Hook
+
+Install the repo-tracked security hook (gitleaks + shellcheck) into `.git/hooks`:
+
+```zsh
+ln -sf "$DOTFILES/scripts/hooks/pre-commit" .git/hooks/pre-commit
+```
+
 ---
 
 ## 3. Symlink Deployment (`scripts/deploy`)
