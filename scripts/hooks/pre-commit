@@ -4,8 +4,8 @@ set -e
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
 if command -v gitleaks >/dev/null; then
-  gitleaks git --no-banner "$REPO_ROOT" --staged || {
-    echo "gitleaks: secret-like content in staged changes. Fix or use 'gitleaks git --staged --redact' to inspect." >&2
+  gitleaks git --no-banner --redact "$REPO_ROOT" --staged || {
+    echo "gitleaks: secret-like content in staged changes. Inspect with: gitleaks git --staged --redact" >&2
     exit 1
   }
 fi
