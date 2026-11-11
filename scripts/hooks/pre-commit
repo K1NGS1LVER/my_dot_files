@@ -1,0 +1,24 @@
+#!/bin/bash
+# Pre-commit: block secrets and broken shell syntax. Kept fast (<5s).
+set -e
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+if command -v gitleaks >/dev/null; then
+  gitleaks git --no-banner "$REPO_ROOT" --staged || {
+    echo "gitleaks: secret-like content in staged changes. Fix or use 'gitleaks git --staged --redact' to inspect." >&2
+    exit 1
+  }
+fi
+
+if command -v shellcheck >/dev/null; then
+  changed="$(git diff --cached --name-only --diff-filter=ACM -- '*.sh' '*.zsh')"
+  if [ -n "$changed" ]; then
+    for f in $changed; do
+      # .zsh files use zsh-only syntax; skip shellcheck rather than false-fail
+      case "$f" in *.zsh) continue ;; esac
+      shellcheck -x "$REPO_ROOT/$f" || exit 1
+    done
+  fi
+fi
+
+exit 0
